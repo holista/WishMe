@@ -1,0 +1,54 @@
+ORGANIZATORSKA CAST
+-----------
+prihlaseni pro organizatory: ..nebo bez prihlaseni zatim? :O 
+ - registrace: jmeno + heslo (zatim asi bez mailu)
+ - prihlaseni: jmeno + heslo
+
+eventy:
+ - vytvoreni 
+ - uprava 
+ - smazani 
+ - zobrazeni 
+ - zobrazeni vsech seznamu
+ - generovani kodu/URL
+
+seznamy u eventu: (napr. "Nejdrazsi dary..", "Chceme nejvic.." apod.)
+ - vytvoreni
+ - uprava
+ - smazani
+ - zobrazeni
+ - zobrazeni polozek
+
+polozky seznamu:
+ - vytvoreni -> zatim vyplneni rucne vsech polozek, do budoucna napr. predvyplneni podle odkazu na zbozi, coz by bylo husty
+ - uprava
+ - smazani
+ - zobrazeni
+ - zabrani polozky seznamu (nakup)
+
+citac penez u seznamu:
+ - vytvoreni
+ - uprava
+ - smazani
+ - zobrazeni
+
+UCASTNICKA CAST:
+------------------
+eventy:
+ - zobrazeni eventu podle special kodu/url
+ - zobrazeni vsech seznamu
+
+seznamy:
+ - ziskani seznamu
+ - ziskani polozek seznamu
+
+polozka seznamu
+ - ziskani polozky seznamu
+ - zabrani polozky seznamu (nakup)
+
+citac penez u seznamu
+ - prihozeni penez
+
+ 
+
+ 
