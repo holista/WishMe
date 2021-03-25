@@ -20,7 +20,7 @@ seznamy u eventu: (napr. "Nejdrazsi dary..", "Chceme nejvic.." apod.)
  - zobrazeni polozek
 
 polozky seznamu:
- - vytvoreni -> zatim vyplneni rucne vsech polozek, do budoucna napr. predvyplneni podle odkazu na zbozi, coz by bylo husty
+ - vytvoreni -> volba mezi rucnim vyplnenim a predvyplnenim pomoci odkazu z Heureky 
  - uprava
  - smazani
  - zobrazeni
