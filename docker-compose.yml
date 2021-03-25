@@ -1,0 +1,9 @@
+version: '3.4'
+
+services:
+  wish_me_service:     
+    build:
+      context: ./DotNet/WishMe.Service
+      dockerfile: Dockerfile
+    ports:
+      - "8085:80"
