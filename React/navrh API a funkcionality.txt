@@ -1,7 +1,7 @@
 ORGANIZATORSKA CAST
 -----------
-prihlaseni pro organizatory: ..nebo bez prihlaseni zatim? :O 
- - registrace: jmeno + heslo (zatim asi bez mailu)
+prihlaseni pro organizatory: 
+ - registrace: jmeno + heslo
  - prihlaseni: jmeno + heslo
 
 eventy:
@@ -17,14 +17,13 @@ seznamy u eventu: (napr. "Nejdrazsi dary..", "Chceme nejvic.." apod.)
  - uprava
  - smazani
  - zobrazeni
- - zobrazeni polozek
+ - zobrazeni polozek (trideni dle ...)
 
 polozky seznamu:
- - vytvoreni -> volba mezi rucnim vyplnenim a predvyplnenim pomoci odkazu z Heureky 
+ - vytvoreni -> volba mezi rucnim vyplnenim a predvyplnenim pomoci odkazu na zbozi z Heureky 
  - uprava
  - smazani
  - zobrazeni
- - zabrani polozky seznamu (nakup)
 
 citac penez u seznamu:
  - vytvoreni
@@ -36,14 +35,14 @@ UCASTNICKA CAST:
 ------------------
 eventy:
  - zobrazeni eventu podle special kodu/url
- - zobrazeni vsech seznamu
+ - zobrazeni vsech seznamu pro event
 
 seznamy:
- - ziskani seznamu
- - ziskani polozek seznamu
+ - zobrazeni seznamu
+ - zobrazeni polozek seznamu + trideni dle jmena, ceny
 
 polozka seznamu
- - ziskani polozky seznamu
+ - zobrazeni polozky seznamu
  - zabrani polozky seznamu (nakup)
 
 citac penez u seznamu
