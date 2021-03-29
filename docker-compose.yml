@@ -1,9 +1,16 @@
 version: '3.4'
 
 services:
-  wish_me_service:     
+  wish-me-backend:     
     build:
-      context: ./DotNet/WishMe.Service
+      context: ./wishme-dotnet/WishMe.Service
       dockerfile: Dockerfile
     ports:
       - "8085:80"
+
+  wish-me-swaggerui:
+    image: swaggerapi/swagger-ui:latest
+    ports:
+      - "3200:8080"
+    environment:
+      URLS: '[ { url: " http://localhost:8085/docs/v1/swagger.json", name: "WishMe Service" } ]'

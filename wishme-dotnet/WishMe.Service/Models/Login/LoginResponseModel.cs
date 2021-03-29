@@ -1,4 +1,4 @@
-﻿namespace WishMe.Service.Models
+﻿namespace WishMe.Service.Models.Login
 {
   public class LoginResponseModel
   {

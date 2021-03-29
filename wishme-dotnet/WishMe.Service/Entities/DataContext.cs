@@ -6,9 +6,9 @@ using WishMe.Service.Attributes;
 
 namespace WishMe.Service.Entities
 {
-  public class DbContext: Microsoft.EntityFrameworkCore.DbContext
+  public class DataContext: DbContext
   {
-    public DbContext(DbContextOptions<DbContext> options)
+    public DataContext(DbContextOptions<DataContext> options)
         : base(options) { }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)

@@ -13,9 +13,10 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using WishMe.Service.Attributes;
+using WishMe.Service.Configs;
 using WishMe.Service.Entities;
 using WishMe.Service.Extensions;
-using WishMe.Service.Models;
+using WishMe.Service.Models.Login;
 
 namespace WishMe.Service.Services
 {
@@ -54,7 +55,7 @@ namespace WishMe.Service.Services
         ExpirationUtc = expirationUtc.ToUnixTimeSeconds(),
       };
 
-      var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(fConfiguration["Jwt:Key"]));
+      var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(fConfiguration[AuthenticationConfig._JwtKey]));
       var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
       var claims = new List<Claim>
@@ -82,9 +83,10 @@ namespace WishMe.Service.Services
         ExpirationUtc = expirationUtc.ToUnixTimeSeconds(),
       };
 
-      var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(fConfiguration["Jwt:Key"]));
+      var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(fConfiguration[AuthenticationConfig._JwtKey]));
       var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
+#warning TODO: tohle neni uplne optimalni, ale zatim v poho
       var nextSubId = Interlocked.Increment(ref fAccessCodeSubId);
 
       var claims = new List<Claim>

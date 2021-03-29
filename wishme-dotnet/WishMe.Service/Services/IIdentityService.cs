@@ -1,7 +1,7 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 using WishMe.Service.Entities;
-using WishMe.Service.Models;
+using WishMe.Service.Models.Login;
 
 namespace WishMe.Service.Services
 {
