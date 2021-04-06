@@ -7,8 +7,9 @@ namespace WishMe.Service.Services
 {
   public interface IIdentityService
   {
-    LoginResponseModel? Login(string password, Organizer organizer);
-    LoginResponseModel Login(AccessHolder holder);
+    Organizer CreateOrganizer(LoginOrganizerModel model);
+    LoginOrganizerResponseModel? Login(string password, Organizer organizer);
+    LoginParticipantResponseModel Login(AccessHolder holder);
     Task<bool> IsOrganizerAsync(CancellationToken cancellationToken);
     Task<bool> CanAccessAsync(IAccessibleEntity accessible, CancellationToken cancellationToken);
   }

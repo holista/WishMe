@@ -18,38 +18,6 @@ namespace Microsoft.Extensions.DependencyInjection
 
     internal bool UseDefaultConventions { get; private set; }
 
-    public ScanOptions FromAssembly(Assembly assembly)
-    {
-      if (assembly is null)
-        throw new ArgumentNullException(nameof(assembly));
-
-      Assemblies.AddLast(assembly);
-
-      return this;
-    }
-
-    public ScanOptions FromAssembliesOf(IEnumerable<Type> types)
-    {
-      if (types is null)
-        throw new ArgumentNullException(nameof(types));
-
-      foreach (var type in types)
-        Assemblies.AddLast(type.Assembly);
-
-      return this;
-    }
-
-    public ScanOptions FromAssemblies(IEnumerable<Assembly> assemblies)
-    {
-      if (assemblies is null)
-        throw new ArgumentNullException(nameof(assemblies));
-
-      foreach (var assembly in assemblies)
-        Assemblies.AddLast(assembly);
-
-      return this;
-    }
-
     public ScanOptions FromAssemblyBy<T>()
     {
       Assemblies.AddLast(typeof(T).Assembly);

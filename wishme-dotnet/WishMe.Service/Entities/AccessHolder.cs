@@ -4,6 +4,7 @@ using WishMe.Service.Attributes;
 
 namespace WishMe.Service.Entities
 {
+  [Table("AccessHolders")]
   public class AccessHolder: EntityBase
   {
     [Indexed]

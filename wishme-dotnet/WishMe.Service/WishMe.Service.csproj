@@ -4,6 +4,8 @@
     <TargetFramework>net5.0</TargetFramework>
     <Nullable>enable</Nullable>
     <UserSecretsId>ca60a96a-ed96-4a2d-acc9-42f94ce6963a</UserSecretsId>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <NoWarn>1591</NoWarn>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
   </PropertyGroup>
 
@@ -15,28 +17,19 @@
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="5.0.4" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="5.0.4" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.4" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="5.0.4" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="5.0.4" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="5.0.4" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="5.0.4">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
     <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="6.9.0" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.10.13" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="6.1.1" />
     <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="6.1.1" />
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.9.0" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Handlers\Events\" />
-    <Folder Include="Handlers\Items\" />
-    <Folder Include="Handlers\Login\" />
-    <Folder Include="Handlers\Wishlists\" />
-    <Folder Include="Models\Events\" />
-    <Folder Include="Models\Items\" />
-    <Folder Include="Models\Wishlists\" />
-    <Folder Include="Requests\Events\" />
-    <Folder Include="Requests\Items\" />
-    <Folder Include="Requests\Login\" />
-    <Folder Include="Requests\Wishlists\" />
   </ItemGroup>
 
 </Project>

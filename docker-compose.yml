@@ -5,6 +5,9 @@ services:
     build:
       context: ./wishme-dotnet/WishMe.Service
       dockerfile: Dockerfile
+    environment:
+      WISH_ME_DB_CONNECTION_STRING: "Server=host.docker.internal;Database=Management-alpha;User Id=SA;Password=Pass@word1;"
+      WISH_ME_JWT_KEY: ":yFD8uJG}jq2^.~q"
     ports:
       - "8085:80"
 
@@ -14,3 +17,16 @@ services:
       - "3200:8080"
     environment:
       URLS: '[ { url: " http://localhost:8085/docs/v1/swagger.json", name: "WishMe Service" } ]'
+
+  wish-me-mssql:
+    image: mcr.microsoft.com/mssql/server:2017-latest
+    environment:
+      SA_PASSWORD: "Pass@word1"
+      ACCEPT_EULA: "Y"
+    ports:
+      - 1433:1433
+    volumes:
+      - mssqldata:/var/opt/mssql/data
+
+volumes:
+  mssqldata:

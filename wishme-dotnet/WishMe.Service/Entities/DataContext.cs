@@ -16,13 +16,17 @@ namespace WishMe.Service.Entities
       base.OnModelCreating(modelBuilder);
 
       var types = Assembly
-          .GetExecutingAssembly()
-          .GetExportedTypes()
-          .Where(x => x.IsSubclassOf(typeof(TimestampEntityBase)))
-          .ToArray();
+        .GetExecutingAssembly()
+        .GetExportedTypes()
+        .Where(x => x.IsSubclassOf(typeof(TimestampEntityBase)));
 
       foreach (var type in types)
       {
+        if (type.IsAbstract)
+          continue;
+
+        modelBuilder.Entity(type);
+
         SetCompositeKeysIfNeed(modelBuilder, type);
 
         SetIndicesIfNeed(modelBuilder, type);

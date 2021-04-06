@@ -1,12 +1,12 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
 
 namespace WishMe.Service.Exceptions
 {
-  public class ConflictException: Exception
+  public class ConflictException: StatusExceptionBase
   {
+    public override int StatusCode => StatusCodes.Status409Conflict;
+
     public ConflictException(string message)
-      : base(message)
-    {
-    }
+      : base(message) { }
   }
 }

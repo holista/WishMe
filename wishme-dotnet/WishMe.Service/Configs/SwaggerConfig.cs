@@ -1,8 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.Swagger;
 using Swashbuckle.AspNetCore.SwaggerGen;
+using WishMe.Service.Swagger;
 
 namespace WishMe.Service.Configs
 {
@@ -18,7 +21,7 @@ namespace WishMe.Service.Configs
 
     public static void SetupSwaggerGen(SwaggerGenOptions options)
     {
-      options.SwaggerDoc("v1", new OpenApiInfo { Title = "WishMe", Version = "v1" });
+      options.SwaggerDoc("v1", new OpenApiInfo { Title = "WishMe", Version = "v1", Description = "WishMe REST API" });
 
       options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
       {
@@ -46,6 +49,19 @@ namespace WishMe.Service.Configs
           new List<string>()
         }
       });
+
+      options.MapType<DateTime>(() => new OpenApiSchema { Type = "string" });
+      options.MapType<DateTime?>(() => new OpenApiSchema { Type = "string" });
+
+      options.OperationFilter<ConsumesProducesAttributeOperationFilter>();
+      options.OperationFilter<RouteControllerNameOperationFilter>();
+
+      options.DocumentFilter<SortDocumentFilter>();
+
+      options.DocInclusionPredicate((version, apiDescription) => apiDescription.RelativePath.Contains($"/{version}/"));
+
+      foreach (string xmlFile in Directory.GetFiles(AppContext.BaseDirectory, "*.xml"))
+        options.IncludeXmlComments(xmlFile);
     }
   }
 }

@@ -6,11 +6,10 @@ namespace WishMe.Service.Configs
   {
     public static void SetupRoles(AuthorizationOptions options)
     {
-      string organizer = UserRole.Organizer.ToString();
-      string participant = UserRole.Participant.ToString();
-
-      options.AddPolicy(organizer, policy => policy.RequireRole(organizer));
-      options.AddPolicy(participant, policy => policy.RequireRole(participant, organizer));
+      options.AddPolicy(AuthorizationConstants.Policies._Organizer, policy
+        => policy.RequireRole(AuthorizationConstants.Roles._Organizer));
+      options.AddPolicy(AuthorizationConstants.Policies._Participant, policy
+        => policy.RequireRole(AuthorizationConstants.Roles._Participant, AuthorizationConstants.Roles._Organizer));
     }
   }
 }

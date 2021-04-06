@@ -1,11 +1,12 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
 
 namespace WishMe.Service.Exceptions
 {
-  public class BadRequestException: Exception
+  public class BadRequestException: StatusExceptionBase
   {
-    public BadRequestException(string message) : base(message)
-    {
-    }
+    public override int StatusCode => StatusCodes.Status400BadRequest;
+
+    public BadRequestException(string message)
+      : base(message) { }
   }
 }
