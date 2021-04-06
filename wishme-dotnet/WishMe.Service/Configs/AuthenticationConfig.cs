@@ -1,25 +1,55 @@
-﻿using System.Text;
+﻿using System;
+using System.Text;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 
 namespace WishMe.Service.Configs
 {
-  public class AuthenticationConfig
+  public class AuthenticationConfig: IAuthenticationConfig
   {
-    public const string _JwtIssuer = "Jwt:Issuer";
-    public const string _JwtKey = "Jwt:Key";
+    public string JwtKey { get; } = Environment.GetEnvironmentVariable(EnvVariables._JwtKey)!;
 
-    public static void SetupJwtBearer(JwtBearerOptions options, IConfiguration configuration)
+    public static void SetupJwtBearer(JwtBearerOptions options)
     {
       options.TokenValidationParameters = new TokenValidationParameters
       {
-        ValidateLifetime = true,
+        ValidateAudience = false,
         ValidateIssuerSigningKey = true,
-        ValidIssuer = configuration[_JwtIssuer],
-        ValidAudience = configuration[_JwtIssuer],
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration[_JwtKey]))
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Environment.GetEnvironmentVariable(EnvVariables._JwtKey)!))
       };
+
+      if (bool.TryParse(Environment.GetEnvironmentVariable(EnvVariables._JwtDebugMode)!, out bool oauthDebugMode) && oauthDebugMode)
+      {
+        options.Events = new JwtBearerEvents
+        {
+          OnForbidden = context =>
+          {
+            Console.WriteLine(context.Response);
+            return Task.CompletedTask;
+          },
+          OnAuthenticationFailed = context =>
+          {
+            Console.WriteLine(context.Exception);
+            return Task.CompletedTask;
+          },
+          OnTokenValidated = context =>
+          {
+            Console.WriteLine(context.SecurityToken);
+            return Task.CompletedTask;
+          },
+          OnChallenge = context =>
+          {
+            Console.WriteLine(context.Error);
+            return Task.CompletedTask;
+          },
+          OnMessageReceived = context =>
+          {
+            Console.WriteLine(context.Token);
+            return Task.CompletedTask;
+          }
+        };
+      }
     }
   }
 }

@@ -2,7 +2,10 @@
 {
   public static class EnvVariables
   {
-    public static string _EnvVariablePrefix = "WISH_ME";
+    public static string _EnvVariablePrefix = "WISH_ME_";
+
     public static string _DbConnectionString = _EnvVariablePrefix + "DB_CONNECTION_STRING";
+    public static string _JwtKey = _EnvVariablePrefix + "JWT_KEY";
+    public static string _JwtDebugMode = _EnvVariablePrefix + "JWT_DEBUG_MODE";
   }
 }

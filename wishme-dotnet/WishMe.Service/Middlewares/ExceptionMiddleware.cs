@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 using WishMe.Service.Exceptions;
-using WishMe.Service.Exceptions.Factories;
+using WishMe.Service.Exceptions.Handlers;
 
 namespace WishMe.Service.Middlewares
 {
@@ -16,7 +16,7 @@ namespace WishMe.Service.Middlewares
       fNext = next;
     }
 
-    public async Task InvokeAsync(HttpContext context, IStatusFactory statusFactory)
+    public async Task InvokeAsync(HttpContext context, IStatusExceptionHandler statusExceptionHandler)
     {
       try
       {
@@ -24,7 +24,7 @@ namespace WishMe.Service.Middlewares
       }
       catch (Exception ex)
       {
-        statusFactory.Create(ex, out var statusCode, out var message);
+        statusExceptionHandler.Handle(ex, out var statusCode, out var message);
 
         await WriteResponseAsync(context, statusCode, message);
       }

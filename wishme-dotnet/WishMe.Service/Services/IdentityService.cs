@@ -9,7 +9,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Caching.Memory;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using WishMe.Service.Attributes;
@@ -29,20 +28,37 @@ namespace WishMe.Service.Services
     private static int fAccessCodeSubId = 1;
 
     private readonly IHttpContextAccessor fHttpContextAccessor;
+    private readonly IAuthenticationConfig fAuthenticationConfig;
     private readonly IMemoryCache fMemoryCache;
-    private readonly IConfiguration fConfiguration;
 
     public IdentityService(
       IHttpContextAccessor httpContextAccessor,
-      IMemoryCache memoryCache,
-      IConfiguration configuration)
+      IAuthenticationConfig authenticationConfig,
+      IMemoryCache memoryCache)
     {
       fHttpContextAccessor = httpContextAccessor;
+      fAuthenticationConfig = authenticationConfig;
       fMemoryCache = memoryCache;
-      fConfiguration = configuration;
     }
 
-    public LoginResponseModel? Login(string password, Organizer organizer)
+    public Organizer CreateOrganizer(LoginOrganizerModel model)
+    {
+      var provider = new RNGCryptoServiceProvider();
+      var saltBytes = new byte[16];
+
+      provider.GetBytes(saltBytes);
+
+      var salt = Convert.ToBase64String(saltBytes);
+
+      return new Organizer
+      {
+        Username = model.Username,
+        PasswordHash = GeneratePasswordHash(model.Password, salt),
+        SecuritySalt = salt
+      };
+    }
+
+    public LoginOrganizerResponseModel? Login(string password, Organizer organizer)
     {
       var passwordHash = GeneratePasswordHash(password, organizer.SecuritySalt);
       if (passwordHash != organizer.PasswordHash)
@@ -50,18 +66,19 @@ namespace WishMe.Service.Services
 
       var expirationUtc = DateTime.UtcNow.AddDays(1);
 
-      var model = new LoginResponseModel
+      var model = new LoginOrganizerResponseModel
       {
         ExpirationUtc = expirationUtc.ToUnixTimeSeconds(),
       };
 
-      var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(fConfiguration[AuthenticationConfig._JwtKey]));
+      var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(fAuthenticationConfig.JwtKey));
       var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
       var claims = new List<Claim>
       {
         new(_Sub, organizer.Id.ToString()),
         new(ClaimTypes.Name,organizer.Username),
+        new(ClaimTypes.Role, AuthorizationConstants.Roles._Organizer)
       };
 
       var token = new JwtSecurityToken(
@@ -74,16 +91,16 @@ namespace WishMe.Service.Services
       return model;
     }
 
-    public LoginResponseModel Login(AccessHolder holder)
+    public LoginParticipantResponseModel Login(AccessHolder holder)
     {
       var expirationUtc = DateTime.UtcNow.AddDays(1);
 
-      var model = new LoginResponseModel
+      var model = new LoginParticipantResponseModel
       {
         ExpirationUtc = expirationUtc.ToUnixTimeSeconds(),
       };
 
-      var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(fConfiguration[AuthenticationConfig._JwtKey]));
+      var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(fAuthenticationConfig.JwtKey));
       var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
 #warning TODO: tohle neni uplne optimalni, ale zatim v poho
@@ -93,6 +110,7 @@ namespace WishMe.Service.Services
       {
         new(_Sub, nextSubId.ToString()),
         new(_AccessCode, holder.Code),
+        new(ClaimTypes.Role, AuthorizationConstants.Roles._Participant)
       };
 
       var token = new JwtSecurityToken(
@@ -109,7 +127,7 @@ namespace WishMe.Service.Services
     {
       var user = await GetClaimsAsync(cancellationToken);
 
-      return user.IsInRole(UserRole.Organizer.ToString());
+      return user.IsInRole(AuthorizationConstants.Roles._Organizer);
     }
 
     public async Task<bool> CanAccessAsync(IAccessibleEntity entity, CancellationToken cancellationToken)
@@ -119,7 +137,9 @@ namespace WishMe.Service.Services
 
       var user = await GetClaimsAsync(cancellationToken);
 
-      var accessCode = user.Claims.First(claim => claim.Type == _AccessCode).Value;
+      var accessCode = user.Claims
+        .First(claim => claim.Type == _AccessCode)
+        .Value;
 
       return accessCode == entity.AccessHolder.Code;
     }

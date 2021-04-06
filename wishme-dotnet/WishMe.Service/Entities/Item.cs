@@ -4,13 +4,8 @@ using WishMe.Service.Attributes;
 namespace WishMe.Service.Entities
 {
   [Table("Items")]
-  public class Item: NamedEntityBase, IAccessibleEntity
+  public class Item: AccessibleEntityBase
   {
-    public int AccessHolderId { get; set; }
-
-    [ForeignKey(nameof(AccessHolderId))]
-    public AccessHolder AccessHolder { get; set; } = default!;
-
     [Indexed]
     public int WishlistId { get; set; }
 

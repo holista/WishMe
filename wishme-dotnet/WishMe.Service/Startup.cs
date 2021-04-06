@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using WishMe.Service.Configs;
 using WishMe.Service.Entities;
@@ -14,20 +13,13 @@ namespace WishMe.Service
 {
   public class Startup
   {
-    private readonly IConfiguration fConfiguration;
-
-    public Startup(IConfiguration configuration)
-    {
-      fConfiguration = configuration;
-    }
-
     public void ConfigureServices(IServiceCollection services)
     {
       services.AddDbContext<DataContext>(DbConfig.SetupDatabase);
 
       services
         .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-        .AddJwtBearer(options => AuthenticationConfig.SetupJwtBearer(options, fConfiguration));
+        .AddJwtBearer(AuthenticationConfig.SetupJwtBearer);
 
       services.AddAuthorization(AuthorizationConfig.SetupRoles);
 
