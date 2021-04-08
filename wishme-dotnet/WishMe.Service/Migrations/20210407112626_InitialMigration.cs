@@ -3,25 +3,10 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace WishMe.Service.Migrations
 {
-    public partial class InitMigration : Migration
+    public partial class InitialMigration : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.CreateTable(
-                name: "AccessHolders",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Code = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    CreatedUtc = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UpdatedUtc = table.Column<DateTime>(type: "datetime2", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_AccessHolders", x => x.Id);
-                });
-
             migrationBuilder.CreateTable(
                 name: "Organizers",
                 columns: table => new
@@ -47,21 +32,14 @@ namespace WishMe.Service.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     DateTimeUtc = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Image = table.Column<byte[]>(type: "varbinary(max)", nullable: true),
+                    AccessCode = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     OrganizerId = table.Column<int>(type: "int", nullable: false),
                     CreatedUtc = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UpdatedUtc = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    AccessHolderId = table.Column<int>(type: "int", nullable: false)
+                    UpdatedUtc = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Events", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Events_AccessHolders_AccessHolderId",
-                        column: x => x.AccessHolderId,
-                        principalTable: "AccessHolders",
-                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Events_Organizers_OrganizerId",
                         column: x => x.OrganizerId,
@@ -77,19 +55,11 @@ namespace WishMe.Service.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     EventId = table.Column<int>(type: "int", nullable: false),
                     CreatedUtc = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UpdatedUtc = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    AccessHolderId = table.Column<int>(type: "int", nullable: false)
+                    UpdatedUtc = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Wishlists", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Wishlists_AccessHolders_AccessHolderId",
-                        column: x => x.AccessHolderId,
-                        principalTable: "AccessHolders",
-                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Wishlists_Events_EventId",
                         column: x => x.EventId,
@@ -103,24 +73,22 @@ namespace WishMe.Service.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    EventId = table.Column<int>(type: "int", nullable: false),
                     WishlistId = table.Column<int>(type: "int", nullable: false),
                     Price = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     Url = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ImageUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Claimed = table.Column<bool>(type: "bit", nullable: false),
                     CreatedUtc = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UpdatedUtc = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    AccessHolderId = table.Column<int>(type: "int", nullable: false)
+                    UpdatedUtc = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Items", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Items_AccessHolders_AccessHolderId",
-                        column: x => x.AccessHolderId,
-                        principalTable: "AccessHolders",
+                        name: "FK_Items_Events_EventId",
+                        column: x => x.EventId,
+                        principalTable: "Events",
                         principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Items_Wishlists_WishlistId",
@@ -130,15 +98,9 @@ namespace WishMe.Service.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_AccessHolders_Code",
-                table: "AccessHolders",
-                column: "Code",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Events_AccessHolderId",
+                name: "IX_Events_AccessCode",
                 table: "Events",
-                column: "AccessHolderId",
+                column: "AccessCode",
                 unique: true);
 
             migrationBuilder.CreateIndex(
@@ -147,20 +109,15 @@ namespace WishMe.Service.Migrations
                 column: "OrganizerId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Items_AccessHolderId",
+                name: "IX_Items_EventId",
                 table: "Items",
-                column: "AccessHolderId");
+                column: "EventId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Items_WishlistId",
                 table: "Items",
                 column: "WishlistId",
                 unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Wishlists_AccessHolderId",
-                table: "Wishlists",
-                column: "AccessHolderId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Wishlists_EventId",
@@ -178,9 +135,6 @@ namespace WishMe.Service.Migrations
 
             migrationBuilder.DropTable(
                 name: "Events");
-
-            migrationBuilder.DropTable(
-                name: "AccessHolders");
 
             migrationBuilder.DropTable(
                 name: "Organizers");

@@ -7,13 +7,21 @@ using WishMe.Service.Exceptions;
 using WishMe.Service.Models.Events;
 using WishMe.Service.Repositories;
 using WishMe.Service.Requests.Events;
+using WishMe.Service.Services;
 
 namespace WishMe.Service.Handlers.Events
 {
   public class PostHandler: PostHandlerBase<PostRequest, Event, EventProfileModel>
   {
-    public PostHandler(IGenericRepository genericRepository)
-      : base(genericRepository) { }
+    private readonly IIdentityService fIdentityService;
+
+    public PostHandler(
+      IGenericRepository genericRepository,
+      IIdentityService identityService)
+      : base(genericRepository)
+    {
+      fIdentityService = identityService;
+    }
 
     protected override Task DoCheckModelAsync(PostRequest request, CancellationToken cancellationToken)
     {
@@ -26,16 +34,21 @@ namespace WishMe.Service.Handlers.Events
       return Task.CompletedTask;
     }
 
-    protected override async Task<int> DoFetchAccessHolderIdAsync(PostRequest request, CancellationToken cancellationToken)
+    protected override Task DoSetAdditionalPropertiesAsync(PostRequest request, Event entity, CancellationToken cancellationToken)
     {
+      if (!fIdentityService.TryGetOrganizerId(out int? organizerId))
+        throw new InvalidOperationException();
+
+      entity.OrganizerId = organizerId!.Value;
+
       var provider = new RNGCryptoServiceProvider();
-      var randomBytes = new byte[16];
+      var randomBytes = new byte[12];
 
       provider.GetBytes(randomBytes);
 
-      var holder = new AccessHolder { Code = Convert.ToBase64String(randomBytes) };
+      entity.AccessCode = Convert.ToBase64String(randomBytes);
 
-      return await fGenericRepository.CreateAsync(holder, cancellationToken);
+      return Task.CompletedTask;
     }
   }
 }

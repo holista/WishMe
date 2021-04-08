@@ -11,7 +11,7 @@ namespace WishMe.Service.Handlers
 {
   public abstract class PostHandlerBase<TRequest, TEntity, TModel>: IRequestHandler<TRequest, IdModel>
     where TRequest : PostRequestBase<TModel>
-    where TEntity : AccessibleEntityBase
+    where TEntity : EntityBase
   {
     protected readonly IGenericRepository fGenericRepository;
 
@@ -26,9 +26,7 @@ namespace WishMe.Service.Handlers
 
       var entity = request.Model!.Adapt<TEntity>();
 
-      entity.AccessHolderId = await DoFetchAccessHolderIdAsync(request, cancellationToken);
-
-      DoSetAdditionalProperties(request, entity);
+      await DoSetAdditionalPropertiesAsync(request, entity, cancellationToken);
 
       var id = await fGenericRepository.CreateAsync(entity, cancellationToken);
 
@@ -40,11 +38,9 @@ namespace WishMe.Service.Handlers
       return Task.CompletedTask;
     }
 
-    protected virtual void DoSetAdditionalProperties(TRequest request, TEntity entity)
+    protected virtual Task DoSetAdditionalPropertiesAsync(TRequest request, TEntity entity, CancellationToken cancellationToken)
     {
-
+      return Task.CompletedTask;
     }
-
-    protected abstract Task<int> DoFetchAccessHolderIdAsync(TRequest request, CancellationToken cancellationToken);
   }
 }

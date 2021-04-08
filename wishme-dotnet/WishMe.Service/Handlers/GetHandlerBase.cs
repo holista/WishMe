@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 using Mapster;
 using MediatR;
@@ -12,8 +13,12 @@ namespace WishMe.Service.Handlers
 {
   public abstract class GetHandlerBase<TRequest, TEntity, TModel>: IRequestHandler<TRequest, TModel>
     where TRequest : GetRequestBase<TModel>
-    where TEntity : AccessibleEntityBase
+    where TEntity : EntityBase
   {
+    protected abstract Func<TEntity, Event> EventSelector { get; }
+
+    protected abstract string Include { get; }
+
     private readonly IGenericRepository fGenericRepository;
     private readonly IIdentityService fIdentityService;
 
@@ -27,14 +32,23 @@ namespace WishMe.Service.Handlers
 
     public async Task<TModel> Handle(TRequest request, CancellationToken cancellationToken)
     {
-      var entity = await fGenericRepository.GetAccessibleAsync<TEntity>(request.Id, cancellationToken);
+      var entity = await fGenericRepository.GetAsync<TEntity>(request.Id, new[] { Include }, cancellationToken);
       if (entity is null)
         throw new NotFoundException($"Entity of type '{typeof(TEntity)}' with ID '{request.Id}' was not found.");
 
-      if (!await fIdentityService.CanAccessAsync(entity, cancellationToken))
+      if (!fIdentityService.CanAccess(EventSelector(entity)))
         throw new ForbiddenException($"Current user does not have permissions to view resource with ID '{request.Id}'.");
 
-      return entity.Adapt<TModel>();
+      var model = entity.Adapt<TModel>();
+
+      DoSetAdditionalProperties(entity, model);
+
+      return model;
+    }
+
+    protected virtual void DoSetAdditionalProperties(TEntity entity, TModel model)
+    {
+
     }
   }
 }

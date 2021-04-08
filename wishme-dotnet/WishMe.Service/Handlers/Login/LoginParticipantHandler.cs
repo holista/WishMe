@@ -25,13 +25,13 @@ namespace WishMe.Service.Handlers.Login
 
     public async Task<LoginResponseModel> Handle(LoginParticipantRequest request, CancellationToken cancellationToken)
     {
-      var holder = await fGenericRepository.GetAsync<AccessHolder>(row => row.Code == request.Model.AccessCode, cancellationToken);
-      if (holder is null)
+      var @event = await fGenericRepository.GetAsync<Event>(row => row.AccessCode == request.Model.AccessCode, cancellationToken);
+      if (@event is null)
         throw new NotFoundException($"Event with access code '{request.Model.AccessCode}' was not found.");
 
-      var model = fIdentityService.Login(holder);
+      var model = fIdentityService.Login(@event.AccessCode);
 
-      model.EventId = holder.Event.Id;
+      model.EventId = @event.Id;
 
       return model;
     }

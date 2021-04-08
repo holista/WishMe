@@ -6,7 +6,7 @@ services:
       context: ./wishme-dotnet/WishMe.Service
       dockerfile: Dockerfile
     environment:
-      WISH_ME_DB_CONNECTION_STRING: "Server=host.docker.internal;Database=Management-alpha;User Id=SA;Password=Pass@word1;"
+      WISH_ME_DB_CONNECTION_STRING: "Server=host.docker.internal;Database=WishMe-dev;User Id=SA;Password=Pass@word1;"
       WISH_ME_JWT_KEY: ":yFD8uJG}jq2^.~q"
     ports:
       - "8085:80"
@@ -25,8 +25,3 @@ services:
       ACCEPT_EULA: "Y"
     ports:
       - 1433:1433
-    volumes:
-      - mssqldata:/var/opt/mssql/data
-
-volumes:
-  mssqldata:

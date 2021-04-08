@@ -4,8 +4,13 @@ using WishMe.Service.Attributes;
 namespace WishMe.Service.Entities
 {
   [Table("Items")]
-  public class Item: AccessibleEntityBase
+  public class Item: EntityBase
   {
+    public int EventId { get; set; }
+
+    [ForeignKey(nameof(EventId))]
+    public Event Event { get; set; } = default!;
+
     [Indexed]
     public int WishlistId { get; set; }
 
