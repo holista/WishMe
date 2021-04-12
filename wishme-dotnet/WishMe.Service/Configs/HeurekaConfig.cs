@@ -1,0 +1,10 @@
+﻿using System;
+
+namespace WishMe.Service.Configs
+{
+  public class HeurekaConfig: IHeurekaConfig
+  {
+    public string GalleryThumbnailImageClassName { get; } = Environment.GetEnvironmentVariable(EnvVariables._HeurekaGalleryThumbnailImage)!;
+    public string RecommendedOfferClassName { get; } = Environment.GetEnvironmentVariable(EnvVariables._HeurekaRecommendedOffer)!;
+  }
+}
