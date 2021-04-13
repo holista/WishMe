@@ -4,17 +4,19 @@ using System.Threading;
 using System.Threading.Tasks;
 using AngleSharp;
 using AngleSharp.Html.Dom;
-using AngleSharp.Text;
+using Microsoft.Extensions.DependencyInjection;
+using WishMe.Service.Attributes;
 using WishMe.Service.Configs;
 using WishMe.Service.Models.ItemSuggestions.Heureka;
 
-namespace WishMe.Service.Services
+namespace WishMe.Service.Services.Heureka
 {
-  public class HeurekaService: IHeurekaService
+  [Lifetime(ServiceLifetime.Singleton)]
+  public class HeurekaScraperService: IHeurekaScraperService
   {
     private readonly IHeurekaConfig fHeurekaConfig;
 
-    public HeurekaService(IHeurekaConfig heurekaConfig)
+    public HeurekaScraperService(IHeurekaConfig heurekaConfig)
     {
       fHeurekaConfig = heurekaConfig;
     }
@@ -36,17 +38,11 @@ namespace WishMe.Service.Services
           .GetElementsByClassName(fHeurekaConfig.RecommendedOfferClassName)
           .First();
 
-        var priceNumbers = string
-          .Join("", price.TextContent
-            .Trim()
-            .TakeWhile(ch => !ch.IsLetter())
-            .Where(ch => ch.IsDigit()));
-
         return new DetailModel
         {
           Name = image.AlternativeText,
           ImageUrl = image.Source,
-          Price = decimal.Parse(priceNumbers)
+          Price = price.TextContent.GetPrice()
         };
       }
       catch (Exception e)

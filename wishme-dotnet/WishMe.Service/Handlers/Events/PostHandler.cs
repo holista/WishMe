@@ -8,6 +8,7 @@ using WishMe.Service.Models.Events;
 using WishMe.Service.Repositories;
 using WishMe.Service.Requests.Events;
 using WishMe.Service.Services;
+using WishMe.Service.Services.Identity;
 
 namespace WishMe.Service.Handlers.Events
 {

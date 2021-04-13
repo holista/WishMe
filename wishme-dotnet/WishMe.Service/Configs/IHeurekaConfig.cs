@@ -4,5 +4,6 @@
   {
     string GalleryThumbnailImageClassName { get; }
     string RecommendedOfferClassName { get; }
+    string SearchRequestUrl { get; }
   }
 }

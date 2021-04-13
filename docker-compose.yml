@@ -8,6 +8,7 @@ services:
     environment:
       WISH_ME_HEUREKA_GALLERY_THUMBNAIL_IMAGE: "c-gallery-open__thumbnail"
       WISH_ME_HEUREKA_RECOMMENDED_OFFER: "c-offer-v3__price u-bold u-delta"
+      WISH_ME_HEUREKA_SEARCH_REQUEST_URL: "https://api.heureka.cz/head-gateway/search?term={0}"
       WISH_ME_DB_CONNECTION_STRING: "Server=host.docker.internal;Database=WishMe-dev;User Id=SA;Password=Pass@word1;"
       WISH_ME_JWT_KEY: ":yFD8uJG}jq2^.~q"
     ports:

@@ -1,8 +1,10 @@
 ﻿namespace WishMe.Service.Models.ItemSuggestions.Heureka
 {
-  public class DetailModel
+  public class PreviewModel
   {
     public string Name { get; set; } = default!;
+
+    public string Url { get; set; } = default!;
 
     public string ImageUrl { get; set; } = default!;
 

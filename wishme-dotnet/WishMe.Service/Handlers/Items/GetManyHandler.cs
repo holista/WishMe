@@ -7,6 +7,7 @@ using WishMe.Service.Models.Items;
 using WishMe.Service.Repositories;
 using WishMe.Service.Requests.Items;
 using WishMe.Service.Services;
+using WishMe.Service.Services.Identity;
 
 namespace WishMe.Service.Handlers.Items
 {

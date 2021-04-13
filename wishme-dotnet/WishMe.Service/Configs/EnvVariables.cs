@@ -9,5 +9,6 @@
     public static string _JwtDebugMode = _EnvVariablePrefix + "JWT_DEBUG_MODE";
     public static string _HeurekaGalleryThumbnailImage = _EnvVariablePrefix + "HEUREKA_GALLERY_THUMBNAIL_IMAGE";
     public static string _HeurekaRecommendedOffer = _EnvVariablePrefix + "HEUREKA_RECOMMENDED_OFFER";
+    public static string _HeurekaSearchRequestURL = _EnvVariablePrefix + "HEUREKA_SEARCH_REQUEST_URL";
   }
 }

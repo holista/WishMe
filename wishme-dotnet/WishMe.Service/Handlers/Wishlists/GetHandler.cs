@@ -4,6 +4,7 @@ using WishMe.Service.Models.Wishlists;
 using WishMe.Service.Repositories;
 using WishMe.Service.Requests.Wishlists;
 using WishMe.Service.Services;
+using WishMe.Service.Services.Identity;
 
 namespace WishMe.Service.Handlers.Wishlists
 {

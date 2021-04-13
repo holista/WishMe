@@ -2,9 +2,9 @@
 using System.Threading.Tasks;
 using WishMe.Service.Models.ItemSuggestions.Heureka;
 
-namespace WishMe.Service.Services
+namespace WishMe.Service.Services.Heureka
 {
-  public interface IHeurekaService
+  public interface IHeurekaScraperService
   {
     Task<DetailModel?> GetDetailSuggestionAsync(string url, CancellationToken cancellationToken);
   }

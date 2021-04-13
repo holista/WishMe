@@ -8,6 +8,7 @@ using WishMe.Service.Exceptions;
 using WishMe.Service.Repositories;
 using WishMe.Service.Requests;
 using WishMe.Service.Services;
+using WishMe.Service.Services.Identity;
 
 namespace WishMe.Service.Handlers
 {

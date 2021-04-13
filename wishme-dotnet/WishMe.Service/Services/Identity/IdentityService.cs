@@ -16,7 +16,7 @@ using WishMe.Service.Entities;
 using WishMe.Service.Extensions;
 using WishMe.Service.Models.Login;
 
-namespace WishMe.Service.Services
+namespace WishMe.Service.Services.Identity
 {
   [Lifetime(ServiceLifetime.Singleton)]
   public class IdentityService: IIdentityService

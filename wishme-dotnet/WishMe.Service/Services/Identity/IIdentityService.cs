@@ -1,7 +1,7 @@
 ﻿using WishMe.Service.Entities;
 using WishMe.Service.Models.Login;
 
-namespace WishMe.Service.Services
+namespace WishMe.Service.Services.Identity
 {
   public interface IIdentityService
   {
