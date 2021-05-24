@@ -7,7 +7,7 @@ namespace WishMe.Service.Configs
   {
     public static string ConnectionString { get; } = Environment.GetEnvironmentVariable(EnvVariables._DbConnectionString)
          ?? "Server=host.docker.internal;Database=WishMe-dev;User Id=SA;Password=Pass@word1";
-    //#warning jen kvuli migraci, smazat pak
+#warning jen kvuli migraci, smazat pak
 
     public static void SetupDatabase(DbContextOptionsBuilder options)
     {
