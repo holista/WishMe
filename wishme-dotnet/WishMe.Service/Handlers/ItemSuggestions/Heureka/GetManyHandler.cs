@@ -5,7 +5,7 @@ using MediatR;
 using WishMe.Service.Exceptions;
 using WishMe.Service.Models.ItemSuggestions.Heureka;
 using WishMe.Service.Requests.ItemSuggestions.Heureka;
-using WishMe.Service.Services.Heureka;
+using WishMe.Service.Services.Heureka.Client;
 
 namespace WishMe.Service.Handlers.ItemSuggestions.Heureka
 {

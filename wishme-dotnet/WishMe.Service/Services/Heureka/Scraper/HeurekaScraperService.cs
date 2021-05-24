@@ -9,7 +9,7 @@ using WishMe.Service.Attributes;
 using WishMe.Service.Configs;
 using WishMe.Service.Models.ItemSuggestions.Heureka;
 
-namespace WishMe.Service.Services.Heureka
+namespace WishMe.Service.Services.Heureka.Scraper
 {
   [Lifetime(ServiceLifetime.Singleton)]
   public class HeurekaScraperService: IHeurekaScraperService

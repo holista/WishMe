@@ -13,7 +13,7 @@ using WishMe.Service.Configs;
 using WishMe.Service.Models.ItemSuggestions.Heureka;
 using WishMe.Service.Services.Heureka.Models;
 
-namespace WishMe.Service.Services.Heureka
+namespace WishMe.Service.Services.Heureka.Client
 {
   [Lifetime(ServiceLifetime.Singleton)]
   public class HeurekaClientService: IHeurekaClientService

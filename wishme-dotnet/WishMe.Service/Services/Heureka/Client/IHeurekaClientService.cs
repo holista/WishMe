@@ -3,7 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using WishMe.Service.Models.ItemSuggestions.Heureka;
 
-namespace WishMe.Service.Services.Heureka
+namespace WishMe.Service.Services.Heureka.Client
 {
   public interface IHeurekaClientService
   {
