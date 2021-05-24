@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace WishMe.Service.Entities
 {
   [Table("Wishlists")]
-  public class Wishlist: AccessibleEntityBase
+  public class Wishlist: EntityBase
   {
     public int EventId { get; set; }
 

@@ -13,20 +13,19 @@ namespace WishMe.Service.Handlers.Items
     public PostHandler(IGenericRepository genericRepository)
       : base(genericRepository) { }
 
-    protected override void DoSetAdditionalProperties(PostRequest request, Item entity)
+    protected override async Task DoCheckModelAsync(PostRequest request, CancellationToken cancellationToken)
     {
-      base.DoSetAdditionalProperties(request, entity);
-
-      entity.WishlistId = request.WishlistId;
+      if (!await fGenericRepository.ExistsAsync<Wishlist>(request.WishlistId, cancellationToken))
+        throw new NotFoundException($"Wishlist with ID '{request.WishlistId}' was not found.");
     }
 
-    protected override async Task<int> DoFetchAccessHolderIdAsync(PostRequest request, CancellationToken cancellationToken)
+    protected override async Task DoSetAdditionalPropertiesAsync(PostRequest request, Item entity, CancellationToken cancellationToken)
     {
-      var wishlist = await fGenericRepository.GetAsync<Wishlist>(request.WishlistId, cancellationToken);
-      if (wishlist is null)
-        throw new NotFoundException($"Wishlist with ID '{request.WishlistId}' was not found.");
+      entity.WishlistId = request.WishlistId;
 
-      return wishlist.AccessHolderId;
+      var wishlist = await fGenericRepository.GetAsync<Wishlist>(request.WishlistId, cancellationToken);
+
+      entity.EventId = wishlist!.EventId;
     }
   }
 }

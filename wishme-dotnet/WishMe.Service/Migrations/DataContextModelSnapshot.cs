@@ -19,31 +19,6 @@ namespace WishMe.Service.Migrations
                 .HasAnnotation("ProductVersion", "5.0.4")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("WishMe.Service.Entities.AccessHolder", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Code")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<DateTime>("CreatedUtc")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("UpdatedUtc")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("Code")
-                        .IsUnique();
-
-                    b.ToTable("AccessHolders");
-                });
-
             modelBuilder.Entity("WishMe.Service.Entities.Event", b =>
                 {
                     b.Property<int>("Id")
@@ -51,8 +26,9 @@ namespace WishMe.Service.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("AccessHolderId")
-                        .HasColumnType("int");
+                    b.Property<string>("AccessCode")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime>("CreatedUtc")
                         .HasColumnType("datetime2");
@@ -60,15 +36,8 @@ namespace WishMe.Service.Migrations
                     b.Property<DateTime>("DateTimeUtc")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<byte[]>("Image")
                         .HasColumnType("varbinary(max)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("OrganizerId")
                         .HasColumnType("int");
@@ -78,7 +47,7 @@ namespace WishMe.Service.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AccessHolderId")
+                    b.HasIndex("AccessCode")
                         .IsUnique();
 
                     b.HasIndex("OrganizerId");
@@ -93,23 +62,16 @@ namespace WishMe.Service.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("AccessHolderId")
-                        .HasColumnType("int");
-
                     b.Property<bool>("Claimed")
                         .HasColumnType("bit");
 
                     b.Property<DateTime>("CreatedUtc")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("EventId")
+                        .HasColumnType("int");
 
                     b.Property<string>("ImageUrl")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("Price")
@@ -126,7 +88,7 @@ namespace WishMe.Service.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AccessHolderId");
+                    b.HasIndex("EventId");
 
                     b.HasIndex("WishlistId")
                         .IsUnique();
@@ -171,28 +133,16 @@ namespace WishMe.Service.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("AccessHolderId")
-                        .HasColumnType("int");
-
                     b.Property<DateTime>("CreatedUtc")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<int>("EventId")
                         .HasColumnType("int");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("UpdatedUtc")
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("AccessHolderId");
 
                     b.HasIndex("EventId");
 
@@ -201,28 +151,20 @@ namespace WishMe.Service.Migrations
 
             modelBuilder.Entity("WishMe.Service.Entities.Event", b =>
                 {
-                    b.HasOne("WishMe.Service.Entities.AccessHolder", "AccessHolder")
-                        .WithOne("Event")
-                        .HasForeignKey("WishMe.Service.Entities.Event", "AccessHolderId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
                     b.HasOne("WishMe.Service.Entities.Organizer", "Organizer")
                         .WithMany("Events")
                         .HasForeignKey("OrganizerId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
-                    b.Navigation("AccessHolder");
-
                     b.Navigation("Organizer");
                 });
 
             modelBuilder.Entity("WishMe.Service.Entities.Item", b =>
                 {
-                    b.HasOne("WishMe.Service.Entities.AccessHolder", "AccessHolder")
-                        .WithMany("Items")
-                        .HasForeignKey("AccessHolderId")
+                    b.HasOne("WishMe.Service.Entities.Event", "Event")
+                        .WithMany()
+                        .HasForeignKey("EventId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
@@ -232,38 +174,20 @@ namespace WishMe.Service.Migrations
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
-                    b.Navigation("AccessHolder");
+                    b.Navigation("Event");
 
                     b.Navigation("Wishlist");
                 });
 
             modelBuilder.Entity("WishMe.Service.Entities.Wishlist", b =>
                 {
-                    b.HasOne("WishMe.Service.Entities.AccessHolder", "AccessHolder")
-                        .WithMany("Wishlists")
-                        .HasForeignKey("AccessHolderId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
                     b.HasOne("WishMe.Service.Entities.Event", "Event")
                         .WithMany("Wishlists")
                         .HasForeignKey("EventId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
-                    b.Navigation("AccessHolder");
-
                     b.Navigation("Event");
-                });
-
-            modelBuilder.Entity("WishMe.Service.Entities.AccessHolder", b =>
-                {
-                    b.Navigation("Event")
-                        .IsRequired();
-
-                    b.Navigation("Items");
-
-                    b.Navigation("Wishlists");
                 });
 
             modelBuilder.Entity("WishMe.Service.Entities.Event", b =>

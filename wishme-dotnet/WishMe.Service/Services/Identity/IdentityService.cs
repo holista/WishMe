@@ -6,7 +6,6 @@ using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.DependencyInjection;
@@ -17,13 +16,12 @@ using WishMe.Service.Entities;
 using WishMe.Service.Extensions;
 using WishMe.Service.Models.Login;
 
-namespace WishMe.Service.Services
+namespace WishMe.Service.Services.Identity
 {
   [Lifetime(ServiceLifetime.Singleton)]
   public class IdentityService: IIdentityService
   {
     private const string _AccessCode = "accessCode";
-    private const string _Sub = "sub";
 
     private static int fAccessCodeSubId = 1;
 
@@ -39,6 +37,19 @@ namespace WishMe.Service.Services
       fHttpContextAccessor = httpContextAccessor;
       fAuthenticationConfig = authenticationConfig;
       fMemoryCache = memoryCache;
+    }
+
+    public bool TryGetOrganizerId(out int? organizerId)
+    {
+      var claims = GetClaims();
+      if (!claims.IsInRole(AuthorizationConstants.Roles._Organizer))
+      {
+        organizerId = null;
+        return false;
+      }
+
+      organizerId = int.Parse(GetSubjectId());
+      return true;
     }
 
     public Organizer CreateOrganizer(LoginOrganizerModel model)
@@ -76,8 +87,7 @@ namespace WishMe.Service.Services
 
       var claims = new List<Claim>
       {
-        new(_Sub, organizer.Id.ToString()),
-        new(ClaimTypes.Name,organizer.Username),
+        new(ClaimTypes.Name,organizer.Id.ToString()),
         new(ClaimTypes.Role, AuthorizationConstants.Roles._Organizer)
       };
 
@@ -91,7 +101,7 @@ namespace WishMe.Service.Services
       return model;
     }
 
-    public LoginParticipantResponseModel Login(AccessHolder holder)
+    public LoginParticipantResponseModel Login(string accessCode)
     {
       var expirationUtc = DateTime.UtcNow.AddDays(1);
 
@@ -108,8 +118,8 @@ namespace WishMe.Service.Services
 
       var claims = new List<Claim>
       {
-        new(_Sub, nextSubId.ToString()),
-        new(_AccessCode, holder.Code),
+        new(_AccessCode, accessCode),
+        new(ClaimTypes.Name, nextSubId.ToString()),
         new(ClaimTypes.Role, AuthorizationConstants.Roles._Participant)
       };
 
@@ -123,32 +133,32 @@ namespace WishMe.Service.Services
       return model;
     }
 
-    public async Task<bool> IsOrganizerAsync(CancellationToken cancellationToken)
+    public bool CanAccess(Event @event)
     {
-      var user = await GetClaimsAsync(cancellationToken);
+      if (IsOrganizer())
+        return true;
+
+      var user = GetClaims();
+
+      var accessCode = user.Claims
+        .Single(claim => claim.Type == _AccessCode)
+        .Value;
+
+      return accessCode == @event.AccessCode;
+    }
+
+    private bool IsOrganizer()
+    {
+      var user = GetClaims();
 
       return user.IsInRole(AuthorizationConstants.Roles._Organizer);
     }
 
-    public async Task<bool> CanAccessAsync(IAccessibleEntity entity, CancellationToken cancellationToken)
-    {
-      if (await IsOrganizerAsync(cancellationToken))
-        return true;
-
-      var user = await GetClaimsAsync(cancellationToken);
-
-      var accessCode = user.Claims
-        .First(claim => claim.Type == _AccessCode)
-        .Value;
-
-      return accessCode == entity.AccessHolder.Code;
-    }
-
-    private async Task<ClaimsPrincipal> GetClaimsAsync(CancellationToken cancellationToken)
+    private ClaimsPrincipal GetClaims()
     {
       var subjectId = GetSubjectId();
 
-      return await fMemoryCache.GetOrCreateAsync(subjectId, FetchIdentityAsync);
+      return fMemoryCache.GetOrCreate(subjectId, FetchIdentity);
     }
 
     private string GetSubjectId()
@@ -156,22 +166,19 @@ namespace WishMe.Service.Services
       if (!(fHttpContextAccessor.HttpContext is { User: { Identity: { IsAuthenticated: true } } }))
         throw new InvalidOperationException("Žádná identita.");
 
-      return fHttpContextAccessor.HttpContext.User.Claims
-        .Where(x => x.Type == _Sub)
-        .Select(x => x.Value)
-        .Single();
+      return fHttpContextAccessor.HttpContext.User.Identity!.Name!;
     }
 
-    private async Task<ClaimsPrincipal> FetchIdentityAsync(ICacheEntry entry)
+    private ClaimsPrincipal FetchIdentity(ICacheEntry entry)
     {
       var user = fHttpContextAccessor.HttpContext!.User;
 
       entry.SlidingExpiration = TimeSpan.FromHours(1);
 
-      return await Task.FromResult(user);
+      return user;
     }
 
-    private string GeneratePasswordHash(string password, string securitySalt)
+    private static string GeneratePasswordHash(string password, string securitySalt)
     {
       byte[] passwordBytes = Encoding.UTF8.GetBytes(password);
       byte[] saltBytes = Convert.FromBase64String(securitySalt);

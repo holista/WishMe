@@ -23,6 +23,33 @@ namespace WishMe.Service.Controllers
     }
 
     /// <summary>
+    /// Vrátí seznam událostí daného organizátora.
+    /// </summary>
+    /// <param name="organizerId">ID organizátora</param>
+    /// <param name="offset">počet událostí, které se mají přeskočit</param>
+    /// <param name="limit">počet událostí, které se mají vrátit</param>
+    /// <param name="cancellationToken"></param>
+    /// <returns>seznam událostí</returns>
+    [HttpGet]
+    [Authorize(Policy = AuthorizationConstants.Policies._Organizer)]
+    [ProducesResponseType(typeof(ListModel<EventPreviewModel>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> GetManyAsync([FromQuery] int offset, [FromQuery] int limit, [FromQuery] int organizerId, CancellationToken cancellationToken)
+    {
+      return Ok(await fMediator.Send(new GetManyRequest
+      {
+        OrganizerId = organizerId,
+        Model = new QueryModel
+        {
+          Offset = offset,
+          Limit = limit
+        }
+      }, cancellationToken));
+    }
+
+    /// <summary>
     /// Vytvoří novou událost.
     /// </summary>
     /// <param name="model">model nové události</param>

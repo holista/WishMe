@@ -1,6 +1,5 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
-using Mapster;
 using MediatR;
 using WishMe.Service.Entities;
 using WishMe.Service.Exceptions;
@@ -24,9 +23,7 @@ namespace WishMe.Service.Handlers
     {
       DoCheckModel(request.Model);
 
-      var updated = request.Model!.Adapt<TEntity>();
-
-      if (!await fGenericRepository.UpdateAsync(request.Id, updated, cancellationToken))
+      if (!await fGenericRepository.UpdateAsync<TEntity>(request.Id, request.Model!, cancellationToken))
         throw new NotFoundException($"Entity of type '{typeof(TEntity)}' with ID '{request.Id}' was not found.");
 
       return Unit.Value;

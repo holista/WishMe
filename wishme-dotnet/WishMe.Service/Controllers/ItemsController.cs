@@ -4,12 +4,13 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using WishMe.Service.Models;
 using WishMe.Service.Models.Items;
 using WishMe.Service.Requests.Items;
 
 namespace WishMe.Service.Controllers
 {
-  [Route("api/v1/items")]
+  [Route("api/v1/items", Name = "Položky")]
   [ApiController]
   public class ItemsController: ControllerBase
   {
@@ -18,6 +19,33 @@ namespace WishMe.Service.Controllers
     public ItemsController(IMediator mediator)
     {
       fMediator = mediator;
+    }
+
+    /// <summary>
+    /// Vrátí seznam položek daného seznamu.
+    /// </summary>
+    /// <param name="wishlistId">ID seznamu přání</param>
+    /// <param name="offset">počet položek, které se mají přeskočit</param>
+    /// <param name="limit">počet položek, které se mají vrátit</param>
+    /// <param name="cancellationToken"></param>
+    /// <returns>seznam položek</returns>
+    [HttpGet]
+    [Authorize(Policy = AuthorizationConstants.Policies._Participant)]
+    [ProducesResponseType(typeof(ListModel<ItemPreviewModel>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> GetManyAsync([FromQuery] int offset, [FromQuery] int limit, [FromQuery] int wishlistId, CancellationToken cancellationToken)
+    {
+      return Ok(await fMediator.Send(new GetManyRequest
+      {
+        WishlistId = wishlistId,
+        Model = new QueryModel
+        {
+          Offset = offset,
+          Limit = limit
+        }
+      }, cancellationToken));
     }
 
     /// <summary>

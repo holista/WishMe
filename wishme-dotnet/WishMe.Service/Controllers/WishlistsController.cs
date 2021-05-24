@@ -11,7 +11,7 @@ using WishMe.Service.Requests.Wishlists;
 
 namespace WishMe.Service.Controllers
 {
-  [Route("api/v1/wishlists")]
+  [Route("api/v1/wishlists", Name = "Seznamy přání")]
   [ApiController]
   public class WishlistsController: ControllerBase
   {
@@ -20,6 +20,33 @@ namespace WishMe.Service.Controllers
     public WishlistsController(IMediator mediator)
     {
       fMediator = mediator;
+    }
+
+    /// <summary>
+    /// Vrátí seznam seznamů přání dané události.
+    /// </summary>
+    /// <param name="eventId">ID události</param>
+    /// <param name="offset">počet seznamů přání, které se mají přeskočit</param>
+    /// <param name="limit">počet seznamů přání, které se mají vrátit</param>
+    /// <param name="cancellationToken"></param>
+    /// <returns>seznam seznamů přání</returns>
+    [HttpGet]
+    [Authorize(Policy = AuthorizationConstants.Policies._Participant)]
+    [ProducesResponseType(typeof(ListModel<WishlistPreviewModel>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> GetManyAsync([FromQuery] int offset, [FromQuery] int limit, [FromQuery] int eventId, CancellationToken cancellationToken)
+    {
+      return Ok(await fMediator.Send(new GetManyRequest
+      {
+        EventId = eventId,
+        Model = new QueryModel
+        {
+          Offset = offset,
+          Limit = limit
+        }
+      }, cancellationToken));
     }
 
     /// <summary>

@@ -15,26 +15,15 @@ namespace WishMe.Service.Handlers.Wishlists
 
     protected override async Task DoCheckModelAsync(PostRequest request, CancellationToken cancellationToken)
     {
-      await base.DoCheckModelAsync(request, cancellationToken);
-
       if (!await fGenericRepository.ExistsAsync<Event>(request.EventId, cancellationToken))
         throw new NotFoundException($"Event with ID '{request.EventId}' was not found.");
     }
 
-    protected override void DoSetAdditionalProperties(PostRequest request, Wishlist entity)
+    protected override Task DoSetAdditionalPropertiesAsync(PostRequest request, Wishlist entity, CancellationToken cancellationToken)
     {
-      base.DoSetAdditionalProperties(request, entity);
-
       entity.EventId = request.EventId;
-    }
 
-    protected override async Task<int> DoFetchAccessHolderIdAsync(PostRequest request, CancellationToken cancellationToken)
-    {
-      var @event = await fGenericRepository.GetAsync<Event>(request.EventId, cancellationToken);
-      if (@event is null)
-        throw new NotFoundException($"Event with ID '{request.EventId}' was not found.");
-
-      return @event.AccessHolderId;
+      return Task.CompletedTask;
     }
   }
 }

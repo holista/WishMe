@@ -7,5 +7,7 @@ namespace WishMe.Service.Models.Events
     public string? Description { get; set; }
 
     public DateTime UpdatedUtc { get; set; }
+
+    public string AccessCode { get; set; } = default!;
   }
 }

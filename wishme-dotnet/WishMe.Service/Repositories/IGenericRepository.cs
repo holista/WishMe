@@ -21,17 +21,9 @@ namespace WishMe.Service.Repositories
       where TEntity : EntityBase;
     Task<TEntity?> GetAsync<TEntity>(Expression<Func<TEntity, bool>> filter, string[] includes, CancellationToken cancellationToken)
       where TEntity : EntityBase;
-    Task<TAccessibleEntity?> GetAccessibleAsync<TAccessibleEntity>(int id, CancellationToken cancellationToken)
-      where TAccessibleEntity : AccessibleEntityBase;
-    Task<TAccessibleEntity?> GetAccessibleAsync<TAccessibleEntity>(Expression<Func<TAccessibleEntity, bool>> filter, CancellationToken cancellationToken)
-      where TAccessibleEntity : AccessibleEntityBase;
-    Task<TAccessibleEntity?> GetAccessibleAsync<TAccessibleEntity>(int id, string[] includes, CancellationToken cancellationToken)
-      where TAccessibleEntity : AccessibleEntityBase;
-    Task<TAccessibleEntity?> GetAccessibleAsync<TAccessibleEntity>(Expression<Func<TAccessibleEntity, bool>> filter, string[] includes, CancellationToken cancellationToken)
-      where TAccessibleEntity : AccessibleEntityBase;
     Task<bool> DeleteAsync<TEntity>(int id, CancellationToken cancellationToken)
       where TEntity : EntityBase;
-    Task<bool> UpdateAsync<TEntity>(int id, TEntity updated, CancellationToken cancellationToken)
+    Task<bool> UpdateAsync<TEntity>(int id, object updated, CancellationToken cancellationToken)
       where TEntity : EntityBase;
     Task<bool> ExistsAsync<TEntity>(int id, CancellationToken cancellationToken)
       where TEntity : EntityBase;
