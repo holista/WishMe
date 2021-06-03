@@ -1,55 +1,47 @@
 import { useState } from "react";
 import { FaChevronRight, FaChevronLeft } from "react-icons/fa/index";
+import Event from "../event/Event";
+import NewEvent from "../event/NewEvent";
 
 import classes from "./MainCarousel.module.css";
 
 const MainCarousel = (props) => {
-  const ImageData = [
-    {
-      image:
-        "https://images.unsplash.com/photo-1546190255-451a91afc548?ixlib=rb-1.2.1",
-    },
-    {
-      image:
-        "https://images.unsplash.com/photo-1591348122449-02525d70379b?ixlib=rb-1.2.1",
-    },
-    {
-      image:
-        "https://images.unsplash.com/photo-1548802673-380ab8ebc7b7?ixlib=rb-1.2.1",
-    },
-    {
-      image:
-        "https://images.unsplash.com/photo-1577023311546-cdc07a8454d9?ixlib=rb-1.2.1",
-    },
+  const DUMMY_DATA = [
+    { title: "1" },
+    { title: "2" },
+    { title: "3" },
+    { title: "4" },
   ];
 
-  const slides = ImageData;
-
   const [curSlide, setCurSlide] = useState(0);
-  const length = slides.length;
+  const slidesLength = DUMMY_DATA.length;
 
   const nextSlideHandler = () => {
-    setCurSlide(curSlide === length - 1 ? 0 : curSlide + 1);
+    setCurSlide(curSlide === slidesLength ? -1 : curSlide + 1);
   };
 
   const prevSlideHandler = () => {
-    setCurSlide(curSlide === 0 ? length - 1 : curSlide - 1);
+    setCurSlide(curSlide === -1 ? slidesLength - 1 : curSlide - 1);
   };
 
-  const mappedSlides = slides.map((slide, index) => {
-    return (
-      <div key={index}>
-        {index === curSlide && (
-          <img className={classes.slide} src={slide.image} alt="" />
-        )}
-      </div>
-    );
-  });
+  const getSlide = (data, index) => {
+    if (data[index] !== undefined) {
+      return <Event title={data[index].title} />;
+    } else {
+      return <NewEvent />;
+    }
+  };
+
+  const slides = [];
+
+  slides.push(getSlide(DUMMY_DATA, curSlide - 1));
+  slides.push(getSlide(DUMMY_DATA, curSlide));
+  slides.push(getSlide(DUMMY_DATA, curSlide + 1));
 
   return (
     <div className={classes.slider}>
       <FaChevronLeft className={classes.leftArrow} onClick={prevSlideHandler} />
-      {mappedSlides}
+      {slides}
       <FaChevronRight
         className={classes.rightArrow}
         onClick={nextSlideHandler}

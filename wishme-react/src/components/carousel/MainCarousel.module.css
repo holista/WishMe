@@ -1,5 +1,6 @@
 .slider {
   position: relative;
+  top: 10%;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -18,9 +19,17 @@
   font-size: 2rem;
 }
 
+.leftArrow :hover {
+  cursor: pointer;
+}
+
 .rightArrow {
   position: absolute;
   top: 50%;
   right: 20px;
   font-size: 2rem;
+}
+
+.rightArrow :hover {
+  cursor: pointer;
 }
