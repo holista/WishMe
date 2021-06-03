@@ -1,4 +1,9 @@
 .main {
-  margin: 3rem auto;
-  width: 90%;
+  width: 100vw;
+  height: 100vw;
+  background-image: linear-gradient(
+      rgba(255, 255, 255, 0.9),
+      rgba(0, 0, 255, 0.6)
+    ),
+    url("../../assets/background.jpg");
 }

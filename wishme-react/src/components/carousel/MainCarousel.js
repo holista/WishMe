@@ -1,49 +1,60 @@
-import Carousel from "react-multi-carousel";
-import "react-multi-carousel/lib/styles.css";
+import { useState } from "react";
+import { FaChevronRight, FaChevronLeft } from "react-icons/fa/index";
+
+import classes from "./MainCarousel.module.css";
 
 const MainCarousel = (props) => {
-  const responsive = {
-    desktop: {
-      breakpoint: { max: 3000, min: 1024 },
-      items: 3,
-      slidesToSlide: 3, // optional, default to 1.
+  const ImageData = [
+    {
+      image:
+        "https://images.unsplash.com/photo-1546190255-451a91afc548?ixlib=rb-1.2.1",
     },
-    tablet: {
-      breakpoint: { max: 1024, min: 464 },
-      items: 2,
-      slidesToSlide: 2, // optional, default to 1.
+    {
+      image:
+        "https://images.unsplash.com/photo-1591348122449-02525d70379b?ixlib=rb-1.2.1",
     },
-    mobile: {
-      breakpoint: { max: 464, min: 0 },
-      items: 1,
-      slidesToSlide: 1, // optional, default to 1.
+    {
+      image:
+        "https://images.unsplash.com/photo-1548802673-380ab8ebc7b7?ixlib=rb-1.2.1",
     },
+    {
+      image:
+        "https://images.unsplash.com/photo-1577023311546-cdc07a8454d9?ixlib=rb-1.2.1",
+    },
+  ];
+
+  const slides = ImageData;
+
+  const [curSlide, setCurSlide] = useState(0);
+  const length = slides.length;
+
+  const nextSlideHandler = () => {
+    setCurSlide(curSlide === length - 1 ? 0 : curSlide + 1);
   };
 
+  const prevSlideHandler = () => {
+    setCurSlide(curSlide === 0 ? length - 1 : curSlide - 1);
+  };
+
+  const mappedSlides = slides.map((slide, index) => {
+    return (
+      <div key={index}>
+        {index === curSlide && (
+          <img className={classes.slide} src={slide.image} alt="" />
+        )}
+      </div>
+    );
+  });
+
   return (
-    <Carousel
-      swipeable={false}
-      draggable={false}
-      showDots={true}
-      responsive={responsive}
-      ssr={true} // means to render carousel on server-side.
-      infinite={true}
-      //autoPlay={this.props.deviceType !== "mobile" ? true : false}
-      autoPlaySpeed={1000}
-      keyBoardControl={true}
-      customTransition="all .5"
-      transitionDuration={500}
-      containerClass="carousel-container"
-      removeArrowOnDeviceType={["tablet", "mobile"]}
-      //deviceType={this.props.deviceType}
-      dotListClass="custom-dot-list-style"
-      itemClass="carousel-item-padding-40-px"
-    >
-      {props.eItem}
-      {props.eItem}
-      {props.eItem}
-      {props.eItem}
-    </Carousel>
+    <div className={classes.slider}>
+      <FaChevronLeft className={classes.leftArrow} onClick={prevSlideHandler} />
+      {mappedSlides}
+      <FaChevronRight
+        className={classes.rightArrow}
+        onClick={nextSlideHandler}
+      />
+    </div>
   );
 };
 
