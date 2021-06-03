@@ -1,49 +1,52 @@
-import Carousel from "react-multi-carousel";
-import "react-multi-carousel/lib/styles.css";
+import { useState } from "react";
+import { FaChevronRight, FaChevronLeft } from "react-icons/fa/index";
+import Event from "../event/Event";
+import NewEvent from "../event/NewEvent";
+
+import classes from "./MainCarousel.module.css";
 
 const MainCarousel = (props) => {
-  const responsive = {
-    desktop: {
-      breakpoint: { max: 3000, min: 1024 },
-      items: 3,
-      slidesToSlide: 3, // optional, default to 1.
-    },
-    tablet: {
-      breakpoint: { max: 1024, min: 464 },
-      items: 2,
-      slidesToSlide: 2, // optional, default to 1.
-    },
-    mobile: {
-      breakpoint: { max: 464, min: 0 },
-      items: 1,
-      slidesToSlide: 1, // optional, default to 1.
-    },
+  const DUMMY_DATA = [
+    { title: "1" },
+    { title: "2" },
+    { title: "3" },
+    { title: "4" },
+  ];
+
+  const [curSlide, setCurSlide] = useState(0);
+  const slidesLength = DUMMY_DATA.length;
+
+  const nextSlideHandler = () => {
+    setCurSlide(curSlide === slidesLength ? -1 : curSlide + 1);
   };
 
+  const prevSlideHandler = () => {
+    setCurSlide(curSlide === -1 ? slidesLength - 1 : curSlide - 1);
+  };
+
+  const getSlide = (data, index) => {
+    if (data[index] !== undefined) {
+      return <Event title={data[index].title} />;
+    } else {
+      return <NewEvent />;
+    }
+  };
+
+  const slides = [];
+
+  slides.push(getSlide(DUMMY_DATA, curSlide - 1));
+  slides.push(getSlide(DUMMY_DATA, curSlide));
+  slides.push(getSlide(DUMMY_DATA, curSlide + 1));
+
   return (
-    <Carousel
-      swipeable={false}
-      draggable={false}
-      showDots={true}
-      responsive={responsive}
-      ssr={true} // means to render carousel on server-side.
-      infinite={true}
-      //autoPlay={this.props.deviceType !== "mobile" ? true : false}
-      autoPlaySpeed={1000}
-      keyBoardControl={true}
-      customTransition="all .5"
-      transitionDuration={500}
-      containerClass="carousel-container"
-      removeArrowOnDeviceType={["tablet", "mobile"]}
-      //deviceType={this.props.deviceType}
-      dotListClass="custom-dot-list-style"
-      itemClass="carousel-item-padding-40-px"
-    >
-      {props.eItem}
-      {props.eItem}
-      {props.eItem}
-      {props.eItem}
-    </Carousel>
+    <div className={classes.slider}>
+      <FaChevronLeft className={classes.leftArrow} onClick={prevSlideHandler} />
+      {slides}
+      <FaChevronRight
+        className={classes.rightArrow}
+        onClick={nextSlideHandler}
+      />
+    </div>
   );
 };
 
