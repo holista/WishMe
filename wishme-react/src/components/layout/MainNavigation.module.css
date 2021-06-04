@@ -1,0 +1,33 @@
+.header {
+  height: 4rem;
+  display: flex;
+  padding: 0 5%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: rgb(255, 255, 255);
+}
+
+.logo {
+  font-size: 1.25rem;
+}
+
+.nav ul {
+  list-style: none;
+  display: flex;
+}
+
+.nav li {
+  margin-left: 1.5rem;
+  font-size: 1.25rem;
+  text-decoration: none;
+}
+
+.nav li :hover {
+  cursor: pointer;
+}
+
+.nav li :active,
+.nav li .active {
+  text-decoration: underline;
+}

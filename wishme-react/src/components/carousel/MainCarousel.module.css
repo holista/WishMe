@@ -6,12 +6,6 @@
   align-items: center;
 }
 
-.slide {
-  width: 400px;
-  height: 300px;
-  object-fit: cover;
-}
-
 .leftArrow {
   position: absolute;
   top: 50%;
