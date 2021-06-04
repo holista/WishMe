@@ -1,6 +1,6 @@
-.event {
-  width: 350px;
-  height: 250px;
+.newEventItem {
+  width: 300px;
+  height: 200px;
   background-color: aliceblue;
   object-fit: cover;
   border-radius: 6px;
@@ -12,4 +12,11 @@
 
 .title {
   color: rgb(14, 14, 155);
+}
+
+.plus {
+  padding: 3%;
+
+  font-weight: bold;
+  color: blue;
 }

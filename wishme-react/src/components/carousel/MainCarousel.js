@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { FaChevronRight, FaChevronLeft } from "react-icons/fa/index";
-import Event from "../event/Event";
-import NewEvent from "../event/NewEvent";
 
+import EventItem from "../event/EventItem";
+import NewEventItem from "../event/NewEventItem";
 import classes from "./MainCarousel.module.css";
 
 const MainCarousel = (props) => {
@@ -26,9 +26,9 @@ const MainCarousel = (props) => {
 
   const getSlide = (data, index) => {
     if (data[index] !== undefined) {
-      return <Event title={data[index].title} />;
+      return <EventItem title={data[index].title} />;
     } else {
-      return <NewEvent />;
+      return <NewEventItem />;
     }
   };
 
