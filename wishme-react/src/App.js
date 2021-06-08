@@ -3,7 +3,6 @@ import { Switch, Route, Redirect } from "react-router-dom";
 import Layout from "./components/layout/Layout";
 import WelcomePage from "./pages/WelcomePage";
 import MainPage from "./pages/MainPage";
-import NewEvent from "./components/event/NewEvent";
 
 function App() {
   return (
@@ -17,9 +16,6 @@ function App() {
         </Route>
         <Route path="/mainpage">
           <MainPage />
-        </Route>
-        <Route path="/new-event">
-          <NewEvent />
         </Route>
       </Switch>
     </Layout>

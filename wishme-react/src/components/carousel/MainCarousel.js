@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useHistory } from "react-router-dom";
 import { FaChevronRight, FaChevronLeft } from "react-icons/fa/index";
 
 import EventItem from "../event/EventItem";
@@ -28,7 +29,7 @@ const MainCarousel = (props) => {
     if (data[index] !== undefined) {
       return <EventItem title={data[index].title} />;
     } else {
-      return <NewEventItem />;
+      return <NewEventItem onClick={props.onOpenNewEvent} />;
     }
   };
 
