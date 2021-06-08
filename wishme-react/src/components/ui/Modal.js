@@ -1,24 +1,26 @@
-import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { uiActions } from "../../store/ui-slice";
 
 import classes from "./Modal.module.css";
 
 const Modal = (props) => {
-  const [openModal, setOpenModal] = useState(true);
+  const modalIsOpen = useSelector((state) => state.ui.modalIsOpen);
+  const dispatch = useDispatch();
 
-  if (openModal) {
+  if (modalIsOpen) {
     document.body.style.overflow = "hidden";
   }
 
   const closeModalHandler = () => {
-    setOpenModal(false);
+    dispatch(uiActions.closeModal());
   };
 
   return (
     <>
-      {openModal && (
+      {modalIsOpen && (
         <div className={classes.backdrop} onClick={closeModalHandler}></div>
       )}
-      {openModal && (
+      {modalIsOpen && (
         <div className={classes.modal}>
           <div className={classes.modalHeader}>
             <h1>{props.header}</h1>
