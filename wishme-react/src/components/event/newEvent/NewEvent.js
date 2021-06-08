@@ -1,6 +1,6 @@
 import classes from "./NewEvent.module.css";
 import Modal from "../../ui/Modal";
-import { useState } from "react";
+//import { useState } from "react";
 
 const NewEvent = (props) => {
   return (

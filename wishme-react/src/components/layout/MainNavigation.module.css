@@ -26,8 +26,3 @@
 .nav li :hover {
   cursor: pointer;
 }
-
-.nav li :active,
-.nav li .active {
-  text-decoration: underline;
-}

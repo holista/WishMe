@@ -9,24 +9,15 @@ const MainNavigation = (props) => {
       <nav className={classes.nav}>
         <ul>
           <li>
-            <NavLink to="">Vytvorit udalost</NavLink>
+            <NavLink to="/mainpage/new-event">Vytvořit událost</NavLink>
           </li>
           <li>
-            <NavLink to="/">Odhlasit</NavLink>
+            <NavLink to="/">Odhlásit</NavLink>
           </li>
         </ul>
       </nav>
     </header>
   );
 };
-
-/*
-<li>
-            <NavLink>Vytvorit udalost</NavLink>
-          </li>
-          <li>
-            <NavLink to="/welcome">Odhlasit</NavLink>
-          </li>
-          */
 
 export default MainNavigation;

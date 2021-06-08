@@ -1,8 +1,13 @@
 .slider {
   position: relative;
-  top: 10%;
+  top: 20vh;
+  width: 100%;
   display: flex;
   justify-content: center;
+}
+
+.slides {
+  display: flex;
   align-items: center;
 }
 
