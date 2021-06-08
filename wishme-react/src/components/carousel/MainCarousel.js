@@ -42,7 +42,7 @@ const MainCarousel = (props) => {
   return (
     <div className={classes.slider}>
       <FaChevronLeft className={classes.leftArrow} onClick={prevSlideHandler} />
-      {slides}
+      <div className={classes.slides}>{slides}</div>
       <FaChevronRight
         className={classes.rightArrow}
         onClick={nextSlideHandler}

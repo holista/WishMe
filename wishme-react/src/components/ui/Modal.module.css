@@ -34,6 +34,7 @@
   justify-content: space-between;
   align-items: flex-start;
   margin-bottom: 1rem;
+  margin-top: 15rem;
 }
 
 .modalHeader button {
