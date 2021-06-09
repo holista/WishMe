@@ -3,13 +3,15 @@ version: '3.4'
 services:
   wish-me-backend:     
     build:
-      context: ./wishme-dotnet/WishMe.Service
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: wishme-dotnet/WishMe.Service/Dockerfile
+    depends_on:
+      - wish-me-mssql
     environment:
       WISH_ME_HEUREKA_GALLERY_THUMBNAIL_IMAGE: "c-gallery-open__thumbnail"
       WISH_ME_HEUREKA_RECOMMENDED_OFFER: "c-offer-v3__price u-bold u-delta"
       WISH_ME_HEUREKA_SEARCH_REQUEST_URL: "https://api.heureka.cz/head-gateway/search?term={0}"
-      WISH_ME_DB_CONNECTION_STRING: "Server=host.docker.internal;Database=WishMe-dev;User Id=SA;Password=Pass@word1;"
+      WISH_ME_DB_CONNECTION_STRING: "Server=host.docker.internal;Database=WishMe-dev;User Id=SA;Password=Pass@word1;Encrypt=True;TrustServerCertificate=True"
       WISH_ME_JWT_KEY: ":yFD8uJG}jq2^.~q"
     ports:
       - "8085:80"
@@ -27,4 +29,9 @@ services:
       SA_PASSWORD: "Pass@word1"
       ACCEPT_EULA: "Y"
     ports:
-      - 1433:1433
+      - 1433:1433 
+    volumes:
+      - mssqldata:/var/opt/mssql/data
+
+volumes:
+  mssqldata:
