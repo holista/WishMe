@@ -7,7 +7,7 @@ import MainPage from "./pages/MainPage";
 import EventPage from "./pages/EventPage";
 
 function App() {
-  const isAuth = useSelector((state) => state.auth.isAuthenticated);
+  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
 
   return (
     <Layout>
@@ -18,9 +18,13 @@ function App() {
         <Route path="/welcome">
           <WelcomePage />
         </Route>
-        {isAuth && (
+        {isAuthenticated ? (
           <Route path="/mainpage">
             <MainPage />
+          </Route>
+        ) : (
+          <Route path="/welcome">
+            <WelcomePage />
           </Route>
         )}
         <Route path="/event">

@@ -55,6 +55,12 @@ const Auth = (props) => {
             </div>
           </div>
 
+          <div className={classes.switching}>
+            <h3>
+              Ještě zde nemáte účet? <span>Registrujte se.</span>
+            </h3>
+          </div>
+
           <div className={classes.submitBtn}>
             <button>Přihlásit</button>
           </div>

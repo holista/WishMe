@@ -14,14 +14,21 @@ const MainPage = (props) => {
     history.push("/mainpage");
   }
 
-  const openEventHandler = () => {
+  const openNewEventHandler = () => {
     dispatch(uiActions.openModal());
     history.push("/mainpage/new-event");
   };
 
+  const openEventHandler = () => {
+    history.push("/event");
+  };
+
   return (
     <>
-      <MainCarousel onClick={openEventHandler} />
+      <MainCarousel
+        onNewEvent={openNewEventHandler}
+        onEvent={openEventHandler}
+      />
       {modalIsOpen && <NewEvent />}
     </>
   );

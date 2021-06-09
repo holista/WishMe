@@ -4,7 +4,9 @@ import Card from "../ui/Card";
 const EventItem = (props) => {
   return (
     <Card className={classes.eventItem}>
-      <h1>{props.title}</h1>
+      <div onClick={props.onClick}>
+        <h1>{props.title}</h1>
+      </div>
     </Card>
   );
 };
