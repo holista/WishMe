@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using Microsoft.EntityFrameworkCore;
 
 namespace WishMe.Service.Configs
@@ -11,6 +12,9 @@ namespace WishMe.Service.Configs
 
     public static void SetupDatabase(DbContextOptionsBuilder options)
     {
+#warning tohle je shit, ale jinak to nechce nastartovat spravne pres docker CLI
+      Thread.Sleep(3000);
+
       options.UseSqlServer(ConnectionString, opt =>
       {
         opt.CommandTimeout(60);
