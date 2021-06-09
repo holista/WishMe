@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { NavLink, useHistory } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import { authActions } from "../../store/auth-slice";
 import classes from "./Auth.module.css";
 
@@ -16,12 +16,8 @@ const Auth = (props) => {
     history.push("/mainpage");
   };
 
-  const loginHandler = () => {
-    setIsRegistered(true);
-  };
-
-  const registrationHandler = () => {
-    setIsRegistered(false);
+  const toggleHandler = () => {
+    setIsRegistered((prevState) => !prevState);
   };
 
   const email = (
@@ -35,11 +31,8 @@ const Auth = (props) => {
       <div className={classes.formWrap}>
         <form onSubmit={authHandler} className={classes.form}>
           <ul className={classes.formActions}>
-            <li onClick={loginHandler}>
-              <a>Přihlásit se</a>
-            </li>
-            <li onClick={registrationHandler}>
-              <a>Registrovat se</a>
+            <li>
+              <a>{isRegistered ? "Přihlášení" : "Registrace"}</a>
             </li>
           </ul>
 
@@ -57,13 +50,14 @@ const Auth = (props) => {
 
           <div className={classes.switching}>
             <h3>
-              Ještě zde nemáte účet? <span>Registrujte se.</span>
+              {!isRegistered ? "Už zde máte účet? " : "Ještě zde nemáte účet? "}
+              <span onClick={toggleHandler}>
+                {!isRegistered ? "Přihlaste se." : "Registrujte se."}
+              </span>
             </h3>
           </div>
 
-          <div className={classes.submitBtn}>
-            <button>Přihlásit</button>
-          </div>
+          <button>{isRegistered ? "Přihlásit" : "Registrovat"}</button>
         </form>
       </div>
     </>
