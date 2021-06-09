@@ -1,4 +1,5 @@
 import { Switch, Route, Redirect } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 import Layout from "./components/layout/Layout";
 import WelcomePage from "./pages/WelcomePage";
@@ -6,6 +7,8 @@ import MainPage from "./pages/MainPage";
 import EventPage from "./pages/EventPage";
 
 function App() {
+  const isAuth = useSelector((state) => state.auth.isAuthenticated);
+
   return (
     <Layout>
       <Switch>
@@ -15,9 +18,11 @@ function App() {
         <Route path="/welcome">
           <WelcomePage />
         </Route>
-        <Route path="/mainpage">
-          <MainPage />
-        </Route>
+        {isAuth && (
+          <Route path="/mainpage">
+            <MainPage />
+          </Route>
+        )}
         <Route path="/event">
           <EventPage />
         </Route>

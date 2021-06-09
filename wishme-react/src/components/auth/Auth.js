@@ -1,15 +1,18 @@
 import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { NavLink, useHistory } from "react-router-dom";
+import { authActions } from "../../store/auth-slice";
 import classes from "./Auth.module.css";
 
 const Auth = (props) => {
+  const dispatch = useDispatch();
+  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
   const [isRegistered, setIsRegistered] = useState(true);
-  const [isLogin, setIsLogin] = useState(false);
   const history = useHistory();
 
   const authHandler = (event) => {
     event.preventDefault();
-    setIsLogin(true);
+    dispatch(authActions.login());
     history.push("/mainpage");
   };
 
