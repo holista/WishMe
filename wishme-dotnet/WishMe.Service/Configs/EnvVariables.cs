@@ -2,15 +2,16 @@
 {
   public static class EnvVariables
   {
-    public static string _EnvVariablePrefix = "WISH_ME_";
+    public const string _EnvVariablePrefix = "WISH_ME_";
 
-    public static string _DbConnectionString = _EnvVariablePrefix + "DB_CONNECTION_STRING";
+    public const string _MongoUrl = _EnvVariablePrefix + "MONGO_URL";
+    public const string _MongoDbName = _EnvVariablePrefix + "MONGO_DB_NAME";
 
-    public static string _JwtKey = _EnvVariablePrefix + "JWT_KEY";
-    public static string _JwtDebugMode = _EnvVariablePrefix + "JWT_DEBUG_MODE";
+    public const string _JwtKey = _EnvVariablePrefix + "JWT_KEY";
+    public const string _JwtDebugMode = _EnvVariablePrefix + "JWT_DEBUG_MODE";
 
-    public static string _HeurekaGalleryThumbnailImage = _EnvVariablePrefix + "HEUREKA_GALLERY_THUMBNAIL_IMAGE";
-    public static string _HeurekaRecommendedOffer = _EnvVariablePrefix + "HEUREKA_RECOMMENDED_OFFER";
-    public static string _HeurekaSearchRequestURL = _EnvVariablePrefix + "HEUREKA_SEARCH_REQUEST_URL";
+    public const string _HeurekaGalleryThumbnailImage = _EnvVariablePrefix + "HEUREKA_GALLERY_THUMBNAIL_IMAGE";
+    public const string _HeurekaRecommendedOffer = _EnvVariablePrefix + "HEUREKA_RECOMMENDED_OFFER";
+    public const string _HeurekaSearchRequestURL = _EnvVariablePrefix + "HEUREKA_SEARCH_REQUEST_URL";
   }
 }

@@ -4,6 +4,7 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using MongoDB.Bson;
 using WishMe.Service.Models;
 using WishMe.Service.Models.Events;
 using WishMe.Service.Models.Wishlists;
@@ -36,7 +37,7 @@ namespace WishMe.Service.Controllers
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> GetManyAsync([FromQuery] int offset, [FromQuery] int limit, [FromQuery] int organizerId, CancellationToken cancellationToken)
+    public async Task<IActionResult> GetManyAsync([FromQuery] int offset, [FromQuery] int limit, [FromQuery] ObjectId organizerId, CancellationToken cancellationToken)
     {
       return Ok(await fMediator.Send(new GetManyRequest
       {
@@ -77,7 +78,7 @@ namespace WishMe.Service.Controllers
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> GetAsync([FromRoute] int id, CancellationToken cancellationToken)
+    public async Task<IActionResult> GetAsync([FromRoute] ObjectId id, CancellationToken cancellationToken)
     {
       return Ok(await fMediator.Send(new GetRequest { Id = id }, cancellationToken));
     }
@@ -95,7 +96,7 @@ namespace WishMe.Service.Controllers
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> PutAsync([FromRoute] int id, [FromBody] EventProfileModel model, CancellationToken cancellationToken)
+    public async Task<IActionResult> PutAsync([FromRoute] ObjectId id, [FromBody] EventProfileModel model, CancellationToken cancellationToken)
     {
       await fMediator.Send(new PutRequest
       {
@@ -118,7 +119,7 @@ namespace WishMe.Service.Controllers
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> DeleteAsync([FromRoute] int id, CancellationToken cancellationToken)
+    public async Task<IActionResult> DeleteAsync([FromRoute] ObjectId id, CancellationToken cancellationToken)
     {
       await fMediator.Send(new DeleteRequest
       {
@@ -142,7 +143,7 @@ namespace WishMe.Service.Controllers
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> PostWishlistAsync([FromRoute] int id, [FromBody] WishlistProfileModel model, CancellationToken cancellationToken)
+    public async Task<IActionResult> PostWishlistAsync([FromRoute] ObjectId id, [FromBody] WishlistProfileModel model, CancellationToken cancellationToken)
     {
       return Ok(await fMediator.Send(new Requests.Wishlists.PostRequest
       {

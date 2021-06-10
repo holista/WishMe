@@ -15,7 +15,7 @@ namespace WishMe.Service.Handlers
 {
   public abstract class GetManyHandlerBase<TRequest, TEntity, TModel>: IRequestHandler<TRequest, ListModel<TModel>>
     where TRequest : GetManyRequestBase<TModel>
-    where TEntity : EntityBase
+    where TEntity : DbDocBase
   {
     protected readonly IGenericRepository fGenericRepository;
     protected readonly IIdentityService fIdentityService;

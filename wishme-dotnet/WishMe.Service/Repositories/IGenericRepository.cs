@@ -2,30 +2,30 @@
 using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
+using MongoDB.Bson;
+using MongoDB.Driver;
+using WishMe.Service.Database;
 using WishMe.Service.Dtos;
-using WishMe.Service.Entities;
 
 namespace WishMe.Service.Repositories
 {
   public interface IGenericRepository
   {
-    Task<int> CreateAsync<TEntity>(TEntity entity, CancellationToken cancellationToken)
-      where TEntity : EntityBase;
+    Task<ObjectId> CreateAsync<TEntity>(TEntity entity, CancellationToken cancellationToken)
+      where TEntity : DbDoc;
     Task<ListDto<TEntity>> GetManyAsync<TEntity>(FilterDto<TEntity> filter, CancellationToken cancellationToken)
-      where TEntity : EntityBase;
-    Task<TEntity?> GetAsync<TEntity>(int id, CancellationToken cancellationToken)
-      where TEntity : EntityBase;
+      where TEntity : DbDoc;
+    Task<TEntity?> GetAsync<TEntity>(ObjectId id, CancellationToken cancellationToken)
+      where TEntity : DbDoc;
     Task<TEntity?> GetAsync<TEntity>(Expression<Func<TEntity, bool>> filter, CancellationToken cancellationToken)
-      where TEntity : EntityBase;
-    Task<TEntity?> GetAsync<TEntity>(int id, string[] includes, CancellationToken cancellationToken)
-      where TEntity : EntityBase;
-    Task<TEntity?> GetAsync<TEntity>(Expression<Func<TEntity, bool>> filter, string[] includes, CancellationToken cancellationToken)
-      where TEntity : EntityBase;
-    Task<bool> DeleteAsync<TEntity>(int id, CancellationToken cancellationToken)
-      where TEntity : EntityBase;
-    Task<bool> UpdateAsync<TEntity>(int id, object updated, CancellationToken cancellationToken)
-      where TEntity : EntityBase;
-    Task<bool> ExistsAsync<TEntity>(int id, CancellationToken cancellationToken)
-      where TEntity : EntityBase;
+      where TEntity : DbDoc;
+    Task<bool> DeleteAsync<TEntity>(ObjectId id, CancellationToken cancellationToken)
+         where TEntity : DbDoc;
+    Task<bool> UpdateAsync<TDoc>(ObjectId id, UpdateDefinition<TDoc> update, CancellationToken cancellationToken)
+      where TDoc : DbDoc;
+    Task<bool> UpdateAsync<TEntity>(ObjectId id, TEntity updated, CancellationToken cancellationToken)
+      where TEntity : DbDoc;
+    Task<bool> ExistsAsync<TEntity>(ObjectId id, CancellationToken cancellationToken)
+      where TEntity : DbDoc;
   }
 }
