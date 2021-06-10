@@ -20,44 +20,42 @@ const Auth = (props) => {
     setIsRegistered((prevState) => !prevState);
   };
 
-  const email = (
-    <div className={classes.control}>
-      <input placeholder="Email" />
-    </div>
-  );
-
   return (
     <>
       <div className={classes.formWrap}>
         <form onSubmit={authHandler} className={classes.form}>
-          <ul className={classes.formActions}>
-            <li>
-              <a>{isRegistered ? "Přihlášení" : "Registrace"}</a>
-            </li>
-          </ul>
+          <div className={classes.header}>
+            <h1>WishMe</h1>
+          </div>
 
           <div>
             <div className={classes.control}>
               <input placeholder="Username" />
             </div>
 
-            {!isRegistered && email}
+            {!isRegistered && (
+              <div className={classes.control}>
+                <input placeholder="Email" />
+              </div>
+            )}
 
             <div className={classes.control}>
               <input placeholder="Heslo" />
             </div>
           </div>
 
+          <div className={classes.btn}>
+            <button>{isRegistered ? "Přihlásit" : "Registrovat"}</button>
+          </div>
+
           <div className={classes.switching}>
             <h3>
-              {!isRegistered ? "Už zde máte účet? " : "Ještě zde nemáte účet? "}
+              {!isRegistered ? "Máte účet? " : "Nemáte účet? "}
               <span onClick={toggleHandler}>
-                {!isRegistered ? "Přihlaste se." : "Registrujte se."}
+                {!isRegistered ? "Přihlaste se." : "Zaregistrujte se."}
               </span>
             </h3>
           </div>
-
-          <button>{isRegistered ? "Přihlásit" : "Registrovat"}</button>
         </form>
       </div>
     </>

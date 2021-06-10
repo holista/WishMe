@@ -29,8 +29,8 @@
 
 .control input:focus,
 .control textarea:focus {
-  background-color: #cbf8f8;
-  outline-color: teal;
+  background-color: #dce4ff;
+  outline-color: #2e52ca;
 }
 
 .time {
