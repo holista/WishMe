@@ -32,7 +32,7 @@ services:
       - 27017:27017
     environment:
       MONGO_DATA_DIR: "/data/db"
-    container_name: "24vs-mongodb"
+    container_name: "wish-me-mongodb"
 
 volumes:
   mongodata_volume:
