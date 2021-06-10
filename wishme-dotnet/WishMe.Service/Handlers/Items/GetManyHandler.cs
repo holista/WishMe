@@ -6,7 +6,6 @@ using WishMe.Service.Exceptions;
 using WishMe.Service.Models.Items;
 using WishMe.Service.Repositories;
 using WishMe.Service.Requests.Items;
-using WishMe.Service.Services;
 using WishMe.Service.Services.Identity;
 
 namespace WishMe.Service.Handlers.Items
@@ -20,11 +19,14 @@ namespace WishMe.Service.Handlers.Items
 
     protected override async Task CheckAccessibilityAsync(GetManyRequest request, CancellationToken cancellationToken)
     {
-      var wishlist = await fGenericRepository.GetAsync<Wishlist>(request.WishlistId, new[] { nameof(Wishlist.Event) }, cancellationToken);
+      var wishlist = await fGenericRepository.GetAsync<Wishlist>(request.WishlistId, cancellationToken);
       if (wishlist is null)
         throw new NotFoundException($"Wishlist with ID '{request.WishlistId}' was not found.");
 
-      if (!fIdentityService.CanAccess(wishlist.Event))
+      var @event = await fGenericRepository.GetAsync<Event>(wishlist.EventId, cancellationToken);
+      if (@event is null)
+        throw new NotFoundException($"Event was not found for wishlist with ID '{wishlist.Id}'..");
+      if (!fIdentityService.CanAccess(@event))
         throw new ForbiddenException($"Current user cannot access wishlist with ID '{request.WishlistId}'.");
     }
 

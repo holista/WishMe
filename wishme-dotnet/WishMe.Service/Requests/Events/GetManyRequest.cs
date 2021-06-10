@@ -1,9 +1,10 @@
-﻿using WishMe.Service.Models.Events;
+﻿using MongoDB.Bson;
+using WishMe.Service.Models.Events;
 
 namespace WishMe.Service.Requests.Events
 {
   public class GetManyRequest: GetManyRequestBase<EventPreviewModel>
   {
-    public int OrganizerId { get; set; }
+    public ObjectId OrganizerId { get; set; }
   }
 }

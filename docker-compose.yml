@@ -6,13 +6,14 @@ services:
       context: .
       dockerfile: wishme-dotnet/WishMe.Service/Dockerfile
     depends_on:
-      - wish-me-mssql
-    environment:
+      - wish-me-db
+    environment:     
+      WISH_ME_MONGO_URL: "mongodb://host.docker.internal"
+      WISH_ME_MONGO_DB_NAME: "WishMe"
+      WISH_ME_JWT_KEY: ":yFD8uJG}jq2^.~q"
       WISH_ME_HEUREKA_GALLERY_THUMBNAIL_IMAGE: "c-gallery-open__thumbnail"
       WISH_ME_HEUREKA_RECOMMENDED_OFFER: "c-offer-v3__price u-bold u-delta"
       WISH_ME_HEUREKA_SEARCH_REQUEST_URL: "https://api.heureka.cz/head-gateway/search?term={0}"
-      WISH_ME_DB_CONNECTION_STRING: "Server=host.docker.internal;Database=WishMe-dev;User Id=SA;Password=Pass@word1;Encrypt=True;TrustServerCertificate=True"
-      WISH_ME_JWT_KEY: ":yFD8uJG}jq2^.~q"
     ports:
       - "8085:80"
 
@@ -23,15 +24,15 @@ services:
     environment:
       URLS: '[ { url: " http://localhost:8085/docs/v1/swagger.json", name: "WishMe Service" } ]'
 
-  wish-me-mssql:
-    image: mcr.microsoft.com/mssql/server:2017-latest
-    environment:
-      SA_PASSWORD: "Pass@word1"
-      ACCEPT_EULA: "Y"
-    ports:
-      - 1433:1433 
+  wish-me-db:
+    image: mongo:latest
     volumes:
-      - mssqldata:/var/opt/mssql/data
+      - mongodata_volume:/data/db
+    ports:
+      - 27017:27017
+    environment:
+      MONGO_DATA_DIR: "/data/db"
+    container_name: "wish-me-mongodb"
 
 volumes:
-  mssqldata:
+  mongodata_volume:

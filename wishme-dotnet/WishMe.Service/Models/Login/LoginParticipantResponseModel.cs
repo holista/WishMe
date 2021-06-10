@@ -1,7 +1,9 @@
-﻿namespace WishMe.Service.Models.Login
+﻿using MongoDB.Bson;
+
+namespace WishMe.Service.Models.Login
 {
   public class LoginParticipantResponseModel: LoginResponseModel
   {
-    public int EventId { get; set; }
+    public ObjectId EventId { get; set; }
   }
 }

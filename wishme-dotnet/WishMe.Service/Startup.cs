@@ -3,10 +3,9 @@ using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using WishMe.Service.Configs;
-using WishMe.Service.Entities;
+using WishMe.Service.Microsoft.Extensions.DependencyInjection;
 using WishMe.Service.Middlewares;
 
 namespace WishMe.Service
@@ -15,7 +14,7 @@ namespace WishMe.Service
   {
     public void ConfigureServices(IServiceCollection services)
     {
-      services.AddDbContext<DataContext>(DbConfig.SetupDatabase);
+      services.AddDbContext<MongoConfig>();
 
       services
         .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -23,8 +22,10 @@ namespace WishMe.Service
 
       services.AddAuthorization(AuthorizationConfig.SetupRoles);
 
-      services.AddControllers()
+      services.AddMvc(MvcConfig.SetupMvc)
         .AddNewtonsoftJson(MvcConfig.SetupJsonOptions);
+
+      services.AddControllers();
 
       services.AddSwaggerGen(SwaggerConfig.SetupSwaggerGen);
 
@@ -38,18 +39,10 @@ namespace WishMe.Service
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
     {
-      using (var serviceScope = app.ApplicationServices.CreateScope())
-      {
-        serviceScope
-          .ServiceProvider.GetRequiredService<DataContext>()
-          .Database.Migrate();
-      }
-
       app.UseRouting();
       app.UseCors(CorsConfig.Setup);
 
       app.UseMiddleware<ExceptionMiddleware>();
-      app.UseMiddleware<DbTransactionMiddleware>();
 
       app.UseAuthentication();
       app.UseAuthorization();

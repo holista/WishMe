@@ -1,9 +1,10 @@
 ﻿using MediatR;
+using MongoDB.Bson;
 
 namespace WishMe.Service.Requests
 {
   public abstract class GetRequestBase<TModel>: IRequest<TModel>
   {
-    public int Id { get; set; }
+    public ObjectId Id { get; set; }
   }
 }

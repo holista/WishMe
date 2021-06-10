@@ -2,12 +2,12 @@
 using System.Security.Cryptography;
 using System.Threading;
 using System.Threading.Tasks;
+using MongoDB.Bson;
 using WishMe.Service.Entities;
 using WishMe.Service.Exceptions;
 using WishMe.Service.Models.Events;
 using WishMe.Service.Repositories;
 using WishMe.Service.Requests.Events;
-using WishMe.Service.Services;
 using WishMe.Service.Services.Identity;
 
 namespace WishMe.Service.Handlers.Events
@@ -37,7 +37,7 @@ namespace WishMe.Service.Handlers.Events
 
     protected override Task DoSetAdditionalPropertiesAsync(PostRequest request, Event entity, CancellationToken cancellationToken)
     {
-      if (!fIdentityService.TryGetOrganizerId(out int? organizerId))
+      if (!fIdentityService.TryGetOrganizerId(out ObjectId? organizerId))
         throw new InvalidOperationException();
 
       entity.OrganizerId = organizerId!.Value;

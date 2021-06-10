@@ -2,33 +2,34 @@
 using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
+using MongoDB.Driver.Linq;
 using WishMe.Service.Dtos;
 
 namespace WishMe.Service.Repositories
 {
   public static class QueryableExtensions
   {
-    public static IOrderedQueryable<T> OrderBy<T>(this IQueryable<T> source, string property)
+    private static IOrderedMongoQueryable<T> OrderBy<T>(this IMongoQueryable<T> source, string property)
     {
       return ApplyOrder(source, property, nameof(Queryable.OrderBy));
     }
 
-    public static IOrderedQueryable<T> OrderByDescending<T>(this IQueryable<T> source, string property)
+    private static IOrderedMongoQueryable<T> OrderByDescending<T>(this IMongoQueryable<T> source, string property)
     {
       return ApplyOrder(source, property, nameof(Queryable.OrderByDescending));
     }
 
-    public static IOrderedQueryable<T> ThenBy<T>(this IOrderedQueryable<T> source, string property)
+    private static IOrderedMongoQueryable<T> ThenBy<T>(this IOrderedMongoQueryable<T> source, string property)
     {
       return ApplyOrder(source, property, nameof(Queryable.ThenBy));
     }
 
-    public static IOrderedQueryable<T> ThenByDescending<T>(this IOrderedQueryable<T> source, string property)
+    private static IOrderedMongoQueryable<T> ThenByDescending<T>(this IOrderedMongoQueryable<T> source, string property)
     {
       return ApplyOrder(source, property, nameof(Queryable.ThenByDescending));
     }
 
-    public static IOrderedQueryable<T> ApplyOrder<T>(IQueryable<T> source, string property, string methodName)
+    private static IOrderedMongoQueryable<T> ApplyOrder<T>(IMongoQueryable<T> source, string property, string methodName)
     {
       string[] props = property.Split('.');
       var type = typeof(T);
@@ -59,10 +60,10 @@ namespace WishMe.Service.Repositories
       if (result is null)
         throw new InvalidOperationException("Could not sort entities in given order.");
 
-      return (IOrderedQueryable<T>)result;
+      return (IOrderedMongoQueryable<T>)result;
     }
 
-    public static IQueryable<T> OrderBySortingKeys<T>(this IQueryable<T> source, SortingKeyDto[] sortingKeys)
+    public static IMongoQueryable<T> OrderBySortingKeys<T>(this IMongoQueryable<T> source, SortingKeyDto[] sortingKeys)
     {
       var currentSortingKey = sortingKeys[0];
 
