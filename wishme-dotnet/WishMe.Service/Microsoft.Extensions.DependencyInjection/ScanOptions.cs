@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Reflection;
 
-namespace Microsoft.Extensions.DependencyInjection
+namespace WishMe.Service.Microsoft.Extensions.DependencyInjection
 {
   public sealed class ScanOptions
   {

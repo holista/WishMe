@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
+using MongoDB.Bson;
 using WishMe.Service.Attributes;
 using WishMe.Service.Configs;
 using WishMe.Service.Entities;
@@ -39,7 +40,7 @@ namespace WishMe.Service.Services.Identity
       fMemoryCache = memoryCache;
     }
 
-    public bool TryGetOrganizerId(out int? organizerId)
+    public bool TryGetOrganizerId(out ObjectId? organizerId)
     {
       var claims = GetClaims();
       if (!claims.IsInRole(AuthorizationConstants.Roles._Organizer))
@@ -48,7 +49,7 @@ namespace WishMe.Service.Services.Identity
         return false;
       }
 
-      organizerId = int.Parse(GetSubjectId());
+      organizerId = ObjectId.Parse(GetSubjectId());
       return true;
     }
 

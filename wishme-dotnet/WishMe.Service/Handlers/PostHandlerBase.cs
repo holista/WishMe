@@ -11,7 +11,7 @@ namespace WishMe.Service.Handlers
 {
   public abstract class PostHandlerBase<TRequest, TEntity, TModel>: IRequestHandler<TRequest, IdModel>
     where TRequest : PostRequestBase<TModel>
-    where TEntity : EntityBase
+    where TEntity : DbDocBase
   {
     protected readonly IGenericRepository fGenericRepository;
 

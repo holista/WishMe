@@ -1,6 +1,6 @@
 ﻿namespace WishMe.Service.Entities
 {
-  public abstract class NamedEntityBase: EntityBase
+  public abstract class NamedDbDocBase: DbDocBase
   {
     public string Name { get; set; } = default!;
 

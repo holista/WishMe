@@ -3,13 +3,22 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using WishMe.Service.Attributes;
+using WishMe.Service.Database;
 
-namespace Microsoft.Extensions.DependencyInjection
+namespace WishMe.Service.Microsoft.Extensions.DependencyInjection
 {
   public static class ServiceCollectionExtensions
   {
+    public static void AddDbContext<TDbConfig>(this IServiceCollection services)
+      where TDbConfig : class, IDbConfig
+    {
+      services.TryAddSingleton<IDbConfig, TDbConfig>();
+      services.TryAddSingleton<IDbContext, DbContext>();
+    }
+
     public static void AddServices<T>(this IServiceCollection services)
     {
       services.Scan(opt =>

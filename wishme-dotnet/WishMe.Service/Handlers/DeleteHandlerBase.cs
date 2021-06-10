@@ -10,7 +10,7 @@ namespace WishMe.Service.Handlers
 {
   public abstract class DeleteHandlerBase<TRequest, TEntity>: IRequestHandler<TRequest>
     where TRequest : DeleteRequestBase
-    where TEntity : EntityBase
+    where TEntity : DbDocBase
   {
     private readonly IGenericRepository fGenericRepository;
 

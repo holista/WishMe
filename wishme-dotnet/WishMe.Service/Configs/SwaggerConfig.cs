@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
+using MongoDB.Bson;
 using Swashbuckle.AspNetCore.Swagger;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using WishMe.Service.Swagger;
@@ -16,7 +17,6 @@ namespace WishMe.Service.Configs
     public static void SetupSwagger(SwaggerOptions options)
     {
       options.RouteTemplate = _RouteTemplate;
-      options.SerializeAsV2 = true;
     }
 
     public static void SetupSwaggerGen(SwaggerGenOptions options)
@@ -50,11 +50,14 @@ namespace WishMe.Service.Configs
         }
       });
 
+      options.MapType<ObjectId>(() => new OpenApiSchema { Type = "string" });
+      options.MapType<ObjectId?>(() => new OpenApiSchema { Type = "string" });
       options.MapType<DateTime>(() => new OpenApiSchema { Type = "string" });
       options.MapType<DateTime?>(() => new OpenApiSchema { Type = "string" });
 
       options.OperationFilter<ConsumesProducesAttributeOperationFilter>();
       options.OperationFilter<RouteControllerNameOperationFilter>();
+      options.OperationFilter<RemoveObjectIdOperationFilter>();
 
       options.DocumentFilter<SortDocumentFilter>();
 

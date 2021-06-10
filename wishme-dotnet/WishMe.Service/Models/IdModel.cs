@@ -1,7 +1,9 @@
-﻿namespace WishMe.Service.Models
+﻿using MongoDB.Bson;
+
+namespace WishMe.Service.Models
 {
   public class IdModel
   {
-    public int Id { get; set; }
+    public ObjectId Id { get; set; }
   }
 }

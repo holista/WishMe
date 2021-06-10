@@ -1,38 +1,42 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
+using MongoDB.Bson;
+using MongoDB.Driver;
+using MongoDB.Driver.Linq;
+using WishMe.Service.Database;
 using WishMe.Service.Dtos;
-using WishMe.Service.Entities;
 
 namespace WishMe.Service.Repositories
 {
   public class GenericRepository: IGenericRepository
   {
-    protected readonly DataContext fContext;
+    private readonly IDbContext fDbContext;
 
-    public GenericRepository(DataContext context)
+    protected IMongoCollection<TDoc> Collection<TDoc>() => fDbContext.Database.GetCollection<TDoc>();
+
+    protected IMongoQueryable<TDoc> Query<TDoc>() => Collection<TDoc>().AsQueryable();
+
+    public GenericRepository(IDbContext dbContext)
     {
-      fContext = context;
+      fDbContext = dbContext;
     }
 
-    public async Task<int> CreateAsync<TEntity>(TEntity entity, CancellationToken cancellationToken)
-      where TEntity : EntityBase
+    public async Task<ObjectId> CreateAsync<TEntity>(TEntity entity, CancellationToken cancellationToken)
+      where TEntity : DbDoc
     {
-      await fContext.Set<TEntity>().AddAsync(entity, cancellationToken);
-
-      await fContext.SaveChangesAsync(cancellationToken);
+      await Collection<TEntity>()
+          .InsertOneAsync(entity, null, cancellationToken);
 
       return entity.Id;
     }
 
-    public async Task<ListDto<TEntity>> GetManyAsync<TEntity>(FilterDto<TEntity> filter, CancellationToken cancellationToken)
-      where TEntity : EntityBase
+    public async Task<ListDto<TEntity>> GetManyAsync<TEntity>(FilterDto<TEntity> filter, CancellationToken cancellationToken) where TEntity : DbDoc
     {
-      var filtered = fContext
-        .Set<TEntity>()
+      var filtered = Query<TEntity>()
         .Where(filter.Filter);
 
       if (filter.SortingKeys != null)
@@ -48,75 +52,68 @@ namespace WishMe.Service.Repositories
       };
     }
 
-    public async Task<TEntity?> GetAsync<TEntity>(int id, CancellationToken cancellationToken)
-      where TEntity : EntityBase
+    public async Task<TResult?> GetAsync<TDoc, TResult>(ObjectId id, Expression<Func<TDoc, TResult>> selection, CancellationToken cancellationToken) where TDoc : DbDoc
     {
-      return await GetAsync<TEntity>(row => row.Id == id, cancellationToken);
+      return await GetAsync(doc => doc.Id == id, selection, cancellationToken);
     }
 
-    public async Task<TEntity?> GetAsync<TEntity>(Expression<Func<TEntity, bool>> filter, CancellationToken cancellationToken)
-      where TEntity : EntityBase
+    public async Task<TResult?> GetAsync<TDoc, TResult>(Expression<Func<TDoc, bool>> filter, Expression<Func<TDoc, TResult>> selection, CancellationToken cancellationToken) where TDoc : DbDoc
     {
-      return await fContext.Set<TEntity>()
-        .SingleOrDefaultAsync(filter, cancellationToken);
+      return await Query<TDoc>()
+          .Where(filter)
+          .Select(selection)
+          .SingleOrDefaultAsync(cancellationToken);
     }
 
-    public async Task<TEntity?> GetAsync<TEntity>(int id, string[] includes, CancellationToken cancellationToken)
-      where TEntity : EntityBase
+    public async Task<TDoc?> GetAsync<TDoc>(ObjectId id, CancellationToken cancellationToken) where TDoc : DbDoc
     {
-      return await GetAsync<TEntity>(row => row.Id == id, includes, cancellationToken);
+      return await GetAsync<TDoc>(doc => doc.Id == id, cancellationToken);
     }
 
-    public async Task<TEntity?> GetAsync<TEntity>(Expression<Func<TEntity, bool>> filter, string[] includes, CancellationToken cancellationToken)
-      where TEntity : EntityBase
+    public async Task<TDoc?> GetAsync<TDoc>(Expression<Func<TDoc, bool>> filter, CancellationToken cancellationToken) where TDoc : DbDoc
     {
-      var collection = fContext.Set<TEntity>();
-
-      foreach (string include in includes)
-        collection.Include(include);
-
-      return await collection
-        .SingleOrDefaultAsync(filter, cancellationToken);
+      return await Query<TDoc>()
+          .Where(filter)
+          .SingleOrDefaultAsync(cancellationToken);
     }
 
-    public async Task<bool> DeleteAsync<TEntity>(int id, CancellationToken cancellationToken)
-      where TEntity : EntityBase
+    public async Task<List<TDoc>> GetManyAsync<TDoc>(Expression<Func<TDoc, bool>> filter, CancellationToken cancellationToken) where TDoc : DbDoc
     {
-      var entity = await GetAsync<TEntity>(id, cancellationToken);
-      if (entity is null)
-        return false;
-
-      fContext.Set<TEntity>().Remove(entity);
-
-      await fContext.SaveChangesAsync(cancellationToken);
-
-      return true;
+      return await Query<TDoc>()
+          .Where(filter)
+          .ToListAsync(cancellationToken);
     }
 
-    public async Task<bool> UpdateAsync<TEntity>(int id, object updated, CancellationToken cancellationToken)
-      where TEntity : EntityBase
+    public async Task<bool> UpdateAsync<TDoc>(ObjectId id, UpdateDefinition<TDoc> update, CancellationToken cancellationToken) where TDoc : DbDoc
     {
-      var entity = await GetAsync<TEntity>(id, cancellationToken);
-      if (entity is null)
-        return false;
+      var result = await Collection<TDoc>()
+          .UpdateOneAsync(doc => doc.Id == id, update, null, cancellationToken);
 
-      entity.UpdatedUtc = DateTime.UtcNow;
-
-      var entry = fContext.Entry(entity);
-
-      entry.CurrentValues.SetValues(updated);
-
-      await fContext.SaveChangesAsync(cancellationToken);
-
-      return true;
+      return result.ModifiedCount == 1;
     }
 
-    public async Task<bool> ExistsAsync<TEntity>(int id, CancellationToken cancellationToken)
-      where TEntity : EntityBase
+    public async Task<bool> DeleteAsync<TDoc>(ObjectId id, CancellationToken cancellationToken) where TDoc : DbDoc
     {
-      var entity = await GetAsync<TEntity>(id, cancellationToken);
+      var result = await Collection<TDoc>()
+          .DeleteOneAsync(doc => doc.Id == id, null, cancellationToken);
 
-      return entity != null;
+      return result.DeletedCount == 1;
+    }
+
+    public async Task<bool> UpdateAsync<TEntity>(ObjectId id, TEntity updated, CancellationToken cancellationToken) where TEntity : DbDoc
+    {
+      updated.Id = id;
+
+      var result = await Collection<TEntity>()
+        .ReplaceOneAsync(doc => doc.Id == id, updated, (ReplaceOptions?)null, cancellationToken);
+
+      return result.ModifiedCount == 1;
+    }
+
+    public async Task<bool> ExistsAsync<TDoc>(ObjectId id, CancellationToken cancellationToken) where TDoc : DbDoc
+    {
+      return await Query<TDoc>()
+          .CountAsync(doc => doc.Id == id, cancellationToken) == 1;
     }
   }
 }

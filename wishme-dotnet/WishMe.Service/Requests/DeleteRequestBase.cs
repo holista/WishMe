@@ -1,9 +1,10 @@
 ﻿using MediatR;
+using MongoDB.Bson;
 
 namespace WishMe.Service.Requests
 {
   public abstract class DeleteRequestBase: IRequest
   {
-    public int Id { get; set; }
+    public ObjectId Id { get; set; }
   }
 }

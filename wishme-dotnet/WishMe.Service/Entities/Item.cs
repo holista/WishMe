@@ -1,21 +1,16 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using MongoDB.Bson;
 using WishMe.Service.Attributes;
+using WishMe.Service.Database;
 
 namespace WishMe.Service.Entities
 {
-  [Table("Items")]
-  public class Item: EntityBase
+  [Collection(nameof(DbCollections.Items))]
+  public class Item: NamedDbDocBase
   {
-    public int EventId { get; set; }
-
-    [ForeignKey(nameof(EventId))]
-    public Event Event { get; set; } = default!;
+    public ObjectId EventId { get; set; }
 
     [Indexed]
-    public int WishlistId { get; set; }
-
-    [ForeignKey(nameof(WishlistId))]
-    public Wishlist Wishlist { get; set; } = default!;
+    public ObjectId WishlistId { get; set; }
 
     public decimal Price { get; set; }
 
