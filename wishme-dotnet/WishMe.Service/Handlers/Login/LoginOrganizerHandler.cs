@@ -10,7 +10,7 @@ using WishMe.Service.Services.Identity;
 
 namespace WishMe.Service.Handlers.Login
 {
-  public class LoginOrganizerHandler: IRequestHandler<LoginOrganizerRequest, LoginResponseModel>
+  public class LoginOrganizerHandler: IRequestHandler<LoginOrganizerRequest, LoginOrganizerResponseModel>
   {
     private readonly IIdentityService fIdentityService;
     private readonly IGenericRepository fGenericRepository;
@@ -23,7 +23,7 @@ namespace WishMe.Service.Handlers.Login
       fGenericRepository = genericRepository;
     }
 
-    public async Task<LoginResponseModel> Handle(LoginOrganizerRequest request, CancellationToken cancellationToken)
+    public async Task<LoginOrganizerResponseModel> Handle(LoginOrganizerRequest request, CancellationToken cancellationToken)
     {
       var organizer = await fGenericRepository.GetAsync<Organizer>(row => row.Username == request.Model.Username, cancellationToken);
       if (organizer is null)
