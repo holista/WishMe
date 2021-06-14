@@ -1,13 +1,16 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 import { authActions } from "../../store/auth-slice";
 import classes from "./Auth.module.css";
 
 const Auth = (props) => {
+  const usernameInputRef = useRef();
+  const passwordInputRef = useRef();
+  const passwordRepeatInputRef = useRef();
   const dispatch = useDispatch();
-  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
-  const [isRegistered, setIsRegistered] = useState(true);
+  const { isRegistered, isAuthenticated, isOrganizer, token, organizerId } =
+    useSelector((state) => state.auth);
   const history = useHistory();
 
   const authHandler = (event) => {
@@ -16,33 +19,88 @@ const Auth = (props) => {
     history.push("/mainpage");
   };
 
+  const loginHandler = (event) => {
+    event.preventDefault();
+    dispatch(authActions.login(fetchLogin()));
+    history.push("/mainpage");
+  };
+
+  const registerHandler = (event) => {
+    event.preventDefault();
+    dispatch(authActions.register(fetchRegistration()));
+  };
+
   const toggleHandler = () => {
-    setIsRegistered((prevState) => !prevState);
+    dispatch(authActions.toggle());
+  };
+
+  const fetchRegistration = () => {
+    const dataReg = {
+      username: usernameInputRef.current.value,
+      password: passwordInputRef.current.value,
+    };
+
+    fetch("http://localhost:8085/api/v1/users/register/organizer", {
+      method: "POST",
+      body: JSON.stringify(dataReg),
+    })
+      .then((response) => response.json())
+      .then((responseData) => {
+        return {
+          organizerId: responseData.organizerId,
+          token: responseData.token,
+        };
+      });
+  };
+
+  const fetchLogin = () => {
+    const dataReg = {
+      username: usernameInputRef.current.value,
+      password: passwordInputRef.current.value,
+    };
+
+    fetch("http://localhost:8085/api/v1/users/login/organizer", {
+      method: "POST",
+      body: JSON.stringify(dataReg),
+    })
+      .then((response) => response.json())
+      .then((responseData) => {
+        return {
+          organizerId: responseData.organizerId,
+          token: responseData.token,
+        };
+      });
   };
 
   return (
     <>
       <div className={classes.formWrap}>
-        <form onSubmit={authHandler} className={classes.form}>
+        <form
+          onSubmit={!isRegistered ? registerHandler : loginHandler}
+          className={classes.form}
+        >
           <div className={classes.header}>
             <h1>WishMe</h1>
           </div>
 
           <div>
             <div className={classes.control}>
-              <input placeholder="Username" />
+              <input placeholder="Uživatelské jméno" ref={usernameInputRef} />
             </div>
-
-            {!isRegistered && (
-              <div className={classes.control}>
-                <input placeholder="Email" />
-              </div>
-            )}
 
             <div className={classes.control}>
-              <input placeholder="Heslo" />
+              <input placeholder="Heslo" ref={passwordInputRef} />
             </div>
           </div>
+
+          {!isRegistered && (
+            <div className={classes.control}>
+              <input
+                placeholder="Potvrdit heslo"
+                ref={passwordRepeatInputRef}
+              />
+            </div>
+          )}
 
           <div className={classes.btn}>
             <button>{isRegistered ? "Přihlásit" : "Registrovat"}</button>
