@@ -27,5 +27,7 @@ namespace WishMe.Service.Repositories
       where TEntity : DbDoc;
     Task<bool> ExistsAsync<TEntity>(ObjectId id, CancellationToken cancellationToken)
       where TEntity : DbDoc;
+    Task<bool> ExistsAsync<TEntity>(Expression<Func<TEntity, bool>> filter, CancellationToken cancellationToken)
+      where TEntity : DbDoc;
   }
 }
