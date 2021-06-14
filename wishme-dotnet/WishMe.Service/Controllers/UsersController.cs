@@ -43,7 +43,7 @@ namespace WishMe.Service.Controllers
     /// <returns>ID a přístupový token</returns>
     [HttpPost("login/organizer")]
     [AllowAnonymous]
-    [ProducesResponseType(typeof(LoginResponseModel), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(LoginOrganizerResponseModel), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public async Task<IActionResult> PostLoginOrganizerAsync([FromBody] LoginOrganizerModel model, CancellationToken cancellationToken)
     {
@@ -58,7 +58,7 @@ namespace WishMe.Service.Controllers
     /// <returns>ID akce a přístupový token</returns>
     [HttpPost("login/participant")]
     [AllowAnonymous]
-    [ProducesResponseType(typeof(LoginResponseModel), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(LoginParticipantResponseModel), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> PostLoginParticipantAsync([FromBody] LoginParticipantModel model, CancellationToken cancellationToken)
     {
