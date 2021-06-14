@@ -115,5 +115,12 @@ namespace WishMe.Service.Repositories
       return await Query<TDoc>()
           .CountAsync(doc => doc.Id == id, cancellationToken) == 1;
     }
+
+    public async Task<bool> ExistsAsync<TEntity>(Expression<Func<TEntity, bool>> filter, CancellationToken cancellationToken) where TEntity : DbDoc
+    {
+      return await Query<TEntity>()
+        .Where(filter)
+        .CountAsync(cancellationToken) == 1;
+    }
   }
 }

@@ -2,6 +2,8 @@
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
+using WishMe.Service.Entities;
+using WishMe.Service.Exceptions;
 using WishMe.Service.Models.Login;
 using WishMe.Service.Repositories;
 using WishMe.Service.Requests.Login;
@@ -24,6 +26,9 @@ namespace WishMe.Service.Handlers.Login
 
     public async Task<LoginOrganizerResponseModel> Handle(RegisterOrganizerRequest request, CancellationToken cancellationToken)
     {
+      if (await fGenericRepository.ExistsAsync<Organizer>(doc => doc.Username == request.Model.Username, cancellationToken))
+        throw new ConflictException($"User with username '{request.Model.Username}' already exists.");
+
       var organizer = fIdentityService.CreateOrganizer(request.Model);
 
       var id = await fGenericRepository.CreateAsync(organizer, cancellationToken);
