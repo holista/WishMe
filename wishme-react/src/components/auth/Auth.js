@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 import { authActions } from "../../store/auth-slice";
@@ -9,32 +9,16 @@ const Auth = (props) => {
   const passwordInputRef = useRef();
   const passwordRepeatInputRef = useRef();
   const dispatch = useDispatch();
-  const { isRegistered, isAuthenticated, isOrganizer, token, organizerId } =
+  const { isRegistered /*isAuthenticated, isOrganizer, token, organizerId*/ } =
     useSelector((state) => state.auth);
   const history = useHistory();
-
-  const authHandler = (event) => {
-    event.preventDefault();
-    dispatch(authActions.login());
-    history.push("/mainpage");
-  };
-
-  const loginHandler = (event) => {
-    event.preventDefault();
-    dispatch(authActions.login(fetchLogin()));
-    history.push("/mainpage");
-  };
-
-  const registerHandler = (event) => {
-    event.preventDefault();
-    dispatch(authActions.register(fetchRegistration()));
-  };
 
   const toggleHandler = () => {
     dispatch(authActions.toggle());
   };
 
-  const fetchRegistration = () => {
+  const registerHandler = (event) => {
+    event.preventDefault();
     const dataReg = {
       username: usernameInputRef.current.value,
       password: passwordInputRef.current.value,
@@ -43,17 +27,24 @@ const Auth = (props) => {
     fetch("http://localhost:8085/api/v1/users/register/organizer", {
       method: "POST",
       body: JSON.stringify(dataReg),
+      headers: {
+        "Content-Type": "application/json",
+        accept: "application/json",
+      },
     })
       .then((response) => response.json())
       .then((responseData) => {
-        return {
-          organizerId: responseData.organizerId,
-          token: responseData.token,
-        };
+        dispatch(
+          authActions.register({
+            organizerId: responseData.organizerId,
+            token: responseData.token,
+          })
+        );
       });
   };
 
-  const fetchLogin = () => {
+  const loginHandler = (event) => {
+    event.preventDefault();
     const dataReg = {
       username: usernameInputRef.current.value,
       password: passwordInputRef.current.value,
@@ -62,14 +53,25 @@ const Auth = (props) => {
     fetch("http://localhost:8085/api/v1/users/login/organizer", {
       method: "POST",
       body: JSON.stringify(dataReg),
+      headers: {
+        "Content-Type": "application/json",
+        accept: "application/json",
+      },
     })
-      .then((response) => response.json())
+      .then((response) => {
+        if (!response.ok) throw new Error();
+        return response.json();
+      })
       .then((responseData) => {
-        return {
-          organizerId: responseData.organizerId,
-          token: responseData.token,
-        };
-      });
+        dispatch(
+          authActions.login({
+            organizerId: responseData.organizerId,
+            token: responseData.token,
+          })
+        );
+        history.push("/mainpage");
+      })
+      .catch((err) => console.log(err));
   };
 
   return (
@@ -85,11 +87,15 @@ const Auth = (props) => {
 
           <div>
             <div className={classes.control}>
-              <input placeholder="Uživatelské jméno" ref={usernameInputRef} />
+              <input
+                placeholder="Uživatelské jméno"
+                ref={usernameInputRef}
+                required
+              />
             </div>
 
             <div className={classes.control}>
-              <input placeholder="Heslo" ref={passwordInputRef} />
+              <input placeholder="Heslo" ref={passwordInputRef} required />
             </div>
           </div>
 
@@ -98,6 +104,7 @@ const Auth = (props) => {
               <input
                 placeholder="Potvrdit heslo"
                 ref={passwordRepeatInputRef}
+                required
               />
             </div>
           )}

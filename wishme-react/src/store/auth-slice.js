@@ -6,8 +6,8 @@ const authSlice = createSlice({
     isRegistered: false,
     isAuthenticated: false,
     isOrganizer: false,
-    token: "",
-    organizerId: "",
+    token: null,
+    organizerId: null,
   },
   reducers: {
     login(state, action) {
@@ -17,7 +17,7 @@ const authSlice = createSlice({
     },
     logout(state) {
       state.isAuthenticated = false;
-      state.token = "";
+      state.token = null;
     },
     register(state, action) {
       state.isRegistered = true;
