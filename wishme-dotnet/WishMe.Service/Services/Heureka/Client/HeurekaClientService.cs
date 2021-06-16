@@ -62,9 +62,9 @@ namespace WishMe.Service.Services.Heureka.Client
           .Select(m => new PreviewModel
           {
             Name = m.Name,
-            ImageUrl = m.ImageUrl,
+            ImageUrl = m.ImageUrl.FixUrl(),
             Price = m.Price.GetPrice(),
-            Url = m.DesktopUrl
+            Url = m.DesktopUrl.FixUrl()
           })
           .ToList();
       }
