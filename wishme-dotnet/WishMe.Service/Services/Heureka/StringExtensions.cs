@@ -13,5 +13,14 @@ namespace WishMe.Service.Services.Heureka
           .TakeWhile(ch => !ch.IsLetter())
           .Where(ch => ch.IsDigit())));
     }
+
+    public static string FixUrl(this string heurekaUrl)
+    {
+      const string urlStart = "//";
+
+      return heurekaUrl.StartsWith(urlStart)
+        ? heurekaUrl.Replace(urlStart, "http://")
+        : heurekaUrl;
+    }
   }
 }

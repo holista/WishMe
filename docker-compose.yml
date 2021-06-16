@@ -5,10 +5,8 @@ services:
     build:
       context: .
       dockerfile: wishme-dotnet/WishMe.Service/Dockerfile
-    depends_on:
-      - wish-me-db
     environment:     
-      WISH_ME_MONGO_URL: "mongodb://host.docker.internal"
+      WISH_ME_MONGO_URL: "mongodb+srv://service:MX9pb9QInbRtPU4v@cluster0.8iwha.mongodb.net/WishMe?retryWrites=true&w=majority"
       WISH_ME_MONGO_DB_NAME: "WishMe"
       WISH_ME_JWT_KEY: ":yFD8uJG}jq2^.~q"
       WISH_ME_HEUREKA_GALLERY_THUMBNAIL_IMAGE: "c-gallery-open__thumbnail"
@@ -23,16 +21,3 @@ services:
       - "3200:8080"
     environment:
       URLS: '[ { url: " http://localhost:8085/docs/v1/swagger.json", name: "WishMe Service" } ]'
-
-  wish-me-db:
-    image: mongo:latest
-    volumes:
-      - mongodata_volume:/data/db
-    ports:
-      - 27017:27017
-    environment:
-      MONGO_DATA_DIR: "/data/db"
-    container_name: "wish-me-mongodb"
-
-volumes:
-  mongodata_volume:

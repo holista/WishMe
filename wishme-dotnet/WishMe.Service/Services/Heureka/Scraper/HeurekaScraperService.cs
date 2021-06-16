@@ -41,7 +41,7 @@ namespace WishMe.Service.Services.Heureka.Scraper
         return new DetailModel
         {
           Name = image.AlternativeText,
-          ImageUrl = image.Source,
+          ImageUrl = image.Source.FixUrl(),
           Price = price.TextContent.GetPrice()
         };
       }
