@@ -1,10 +1,14 @@
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
+import { FaEyeSlash, FaEye } from "react-icons/fa/index";
+
 import { authActions } from "../../store/auth-slice";
 import classes from "./Auth.module.css";
 
 const Auth = (props) => {
+  const [passwordIsVisible, setPasswordIsVisible] = useState(false);
+
   const usernameInputRef = useRef();
   const passwordInputRef = useRef();
   const passwordRepeatInputRef = useRef();
@@ -12,6 +16,15 @@ const Auth = (props) => {
   const { isRegistered /*isAuthenticated, isOrganizer, token, organizerId*/ } =
     useSelector((state) => state.auth);
   const history = useHistory();
+
+  const togglePasswordVisibility = () => {
+    setPasswordIsVisible((prevState) => !prevState);
+  };
+  const eye = passwordIsVisible ? (
+    <FaEye onClick={togglePasswordVisibility} className={classes.eye} />
+  ) : (
+    <FaEyeSlash onClick={togglePasswordVisibility} className={classes.eye} />
+  );
 
   const toggleHandler = () => {
     dispatch(authActions.toggle());
@@ -89,13 +102,21 @@ const Auth = (props) => {
             <div className={classes.control}>
               <input
                 placeholder="Uživatelské jméno"
+                type={passwordIsVisible ? "text" : "password"}
                 ref={usernameInputRef}
                 required
               />
             </div>
 
             <div className={classes.control}>
-              <input placeholder="Heslo" ref={passwordInputRef} required />
+              <input
+                placeholder="Heslo"
+                type={passwordIsVisible ? "text" : "password"}
+                ref={passwordInputRef}
+                required
+                eye
+              />
+              <i>{eye}</i>
             </div>
           </div>
 

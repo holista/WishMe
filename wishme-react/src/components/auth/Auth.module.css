@@ -34,7 +34,7 @@
   background-color: #fff;
   border: 1px solid #c1d1d1;
   font-size: 1rem;
-  padding: 8px;
+  padding: 2%;
   text-align: center;
   width: 60%;
 }
@@ -43,6 +43,12 @@
 .control textarea:focus {
   background-color: rgb(247, 247, 247);
   outline: transparent;
+}
+
+.eye {
+  position: absolute;
+  top: 50%;
+  right: 20%;
 }
 
 .switching {
