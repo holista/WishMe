@@ -11,24 +11,24 @@
   align-items: center;
 }
 
-.leftArrow {
+.arrowLeft {
   position: absolute;
   top: 50%;
   left: 20px;
   font-size: 2rem;
 }
 
-.leftArrow :hover {
+.arrowLeft :hover {
   cursor: pointer;
 }
 
-.rightArrow {
+.arrowRight {
   position: absolute;
   top: 50%;
   right: 20px;
   font-size: 2rem;
 }
 
-.rightArrow :hover {
+.arrowRight :hover {
   cursor: pointer;
 }

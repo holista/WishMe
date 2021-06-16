@@ -1,0 +1,48 @@
+.form {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.section {
+  width: 80vw;
+}
+
+.control {
+  margin-bottom: 1rem;
+  padding: 0 1rem;
+}
+
+.control label {
+  display: block;
+  padding-bottom: 0.25rem;
+  font-weight: 700;
+}
+
+.control input,
+.control textarea {
+  display: block;
+  width: 100%;
+  font-size: 16px;
+  padding: 0.25rem;
+}
+
+.control input:focus,
+.control textarea:focus {
+  background-color: #dce4ff;
+  outline-color: #2e52ca;
+}
+
+.time {
+  display: flex;
+}
+
+.actions {
+  display: flex;
+  justify-content: center;
+  margin-top: 1rem;
+}
+
+.actions button {
+  margin: 0 1rem;
+}

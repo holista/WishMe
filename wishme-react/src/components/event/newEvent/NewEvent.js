@@ -1,6 +1,5 @@
 import classes from "./NewEvent.module.css";
 import Modal from "../../ui/Modal";
-//import { useState } from "react";
 
 const NewEvent = (props) => {
   return (
@@ -30,17 +29,6 @@ const NewEvent = (props) => {
             <textarea type="text" id="description" rows="5" />
           </div>
         </form>
-      </section>
-
-      <section className={classes.section}>
-        <div>
-          <h1>Co si přejete?</h1>
-          <h2>Zadejte url předmětu nebo začněte vyhledávat v řádku.</h2>
-        </div>
-        <div className={classes.control}>
-          <label htmlFor="description">Předmět</label>
-          <input type="text" id="description" rows="5" />
-        </div>
       </section>
 
       <section>
