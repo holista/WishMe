@@ -1,7 +1,9 @@
 .form {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-items: center;
+  align-content: space-between;
+  justify-content: center;
 }
 
 .section {
@@ -33,16 +35,68 @@
   outline-color: #2e52ca;
 }
 
-.time {
-  display: flex;
+.imageWrap {
+  height: 100%;
+  width: 100%;
+
+  overflow: hidden;
+  border-top-right-radius: 6px;
+  border-top-left-radius: 6px;
 }
 
-.actions {
+.image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
   display: flex;
   justify-content: center;
-  margin-top: 1rem;
 }
 
-.actions button {
-  margin: 0 1rem;
+.btn {
+  display: flex;
+  justify-content: center;
+}
+
+.form button {
+  width: 25%;
+  background: #1a3cab;
+  border-radius: 6px;
+  color: #fff;
+  border: none;
+  position: relative;
+  height: 60px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: 800ms ease all;
+  outline: none;
+  margin: 1rem 0;
+}
+
+.form button:hover {
+  background: transparent;
+  color: #1a3cab;
+}
+
+.form button:before,
+.form button:after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  height: 2px;
+  width: 0;
+  background: #1a3cab;
+  transition: 400ms ease all;
+}
+.form button:after {
+  right: inherit;
+  top: inherit;
+  left: 0;
+  bottom: 0;
+}
+
+.form button:hover:before,
+.form button:hover:after {
+  width: 100%;
+  transition: 800ms ease all;
 }

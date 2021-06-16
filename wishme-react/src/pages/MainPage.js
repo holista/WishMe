@@ -37,6 +37,7 @@ const MainPage = (props) => {
         onData={openEventHandler}
         data={DUMMY_DATA}
         defaultTitle="Vytvořte novou událost"
+        centerPosition={true}
       />
       {modalIsOpen && <NewEvent />}
     </>

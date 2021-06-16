@@ -28,12 +28,17 @@ const NewEvent = (props) => {
             <label htmlFor="description">Popis</label>
             <textarea type="text" id="description" rows="5" />
           </div>
-        </form>
-      </section>
 
-      <section>
-        <h3>vygenerovany odkaz</h3>
-        <button>Vygenerovat odkaz</button>
+          <section>
+            <div className={classes.control}>
+              {/*<label htmlFor="title">Vygenerovaný odkaz</label>*/}
+              <input type="text" id="title" value="Vygenerovaný odkaz" />
+            </div>
+            <div className={classes.btn}>
+              <button>Přidat událost</button>
+            </div>
+          </section>
+        </form>
       </section>
     </Modal>
   );
