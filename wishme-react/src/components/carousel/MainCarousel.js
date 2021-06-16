@@ -26,9 +26,9 @@ const MainCarousel = (props) => {
 
   const getSlide = (data, index) => {
     if (data[index] !== undefined) {
-      return <EventItem title={data[index].title} />;
+      return <EventItem title={data[index].title} onClick={props.onEvent} />;
     } else {
-      return <NewEventItem onClick={props.onClick} />;
+      return <NewEventItem onClick={props.onNewEvent} />;
     }
   };
 

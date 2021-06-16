@@ -1,72 +1,118 @@
 .formWrap {
   position: absolute;
-  margin: 10% 10% 20% 55%;
-  width: 390px;
+  margin: 5% 10% 20% 55%;
+  width: 30%;
   border-radius: 10px;
-  background-color: #ccc;
+  background-color: aliceblue;
   box-shadow: 0 3px 20px 0 rgb(0 0 0 / 10%);
   box-sizing: border-box;
 }
 
 .form {
-  width: 100%;
   display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
+  flex-direction: column;
+  justify-items: center;
   align-content: space-between;
 }
 
-.form ul {
-  list-style-type: none;
+.header {
+  font-size: 1.25rem;
   display: flex;
   justify-content: center;
-  width: 100%;
-  padding: 10px;
-}
-
-.form li {
-  font-size: 16px;
-  color: #000;
-  line-height: 1.2;
-  text-align: center;
-  margin: 10px;
-  border: none;
-  background-color: transparent;
-  text-decoration: none;
-}
-
-.form li:hover,
-.form li:active,
-.form li.active {
-  text-decoration: underline;
-  font-weight: bold;
 }
 
 .control {
   color: #000;
   box-sizing: border-box;
-  padding: 10px;
+  padding: 0.5rem;
+  display: flex;
+  justify-content: center;
 }
 
 .control input {
   border-radius: 4px;
-  background-color: #f0f0f0;
+  background-color: #fff;
   border: 1px solid #c1d1d1;
-  font-size: 16px;
-  padding: 8px;
+  font-size: 1rem;
+  padding: 2%;
   text-align: center;
+  width: 60%;
 }
 
 .control input:focus,
 .control textarea:focus {
-  background-color: #cbf8f8;
-  outline-color: teal;
+  background-color: rgb(247, 247, 247);
+  outline: transparent;
+}
+
+.eye {
+  position: absolute;
+  top: 50%;
+  right: 20%;
+}
+
+.switching {
+  font-size: 0.55rem;
+  font-weight: 200;
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1rem;
+}
+
+.switching span {
+  color: #1a3cab;
+}
+
+.switching span:hover {
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.btn {
+  display: flex;
+  justify-content: center;
 }
 
 .form button {
-  box-sizing: border-box;
-  padding: 10px;
-  width: 200px;
-  color: #000;
-  margin: 30px 0 10px 0;
+  width: 60%;
+  background: #1a3cab;
+  border-radius: 6px;
+  color: #fff;
+  border: none;
+  position: relative;
+  height: 60px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: 800ms ease all;
+  outline: none;
+  margin: 1rem 0;
+}
+
+.form button:hover {
+  background: transparent;
+  color: #1a3cab;
+}
+
+.form button:before,
+.form button:after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  height: 2px;
+  width: 0;
+  background: #1a3cab;
+  transition: 400ms ease all;
+}
+.form button:after {
+  right: inherit;
+  top: inherit;
+  left: 0;
+  bottom: 0;
+}
+
+.form button:hover:before,
+.form button:hover:after {
+  width: 100%;
+  transition: 800ms ease all;
 }
