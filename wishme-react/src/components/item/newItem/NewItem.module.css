@@ -1,7 +1,9 @@
 .form {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-items: center;
+  align-content: space-between;
+  justify-content: center;
 }
 
 .section {
@@ -33,18 +35,21 @@
   outline-color: #2e52ca;
 }
 
-.time {
-  display: flex;
+.imageWrap {
+  height: 100%;
+  width: 100%;
+
+  overflow: hidden;
+  border-top-right-radius: 6px;
+  border-top-left-radius: 6px;
 }
 
-.actions {
+.image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
   display: flex;
   justify-content: center;
-  margin-top: 1rem;
-}
-
-.actions button {
-  margin: 0 1rem;
 }
 
 .btn {

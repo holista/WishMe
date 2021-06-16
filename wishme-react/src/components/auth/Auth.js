@@ -102,7 +102,7 @@ const Auth = (props) => {
             <div className={classes.control}>
               <input
                 placeholder="Uživatelské jméno"
-                type={passwordIsVisible ? "text" : "password"}
+                type="text"
                 ref={usernameInputRef}
                 required
               />
@@ -124,6 +124,7 @@ const Auth = (props) => {
             <div className={classes.control}>
               <input
                 placeholder="Potvrdit heslo"
+                type={passwordIsVisible ? "text" : "password"}
                 ref={passwordRepeatInputRef}
                 required
               />

@@ -1,11 +1,21 @@
-import MainCarousel from "../components/carousel/MainCarousel";
+import { useHistory } from "react-router-dom";
+import { useSelector } from "react-redux";
+
+import NewItem from "../components/item/newItem/NewItem";
+import ItemList from "../components/item/ItemList";
 
 const EventPage = (props) => {
+  const history = useHistory();
+
+  const modalIsOpen = useSelector((state) => state.ui.modalIsOpen);
+  if (!modalIsOpen) {
+    history.replace("/event");
+  }
+
   return (
     <>
-      <div>
-        <h1>Vyberte svému blízkému dárek dle jeho představ</h1>
-      </div>
+      <ItemList />
+      {modalIsOpen && <NewItem />}
     </>
   );
 };
