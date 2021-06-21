@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router";
 
@@ -6,12 +7,26 @@ import NewEvent from "../components/event/newEvent/NewEvent";
 import { uiActions } from "../store/ui-slice";
 
 const MainPage = (props) => {
-  const DUMMY_DATA = [
-    { title: "1" },
-    { title: "2" },
-    { title: "3" },
-    { title: "4" },
-  ];
+  const { token, organizerId } = useSelector((state) => state.auth);
+  const [events, setEvents] = useState([]);
+
+  useEffect(() => {
+    fetch(
+      `http://localhost:8085/api/v1/events?offset=0&limit=100&organizerId=${organizerId}`,
+      {
+        method: "GET",
+        headers: {
+          accept: "application/json",
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    )
+      .then((response) => response.json())
+      .then((responseData) => {
+        setEvents(responseData.models);
+      });
+  }, []);
 
   const modalIsOpen = useSelector((state) => state.ui.modalIsOpen);
   const dispatch = useDispatch();
@@ -26,8 +41,8 @@ const MainPage = (props) => {
     history.push("/mainpage/new-event");
   };
 
-  const openEventHandler = () => {
-    history.push("/event");
+  const openEventHandler = (id) => {
+    history.push(`/event/${id}`);
   };
 
   return (
@@ -35,7 +50,7 @@ const MainPage = (props) => {
       <Carousel
         onNewData={openNewEventHandler}
         onData={openEventHandler}
-        data={DUMMY_DATA}
+        data={events}
         defaultTitle="Vytvořte novou událost"
         centerPosition={true}
       />

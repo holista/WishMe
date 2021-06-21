@@ -32,7 +32,7 @@ function App() {
             <WelcomePage />
           </Route>
         )}
-        <Route path="/event">
+        <Route path="/event/:Id">
           <EventPage />
         </Route>
       </Switch>

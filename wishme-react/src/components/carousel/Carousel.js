@@ -2,7 +2,7 @@ import { useState } from "react";
 import { FaChevronRight, FaChevronLeft } from "react-icons/fa/index";
 
 import classes from "./Carousel.module.css";
-import Event from "../event/Event";
+import CarouselItem from "./CarouselItem";
 
 const Carousel = (props) => {
   const [curSlide, setCurSlide] = useState(0);
@@ -19,9 +19,17 @@ const Carousel = (props) => {
 
   const getSlide = (data, index) => {
     if (data[index] !== undefined) {
-      return <Event title={data[index].title} onClick={props.onData} />;
+      return (
+        <CarouselItem
+          title={data[index].name}
+          onClick={() => props.onData(data[index].id)}
+          key={data[index].id}
+        />
+      );
     } else {
-      return <Event title={props.defaultTitle} onClick={props.onNewData} />;
+      return (
+        <CarouselItem title={props.defaultTitle} onClick={props.onNewData} />
+      );
     }
   };
 

@@ -1,20 +1,16 @@
-.eventItem {
-  width: 300px;
-  height: 200px;
-  background-color: aliceblue;
-  object-fit: cover;
-  border-radius: 6px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+.event {
   display: flex;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-}
-
-.eventItem:hover {
-  cursor: pointer;
+  flex-direction: column;
+  margin-top: 3%;
+  width: 85%;
+  background-color: rgba(255, 255, 255, 0.596);
+  border-radius: 6px;
 }
 
 .title {
-  color: rgb(14, 14, 155);
+  text-align: center;
+}
+
+.dateTime {
+  display: flex;
 }
