@@ -20,7 +20,10 @@ const EventPage = (props) => {
   return (
     <>
       <Event eventId={id} />
-      <ItemList />
+      <div>
+        <h1>Vyberte svému blízkému dárek dle jeho představ</h1>
+      </div>
+      <ItemList eventId={id} />
       {modalIsOpen && <NewItem />}
     </>
   );

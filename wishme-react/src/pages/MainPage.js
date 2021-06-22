@@ -25,7 +25,7 @@ const MainPage = (props) => {
         setEvents(responseData.models);
       }
     );
-  }, [organizerId, token]);
+  }, [organizerId, token, sendRequest]);
 
   const modalIsOpen = useSelector((state) => state.ui.modalIsOpen);
   const dispatch = useDispatch();

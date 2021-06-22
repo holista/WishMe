@@ -4,6 +4,7 @@ import { useSelector } from "react-redux";
 import classes from "./NewItem.module.css";
 import Modal from "../../ui/Modal";
 import Image from "../../ui/Image";
+import useApi from "../../../hooks/use-api";
 
 const NewItem = (props) => {
   const urlInputRef = useRef();
@@ -14,25 +15,21 @@ const NewItem = (props) => {
   const [imageUrl, setImageUrl] = useState("");
   const [dataIsVisible, setDataIsVisible] = useState(false);
 
+  const { isLoading, error, sendRequest } = useApi();
+
   const getItem = (url) => {
-    fetch(
-      `http://localhost:8085/api/v1/items/suggestions/heureka/detail?url=${url}`,
+    sendRequest(
       {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          accept: "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    )
-      .then((response) => response.json())
-      .then((responseData) => {
+        url: `items/suggestions/heureka/detail?url=${url}`,
+        headers: { Authorization: `Bearer ${token}` },
+      },
+      (responseData) => {
         setName(responseData.name);
         setPrice(responseData.price);
         setImageUrl(responseData.imageUrl);
         setDataIsVisible(true);
-      });
+      }
+    );
   };
 
   const changeUrlHandler = (event) => {
