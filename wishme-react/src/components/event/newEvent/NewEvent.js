@@ -69,7 +69,7 @@ const NewEvent = (props) => {
   return (
     <Modal header="Vytvořte novou událost">
       <section className={classes.section}>
-        <div>
+        <div className={classes.title}>
           <h2>Zadejte základní informace o Vaší události.</h2>
         </div>
         <form className={classes.form} onSubmit={addEventHandler}>

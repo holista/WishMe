@@ -1,4 +1,4 @@
-import { useRef, useEffect, useState } from "react";
+import { useRef, useState } from "react";
 import { useSelector } from "react-redux";
 
 import classes from "./NewItem.module.css";

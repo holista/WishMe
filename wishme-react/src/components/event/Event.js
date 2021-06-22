@@ -1,8 +1,10 @@
-import classes from "./Event.module.css";
-import Card from "../ui/Card";
 import { useSelector } from "react-redux";
 import { useState } from "react";
+import { FaCalendarAlt, FaClock } from "react-icons/fa/index";
 import moment from "moment";
+
+import classes from "./Event.module.css";
+import Card from "../ui/Card";
 
 const Event = (props) => {
   const token = useSelector((state) => state.auth.token);
@@ -36,22 +38,32 @@ const Event = (props) => {
 
   getEvent();
 
+  const editHandler = () => {};
+
+  const calendarIcon = <FaCalendarAlt />;
+  const clockIcon = <FaClock />;
+
   return (
     <Card className={classes.event}>
+      <div className={classes.edit}>
+        <button onClick={editHandler}>Upravit událost</button>
+      </div>
       <div className={classes.title}>
         <h1>{title}</h1>
       </div>
       <div className={classes.dateTime}>
-        <div>
-          <h1>{date}</h1>
+        <div className={classes.control}>
+          <span className={classes.icon}>{calendarIcon}</span>
+          <h3>{date}</h3>
         </div>
-        <div>
-          <h1>{time}</h1>
+        <div className={classes.control}>
+          <span className={classes.icon}>{clockIcon}</span>
+          <h3>{time}</h3>
         </div>
       </div>
 
       <div>
-        <h1>{description}</h1>
+        <p>{description}</p>
       </div>
     </Card>
   );

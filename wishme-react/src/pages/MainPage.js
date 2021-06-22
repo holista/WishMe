@@ -4,29 +4,28 @@ import { useHistory } from "react-router";
 
 import Carousel from "../components/carousel/Carousel";
 import NewEvent from "../components/event/newEvent/NewEvent";
+import useApi from "../hooks/use-api";
 import { uiActions } from "../store/ui-slice";
 
 const MainPage = (props) => {
   const { token, organizerId } = useSelector((state) => state.auth);
   const [events, setEvents] = useState([]);
 
+  const { isLoading, error, sendRequest } = useApi();
+
   useEffect(() => {
-    fetch(
-      `http://localhost:8085/api/v1/events?offset=0&limit=100&organizerId=${organizerId}`,
+    sendRequest(
       {
-        method: "GET",
+        url: `events?offset=0&limit=100&organizerId=${organizerId}`,
         headers: {
-          accept: "application/json",
-          "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-      }
-    )
-      .then((response) => response.json())
-      .then((responseData) => {
+      },
+      (responseData) => {
         setEvents(responseData.models);
-      });
-  }, []);
+      }
+    );
+  }, [organizerId, token]);
 
   const modalIsOpen = useSelector((state) => state.ui.modalIsOpen);
   const dispatch = useDispatch();

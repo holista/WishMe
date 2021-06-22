@@ -26,3 +26,7 @@
 .nav li :hover {
   cursor: pointer;
 }
+.nav a {
+  text-decoration: none;
+  color: #421daa;
+}

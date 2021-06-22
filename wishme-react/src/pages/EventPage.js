@@ -13,9 +13,9 @@ const EventPage = (props) => {
   );
 
   const modalIsOpen = useSelector((state) => state.ui.modalIsOpen);
-  /*if (!modalIsOpen) {
-    history.replace(`event/${id}`);
-  }*/
+  if (!modalIsOpen) {
+    history.replace(`/event/${id}`);
+  }
 
   return (
     <>

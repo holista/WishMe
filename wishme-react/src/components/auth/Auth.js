@@ -5,30 +5,28 @@ import { FaEyeSlash, FaEye } from "react-icons/fa/index";
 
 import { authActions } from "../../store/auth-slice";
 import classes from "./Auth.module.css";
+import useApi from "../../hooks/use-api";
 
 const Auth = (props) => {
+  const history = useHistory();
+
+  const dispatch = useDispatch();
+  const { isRegistered } = useSelector((state) => state.auth);
+
   const [passwordIsVisible, setPasswordIsVisible] = useState(false);
 
   const usernameInputRef = useRef();
   const passwordInputRef = useRef();
   const passwordRepeatInputRef = useRef();
-  const dispatch = useDispatch();
-  const { isRegistered /*isAuthenticated, isOrganizer, token, organizerId*/ } =
-    useSelector((state) => state.auth);
-  const history = useHistory();
 
   const togglePasswordVisibility = () => {
     setPasswordIsVisible((prevState) => !prevState);
   };
-  const eye = passwordIsVisible ? (
-    <FaEye onClick={togglePasswordVisibility} className={classes.eye} />
-  ) : (
-    <FaEyeSlash onClick={togglePasswordVisibility} className={classes.eye} />
-  );
-
   const toggleHandler = () => {
     dispatch(authActions.toggle());
   };
+
+  const { isLoading, error, sendRequest } = useApi();
 
   const registerHandler = (event) => {
     event.preventDefault();
@@ -37,23 +35,21 @@ const Auth = (props) => {
       password: passwordInputRef.current.value,
     };
 
-    fetch("http://localhost:8085/api/v1/users/register/organizer", {
-      method: "POST",
-      body: JSON.stringify(dataReg),
-      headers: {
-        "Content-Type": "application/json",
-        accept: "application/json",
+    sendRequest(
+      {
+        url: "users/register/organizer",
+        method: "POST",
+        body: JSON.stringify(dataReg),
       },
-    })
-      .then((response) => response.json())
-      .then((responseData) => {
+      (responseData) => {
         dispatch(
           authActions.register({
             organizerId: responseData.organizerId,
             token: responseData.token,
           })
         );
-      });
+      }
+    );
   };
 
   const loginHandler = (event) => {
@@ -63,19 +59,13 @@ const Auth = (props) => {
       password: passwordInputRef.current.value,
     };
 
-    fetch("http://localhost:8085/api/v1/users/login/organizer", {
-      method: "POST",
-      body: JSON.stringify(dataReg),
-      headers: {
-        "Content-Type": "application/json",
-        accept: "application/json",
+    sendRequest(
+      {
+        url: "users/login/organizer",
+        method: "POST",
+        body: JSON.stringify(dataReg),
       },
-    })
-      .then((response) => {
-        if (!response.ok) throw new Error();
-        return response.json();
-      })
-      .then((responseData) => {
+      (responseData) => {
         dispatch(
           authActions.login({
             organizerId: responseData.organizerId,
@@ -83,9 +73,15 @@ const Auth = (props) => {
           })
         );
         history.push("/mainpage");
-      })
-      .catch((err) => console.log(err));
+      }
+    );
   };
+
+  const eye = passwordIsVisible ? (
+    <FaEye onClick={togglePasswordVisibility} className={classes.eye} />
+  ) : (
+    <FaEyeSlash onClick={togglePasswordVisibility} className={classes.eye} />
+  );
 
   return (
     <>
@@ -114,7 +110,6 @@ const Auth = (props) => {
                 type={passwordIsVisible ? "text" : "password"}
                 ref={passwordInputRef}
                 required
-                eye
               />
               <i>{eye}</i>
             </div>
