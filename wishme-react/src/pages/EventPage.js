@@ -7,6 +7,7 @@ import ItemList from "../components/itemlist/ItemList";
 import NewItemList from "../components/itemlist/newItemList/NewItemList";
 import useApi from "../hooks/use-api";
 import { useEffect, useState } from "react";
+import Spinner from "../components/ui/Spinner";
 
 const EventPage = (props) => {
   const history = useHistory();
@@ -48,6 +49,7 @@ const EventPage = (props) => {
       <div>
         <h1>Vyberte svému blízkému dárek dle jeho představ</h1>
       </div>
+      {isLoading && <Spinner />}
       {lists}
       <NewItemList eventId={id} />
       {modalIsOpen && <NewItem />}

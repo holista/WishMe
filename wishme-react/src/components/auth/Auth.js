@@ -6,6 +6,7 @@ import { FaEyeSlash, FaEye } from "react-icons/fa/index";
 import { authActions } from "../../store/auth-slice";
 import classes from "./Auth.module.css";
 import useApi from "../../hooks/use-api";
+import Spinner from "../ui/Spinner";
 
 const Auth = (props) => {
   const history = useHistory();
@@ -125,7 +126,10 @@ const Auth = (props) => {
           )}
 
           <div className={classes.btn}>
-            <button>{isRegistered ? "Přihlásit" : "Registrovat"}</button>
+            {isLoading && <Spinner />}
+            {!isLoading && (
+              <button>{isRegistered ? "Přihlásit" : "Registrovat"}</button>
+            )}
           </div>
         </form>
         <div className={classes.switching}>

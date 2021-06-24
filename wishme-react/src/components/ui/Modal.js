@@ -21,17 +21,17 @@ const Modal = (props) => {
   return (
     <>
       {modalIsOpen && (
-        <div className={classes.backdrop} onClick={closeModalHandler}></div>
-      )}
-      {modalIsOpen && (
-        <div className={classes.modal}>
-          <div className={classes.close}>
-            <button onClick={closeModalHandler}>x</button>
+        <div className={classes.overlay}>
+          <div className={classes.backdrop} onClick={closeModalHandler}></div>
+          <div className={classes.modal}>
+            <div className={classes.close}>
+              <button onClick={closeModalHandler}>x</button>
+            </div>
+            <div className={classes.modalHeader}>
+              <h1>{props.header}</h1>
+            </div>
+            {props.children}
           </div>
-          <div className={classes.modalHeader}>
-            <h1>{props.header}</h1>
-          </div>
-          {props.children}
         </div>
       )}
     </>

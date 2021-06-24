@@ -4,6 +4,7 @@ import { useHistory } from "react-router";
 
 import Carousel from "../components/carousel/Carousel";
 import NewEvent from "../components/event/newEvent/NewEvent";
+import Spinner from "../components/ui/Spinner";
 import useApi from "../hooks/use-api";
 import { uiActions } from "../store/ui-slice";
 
@@ -44,15 +45,21 @@ const MainPage = (props) => {
     history.push(`/event/${id}`);
   };
 
+  const content = isLoading ? (
+    <Spinner />
+  ) : (
+    <Carousel
+      onNewData={openNewEventHandler}
+      onData={openEventHandler}
+      data={events}
+      defaultTitle="Vytvořte novou událost"
+      centerPosition={true}
+    />
+  );
+
   return (
     <>
-      <Carousel
-        onNewData={openNewEventHandler}
-        onData={openEventHandler}
-        data={events}
-        defaultTitle="Vytvořte novou událost"
-        centerPosition={true}
-      />
+      {content}
       {modalIsOpen && <NewEvent />}
     </>
   );
