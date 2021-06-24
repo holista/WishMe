@@ -9,10 +9,6 @@ const Modal = (props) => {
   const dispatch = useDispatch();
   const history = useHistory();
 
-  if (modalIsOpen) {
-    document.body.style.overflow = "hidden";
-  }
-
   const closeModalHandler = () => {
     dispatch(uiActions.closeModal());
     history.goBack();
