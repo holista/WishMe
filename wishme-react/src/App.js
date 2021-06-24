@@ -8,12 +8,11 @@ import EventPage from "./pages/EventPage";
 
 function App() {
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
-  const history = useHistory();
-
+  /*
   if (!isAuthenticated) {
-    history.replace("/welcome");
+    return <Redirect to="/welcome" />;
   }
-
+*/
   return (
     <Layout>
       <Switch>

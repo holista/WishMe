@@ -3,19 +3,44 @@ import { useSelector } from "react-redux";
 
 import Event from "../components/event/Event";
 import NewItem from "../components/item/newItem/NewItem";
-import ItemList from "../components/item/ItemList";
+import ItemList from "../components/itemlist/ItemList";
+import NewItemList from "../components/itemlist/newItemList/NewItemList";
+import useApi from "../hooks/use-api";
+import { useEffect, useState } from "react";
 
 const EventPage = (props) => {
   const history = useHistory();
+  const [lists, setLists] = useState(null);
 
   const id = history.location.pathname.substring(
     history.location.pathname.lastIndexOf("/") + 1
   );
+  const token = useSelector((state) => state.auth.token);
 
   const modalIsOpen = useSelector((state) => state.ui.modalIsOpen);
-  if (!modalIsOpen) {
-    history.replace(`/event/${id}`);
-  }
+
+  const { isLoading, error, sendRequest } = useApi();
+
+  useEffect(() => {
+    sendRequest(
+      {
+        url: `wishlists?offset=0&limit=100&eventId=${id}`,
+        headers: { Authorization: `Bearer ${token}` },
+      },
+      (responseData) => {
+        setLists(
+          responseData.models.map((list) => (
+            <ItemList
+              eventId={id}
+              key={list.id}
+              name={list.name}
+              description={list.description}
+            />
+          ))
+        );
+      }
+    );
+  }, [id, token, sendRequest]);
 
   return (
     <>
@@ -23,7 +48,8 @@ const EventPage = (props) => {
       <div>
         <h1>Vyberte svému blízkému dárek dle jeho představ</h1>
       </div>
-      <ItemList eventId={id} />
+      {lists}
+      <NewItemList eventId={id} />
       {modalIsOpen && <NewItem />}
     </>
   );

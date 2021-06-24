@@ -9,10 +9,9 @@ import useApi from "../../hooks/use-api";
 
 const Auth = (props) => {
   const history = useHistory();
-
   const dispatch = useDispatch();
-  const { isRegistered } = useSelector((state) => state.auth);
 
+  const { isRegistered } = useSelector((state) => state.auth);
   const [passwordIsVisible, setPasswordIsVisible] = useState(false);
 
   const usernameInputRef = useRef();
@@ -22,6 +21,7 @@ const Auth = (props) => {
   const togglePasswordVisibility = () => {
     setPasswordIsVisible((prevState) => !prevState);
   };
+
   const toggleHandler = () => {
     dispatch(authActions.toggle());
   };
@@ -78,41 +78,38 @@ const Auth = (props) => {
   };
 
   const eye = passwordIsVisible ? (
-    <FaEye onClick={togglePasswordVisibility} className={classes.eye} />
-  ) : (
     <FaEyeSlash onClick={togglePasswordVisibility} className={classes.eye} />
+  ) : (
+    <FaEye onClick={togglePasswordVisibility} className={classes.eye} />
   );
 
   return (
     <>
       <div className={classes.formWrap}>
+        <div className={classes.header}>
+          <h1>WishMe</h1>
+        </div>
         <form
           onSubmit={!isRegistered ? registerHandler : loginHandler}
           className={classes.form}
         >
-          <div className={classes.header}>
-            <h1>WishMe</h1>
+          <div className={classes.control}>
+            <input
+              placeholder="Uživatelské jméno"
+              type="text"
+              ref={usernameInputRef}
+              required
+            />
           </div>
 
-          <div>
-            <div className={classes.control}>
-              <input
-                placeholder="Uživatelské jméno"
-                type="text"
-                ref={usernameInputRef}
-                required
-              />
-            </div>
-
-            <div className={classes.control}>
-              <input
-                placeholder="Heslo"
-                type={passwordIsVisible ? "text" : "password"}
-                ref={passwordInputRef}
-                required
-              />
-              <i>{eye}</i>
-            </div>
+          <div className={classes.control}>
+            <input
+              placeholder="Heslo"
+              type={passwordIsVisible ? "text" : "password"}
+              ref={passwordInputRef}
+              required
+            />
+            <span>{eye}</span>
           </div>
 
           {!isRegistered && (
@@ -123,22 +120,22 @@ const Auth = (props) => {
                 ref={passwordRepeatInputRef}
                 required
               />
+              <span>{eye}</span>
             </div>
           )}
 
           <div className={classes.btn}>
             <button>{isRegistered ? "Přihlásit" : "Registrovat"}</button>
           </div>
-
-          <div className={classes.switching}>
-            <h3>
-              {!isRegistered ? "Máte účet? " : "Nemáte účet? "}
-              <span onClick={toggleHandler}>
-                {!isRegistered ? "Přihlaste se." : "Zaregistrujte se."}
-              </span>
-            </h3>
-          </div>
         </form>
+        <div className={classes.switching}>
+          <h3>
+            {!isRegistered ? "Máte účet? " : "Nemáte účet? "}
+            <span onClick={toggleHandler}>
+              {!isRegistered ? "Přihlaste se." : "Zaregistrujte se."}
+            </span>
+          </h3>
+        </div>
       </div>
     </>
   );

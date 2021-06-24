@@ -1,4 +1,5 @@
 import { useDispatch, useSelector } from "react-redux";
+import { useHistory } from "react-router";
 import { uiActions } from "../../store/ui-slice";
 
 import classes from "./Modal.module.css";
@@ -6,6 +7,7 @@ import classes from "./Modal.module.css";
 const Modal = (props) => {
   const modalIsOpen = useSelector((state) => state.ui.modalIsOpen);
   const dispatch = useDispatch();
+  const history = useHistory();
 
   if (modalIsOpen) {
     document.body.style.overflow = "hidden";
@@ -13,6 +15,7 @@ const Modal = (props) => {
 
   const closeModalHandler = () => {
     dispatch(uiActions.closeModal());
+    history.goBack();
   };
 
   return (

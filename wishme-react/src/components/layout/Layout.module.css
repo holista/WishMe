@@ -1,7 +1,7 @@
 .main {
   width: calc(100vw - 1%);
   height: 100vw;
-  max-height: 100vh;
+  max-height: fit-content;
   background-image: linear-gradient(
       rgba(255, 255, 255, 0.9),
       rgba(0, 0, 255, 0.6)
