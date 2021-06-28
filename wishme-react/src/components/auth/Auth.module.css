@@ -83,6 +83,7 @@
   position: relative;
   height: 60px;
   font-size: 1rem;
+  font-family: "Quicksand", sans-serif;
   cursor: pointer;
   transition: 800ms ease all;
   outline: none;

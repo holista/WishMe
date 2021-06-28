@@ -45,21 +45,19 @@ const MainPage = (props) => {
     history.push(`/event/${id}`);
   };
 
-  const content = isLoading ? (
-    <Spinner />
-  ) : (
-    <Carousel
-      onNewData={openNewEventHandler}
-      onData={openEventHandler}
-      data={events}
-      defaultTitle="Vytvořte novou událost"
-      centerPosition={true}
-    />
-  );
-
   return (
     <>
-      {content}
+      {isLoading ? (
+        <Spinner />
+      ) : (
+        <Carousel
+          onNewData={openNewEventHandler}
+          onData={openEventHandler}
+          data={events}
+          defaultTitle="Vytvořte novou událost"
+          centerPosition={true}
+        />
+      )}
       {modalIsOpen && <NewEvent />}
     </>
   );

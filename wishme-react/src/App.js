@@ -8,11 +8,7 @@ import EventPage from "./pages/EventPage";
 
 function App() {
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
-  /*
-  if (!isAuthenticated) {
-    return <Redirect to="/welcome" />;
-  }
-*/
+
   return (
     <Layout>
       <Switch>
@@ -22,16 +18,12 @@ function App() {
         <Route path="/welcome">
           <WelcomePage />
         </Route>
-        {isAuthenticated ? (
-          <Route path="/mainpage">
-            <MainPage />
-          </Route>
-        ) : (
-          <Route path="/welcome">
-            <WelcomePage />
-          </Route>
-        )}
-        <Route path="/event/:Id">
+
+        <Route path="/mainpage">
+          <MainPage />
+        </Route>
+
+        <Route path="/event/:id">
           <EventPage />
         </Route>
       </Switch>
