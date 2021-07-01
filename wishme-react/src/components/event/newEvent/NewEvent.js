@@ -1,10 +1,12 @@
+import { useRef } from "react";
+import { useSelector } from "react-redux";
+import { useHistory } from "react-router";
 import moment from "moment";
 
 import classes from "./NewEvent.module.css";
 import Modal from "../../ui/Modal";
-import { useRef } from "react";
-import { useSelector } from "react-redux";
-import { useHistory } from "react-router";
+import Spinner from "../../ui/Spinner";
+import useApi from "../../../hooks/use-api";
 
 const NewEvent = (props) => {
   const history = useHistory();
@@ -16,6 +18,8 @@ const NewEvent = (props) => {
   const descriptionInputRef = useRef();
   const imageInputRef = useRef();
 
+  const { isLoading, error, sendRequest } = useApi();
+
   const toBase64 = async (file) => {
     try {
       const imageStr = await toBase64Convertor(file);
@@ -26,13 +30,14 @@ const NewEvent = (props) => {
     }
   };
 
-  const toBase64Convertor = (file) =>
-    new Promise((resolve, reject) => {
+  const toBase64Convertor = (file) => {
+    return new Promise((resolve, reject) => {
       const reader = new FileReader();
       reader.readAsDataURL(file);
       reader.onload = () => resolve(reader.result.toString());
       reader.onerror = (error) => reject(error);
     });
+  };
 
   const addEventHandler = async (event) => {
     event.preventDefault();
@@ -49,21 +54,17 @@ const NewEvent = (props) => {
 
     eventData.image = await toBase64(imageInputRef.current.files[0]);
 
-    fetch("http://localhost:8085/api/v1/events", {
-      method: "POST",
-      body: JSON.stringify(eventData),
-      headers: {
-        accept: "application/json",
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
+    sendRequest(
+      {
+        url: `events`,
+        method: "POST",
+        body: JSON.stringify(eventData),
+        headers: { Authorization: `Bearer ${token}` },
       },
-    })
-      .then((response) => response.json())
-      .then((responseData) => {
+      (responseData) => {
         history.replace(`/event/${responseData.id}`);
-      });
-
-    console.log(eventData);
+      }
+    );
   };
 
   return (
@@ -110,6 +111,7 @@ const NewEvent = (props) => {
           </div>
 
           <div className={classes.btn}>
+            {isLoading && <Spinner />}
             <button>Přidat událost</button>
           </div>
         </form>

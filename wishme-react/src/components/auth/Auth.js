@@ -1,18 +1,18 @@
 import { useRef, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
 import { FaEyeSlash, FaEye } from "react-icons/fa/index";
 
 import { authActions } from "../../store/auth-slice";
 import classes from "./Auth.module.css";
 import useApi from "../../hooks/use-api";
+import Spinner from "../ui/Spinner";
 
 const Auth = (props) => {
   const history = useHistory();
-
   const dispatch = useDispatch();
-  const { isRegistered } = useSelector((state) => state.auth);
 
+  const [isRegistrating, setIsRegistrating] = useState(true);
   const [passwordIsVisible, setPasswordIsVisible] = useState(false);
 
   const usernameInputRef = useRef();
@@ -22,8 +22,9 @@ const Auth = (props) => {
   const togglePasswordVisibility = () => {
     setPasswordIsVisible((prevState) => !prevState);
   };
+
   const toggleHandler = () => {
-    dispatch(authActions.toggle());
+    setIsRegistrating((prevState) => !prevState);
   };
 
   const { isLoading, error, sendRequest } = useApi();
@@ -78,44 +79,41 @@ const Auth = (props) => {
   };
 
   const eye = passwordIsVisible ? (
-    <FaEye onClick={togglePasswordVisibility} className={classes.eye} />
-  ) : (
     <FaEyeSlash onClick={togglePasswordVisibility} className={classes.eye} />
+  ) : (
+    <FaEye onClick={togglePasswordVisibility} className={classes.eye} />
   );
 
   return (
     <>
       <div className={classes.formWrap}>
+        <div className={classes.header}>
+          <h1>WishMe</h1>
+        </div>
         <form
-          onSubmit={!isRegistered ? registerHandler : loginHandler}
+          onSubmit={!isRegistrating ? registerHandler : loginHandler}
           className={classes.form}
         >
-          <div className={classes.header}>
-            <h1>WishMe</h1>
+          <div className={classes.control}>
+            <input
+              placeholder="Uživatelské jméno"
+              type="text"
+              ref={usernameInputRef}
+              required
+            />
           </div>
 
-          <div>
-            <div className={classes.control}>
-              <input
-                placeholder="Uživatelské jméno"
-                type="text"
-                ref={usernameInputRef}
-                required
-              />
-            </div>
-
-            <div className={classes.control}>
-              <input
-                placeholder="Heslo"
-                type={passwordIsVisible ? "text" : "password"}
-                ref={passwordInputRef}
-                required
-              />
-              <i>{eye}</i>
-            </div>
+          <div className={classes.control}>
+            <input
+              placeholder="Heslo"
+              type={passwordIsVisible ? "text" : "password"}
+              ref={passwordInputRef}
+              required
+            />
+            <span>{eye}</span>
           </div>
 
-          {!isRegistered && (
+          {!isRegistrating && (
             <div className={classes.control}>
               <input
                 placeholder="Potvrdit heslo"
@@ -123,22 +121,25 @@ const Auth = (props) => {
                 ref={passwordRepeatInputRef}
                 required
               />
+              <span>{eye}</span>
             </div>
           )}
 
           <div className={classes.btn}>
-            <button>{isRegistered ? "Přihlásit" : "Registrovat"}</button>
-          </div>
-
-          <div className={classes.switching}>
-            <h3>
-              {!isRegistered ? "Máte účet? " : "Nemáte účet? "}
-              <span onClick={toggleHandler}>
-                {!isRegistered ? "Přihlaste se." : "Zaregistrujte se."}
-              </span>
-            </h3>
+            {isLoading && <Spinner />}
+            {!isLoading && (
+              <button>{isRegistrating ? "Přihlásit" : "Registrovat"}</button>
+            )}
           </div>
         </form>
+        <div className={classes.switching}>
+          <h3>
+            {!isRegistrating ? "Máte účet? " : "Nemáte účet? "}
+            <span onClick={toggleHandler}>
+              {!isRegistrating ? "Přihlaste se." : "Zaregistrujte se."}
+            </span>
+          </h3>
+        </div>
       </div>
     </>
   );

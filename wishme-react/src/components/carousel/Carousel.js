@@ -28,7 +28,11 @@ const Carousel = (props) => {
       );
     } else {
       return (
-        <CarouselItem title={props.defaultTitle} onClick={props.onNewData} />
+        <CarouselItem
+          title={props.defaultTitle}
+          onClick={props.onNewData}
+          key={index}
+        />
       );
     }
   };

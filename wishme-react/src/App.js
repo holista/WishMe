@@ -1,5 +1,5 @@
-import { Switch, Route, Redirect, useHistory } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { Switch, Route, Redirect } from "react-router-dom";
+//import { useSelector } from "react-redux";
 
 import Layout from "./components/layout/Layout";
 import WelcomePage from "./pages/WelcomePage";
@@ -7,12 +7,7 @@ import MainPage from "./pages/MainPage";
 import EventPage from "./pages/EventPage";
 
 function App() {
-  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
-  const history = useHistory();
-
-  if (!isAuthenticated) {
-    history.replace("/welcome");
-  }
+  //const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
 
   return (
     <Layout>
@@ -23,16 +18,12 @@ function App() {
         <Route path="/welcome">
           <WelcomePage />
         </Route>
-        {isAuthenticated ? (
-          <Route path="/mainpage">
-            <MainPage />
-          </Route>
-        ) : (
-          <Route path="/welcome">
-            <WelcomePage />
-          </Route>
-        )}
-        <Route path="/event/:Id">
+
+        <Route path="/mainpage">
+          <MainPage />
+        </Route>
+
+        <Route path="/event/:id">
           <EventPage />
         </Route>
       </Switch>

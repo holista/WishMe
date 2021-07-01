@@ -6,19 +6,15 @@
   background-color: aliceblue;
   box-shadow: 0 3px 20px 0 rgb(0 0 0 / 10%);
   box-sizing: border-box;
-}
 
-.form {
   display: flex;
   flex-direction: column;
-  justify-items: center;
-  align-content: space-between;
+  justify-content: center;
 }
 
 .header {
   font-size: 1.25rem;
-  display: flex;
-  justify-content: center;
+  text-align: center;
 }
 
 .control {
@@ -45,18 +41,23 @@
   outline: transparent;
 }
 
-.eye {
+.control span {
   position: absolute;
-  top: 50%;
-  right: 20%;
+  margin-left: 52%;
+  padding: 0.25rem;
+  display: flex;
+  align-self: center;
+}
+
+.eye {
+  align-self: center;
 }
 
 .switching {
   font-size: 0.55rem;
   font-weight: 200;
-  display: flex;
-  justify-content: center;
   margin-bottom: 1rem;
+  text-align: center;
 }
 
 .switching span {
@@ -82,6 +83,7 @@
   position: relative;
   height: 60px;
   font-size: 1rem;
+  font-family: "Quicksand", sans-serif;
   cursor: pointer;
   transition: 800ms ease all;
   outline: none;
