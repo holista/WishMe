@@ -5,6 +5,7 @@ import moment from "moment";
 
 import classes from "./NewEvent.module.css";
 import Modal from "../../ui/Modal";
+import Spinner from "../../ui/Spinner";
 import useApi from "../../../hooks/use-api";
 
 const NewEvent = (props) => {
@@ -110,6 +111,7 @@ const NewEvent = (props) => {
           </div>
 
           <div className={classes.btn}>
+            {isLoading && <Spinner />}
             <button>Přidat událost</button>
           </div>
         </form>

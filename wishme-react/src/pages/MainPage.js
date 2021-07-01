@@ -24,6 +24,7 @@ const MainPage = (props) => {
       },
       (responseData) => {
         setEvents(responseData.models);
+        console.log("Mainpage: seting events");
       }
     );
   }, [organizerId, token, sendRequest]);
@@ -47,9 +48,8 @@ const MainPage = (props) => {
 
   return (
     <>
-      {isLoading ? (
-        <Spinner />
-      ) : (
+      {isLoading && <Spinner />}
+      {!isLoading && (
         <Carousel
           onNewData={openNewEventHandler}
           onData={openEventHandler}

@@ -1,5 +1,5 @@
-import { Switch, Route, Redirect, useHistory } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { Switch, Route, Redirect } from "react-router-dom";
+//import { useSelector } from "react-redux";
 
 import Layout from "./components/layout/Layout";
 import WelcomePage from "./pages/WelcomePage";
@@ -7,7 +7,7 @@ import MainPage from "./pages/MainPage";
 import EventPage from "./pages/EventPage";
 
 function App() {
-  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+  //const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
 
   return (
     <Layout>

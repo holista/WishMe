@@ -24,9 +24,6 @@ const authSlice = createSlice({
       state.token = action.payload.token;
       state.organizerId = action.payload.organizerId;
     },
-    toggle(state) {
-      state.isRegistered = !state.isRegistered;
-    },
   },
 });
 

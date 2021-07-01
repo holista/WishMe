@@ -10,20 +10,21 @@ const ItemLists = (props) => {
   const dispatch = useDispatch();
 
   const token = useSelector((state) => state.auth.token);
+  const eventId = props.eventId;
   const lists = useSelector((state) => state.event.lists);
   const { isLoading, error, sendRequest } = useApi();
 
   useEffect(() => {
     sendRequest(
       {
-        url: `wishlists?offset=0&limit=100&eventId=${props.eventId}`,
+        url: `wishlists?offset=0&limit=100&eventId=${eventId}`,
         headers: { Authorization: `Bearer ${token}` },
       },
       (responseData) => {
         dispatch(
           eventActions.setLists(
             responseData.models.map((list) => ({
-              eventId: props.eventId,
+              eventId: eventId,
               key: list.id,
               wishlistId: list.id,
               name: list.name,
@@ -31,9 +32,10 @@ const ItemLists = (props) => {
             }))
           )
         );
+        console.log("ItemLists: seting all lists");
       }
     );
-  }, [token, sendRequest]);
+  }, [token, sendRequest, eventId, dispatch]);
 
   return (
     <>

@@ -97,30 +97,31 @@ const NewItem = (props) => {
                   onChange={changeUrlHandler}
                 />
               </div>
-              {isLoading && <Spinner />}
+
+              <div>{isLoading && <Spinner />}</div>
 
               {dataIsVisible && (
                 <div className={classes.control}>
                   <label htmlFor="title">Název</label>
-                  <input type="text" id="title" value={name} />
+                  <input type="text" id="title" defaultValue={name} />
                 </div>
               )}
 
               {dataIsVisible && (
                 <div className={classes.control}>
                   <label htmlFor="price">Cena</label>
-                  <input type="text" id="price" value={price} />
+                  <input type="text" id="price" defaultValue={price} />
                 </div>
               )}
 
               {dataIsVisible && (
                 <div className={classes.control}>
-                  <label htmlFor="price">Popis</label>
+                  <label htmlFor="description">Popis</label>
                   <textarea
                     type="text"
-                    id="price"
+                    id="description"
                     rows="5"
-                    value={description}
+                    defaultValue={description}
                   />
                 </div>
               )}

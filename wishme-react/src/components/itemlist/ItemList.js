@@ -14,15 +14,15 @@ const ItemList = (props) => {
   const history = useHistory();
 
   const token = useSelector((state) => state.auth.token);
+  const eventId = props.eventId;
+  const listId = props.wishlistId;
   const items = useSelector((state) => state.event.items);
 
   const { isLoading, error, sendRequest } = useApi();
 
   const openNewItemHandler = () => {
     dispatch(uiActions.openModal());
-    history.push(
-      `/event/${props.eventId}/wishlist/${props.wishlistId}/new-item`
-    );
+    history.push(`/event/${eventId}/wishlist/${listId}/new-item`);
   };
 
   const openItemHandler = () => {};
@@ -30,10 +30,11 @@ const ItemList = (props) => {
   useEffect(() => {
     sendRequest(
       {
-        url: `items?offset=0&limit=100&wishlistId=${props.wishlistId}`,
+        url: `items?offset=0&limit=100&wishlistId=${listId}`,
         headers: { Authorization: `Bearer ${token}` },
       },
       (responseData) => {
+        console.log("Itemlist: seting items of the list");
         return dispatch(
           eventActions.setItems(
             responseData.models.map((item) => ({
@@ -49,28 +50,28 @@ const ItemList = (props) => {
         );
       }
     );
-  }, []);
+  }, [listId, token, sendRequest, dispatch]);
 
   return (
     <div className={classes.list}>
-      <section className={classes.listName}>
-        <div className={classes.control}>
-          <h3>{props.name}</h3>
-        </div>
-        <div className={classes.control}>
-          <h3>{props.description}</h3>
-        </div>
-      </section>
-
-      {isLoading ? (
-        <Spinner />
-      ) : (
-        <Carousel
-          defaultTitle="Přidejte nový předmět"
-          data={items}
-          onNewData={openNewItemHandler}
-          onData={openItemHandler}
-        />
+      {isLoading && <Spinner />}
+      {!isLoading && (
+        <>
+          <section className={classes.listName}>
+            <div className={classes.control}>
+              <h3>{props.name}</h3>
+            </div>
+            <div className={classes.control}>
+              <h3>{props.description}</h3>
+            </div>
+          </section>
+          <Carousel
+            defaultTitle="Přidejte nový předmět"
+            data={items}
+            onNewData={openNewItemHandler}
+            onData={openItemHandler}
+          />
+        </>
       )}
     </div>
   );

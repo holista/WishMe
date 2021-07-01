@@ -24,12 +24,14 @@ const useApi = () => {
           }
           return res.json();
         })
-        .then((response) => applyData(response));
+        .then((response) => {
+          setIsLoading(false);
+          applyData(response);
+        });
     } catch (error) {
+      setIsLoading(false);
       setError(error.message || "Něco se tu pokazilo");
     }
-
-    setIsLoading(false);
   }, []);
 
   return {

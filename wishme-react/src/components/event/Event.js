@@ -10,6 +10,7 @@ import Spinner from "../ui/Spinner";
 
 const Event = (props) => {
   const token = useSelector((state) => state.auth.token);
+  const eventId = props.eventId;
 
   const [title, setTitle] = useState();
   const [date, setDate] = useState();
@@ -21,7 +22,7 @@ const Event = (props) => {
   useEffect(() => {
     sendRequest(
       {
-        url: `events/${props.eventId}`,
+        url: `events/${eventId}`,
         headers: { Authorization: `Bearer ${token}` },
       },
       (responseData) => {
@@ -35,7 +36,7 @@ const Event = (props) => {
         setDescription(responseData.description);
       }
     );
-  }, []);
+  }, [eventId, token, sendRequest]);
 
   const editHandler = () => {};
 

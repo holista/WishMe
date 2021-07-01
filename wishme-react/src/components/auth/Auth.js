@@ -1,5 +1,5 @@
 import { useRef, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
 import { FaEyeSlash, FaEye } from "react-icons/fa/index";
 
@@ -12,7 +12,7 @@ const Auth = (props) => {
   const history = useHistory();
   const dispatch = useDispatch();
 
-  const { isRegistered } = useSelector((state) => state.auth);
+  const [isRegistrating, setIsRegistrating] = useState(true);
   const [passwordIsVisible, setPasswordIsVisible] = useState(false);
 
   const usernameInputRef = useRef();
@@ -24,7 +24,7 @@ const Auth = (props) => {
   };
 
   const toggleHandler = () => {
-    dispatch(authActions.toggle());
+    setIsRegistrating((prevState) => !prevState);
   };
 
   const { isLoading, error, sendRequest } = useApi();
@@ -91,7 +91,7 @@ const Auth = (props) => {
           <h1>WishMe</h1>
         </div>
         <form
-          onSubmit={!isRegistered ? registerHandler : loginHandler}
+          onSubmit={!isRegistrating ? registerHandler : loginHandler}
           className={classes.form}
         >
           <div className={classes.control}>
@@ -113,7 +113,7 @@ const Auth = (props) => {
             <span>{eye}</span>
           </div>
 
-          {!isRegistered && (
+          {!isRegistrating && (
             <div className={classes.control}>
               <input
                 placeholder="Potvrdit heslo"
@@ -128,15 +128,15 @@ const Auth = (props) => {
           <div className={classes.btn}>
             {isLoading && <Spinner />}
             {!isLoading && (
-              <button>{isRegistered ? "Přihlásit" : "Registrovat"}</button>
+              <button>{isRegistrating ? "Přihlásit" : "Registrovat"}</button>
             )}
           </div>
         </form>
         <div className={classes.switching}>
           <h3>
-            {!isRegistered ? "Máte účet? " : "Nemáte účet? "}
+            {!isRegistrating ? "Máte účet? " : "Nemáte účet? "}
             <span onClick={toggleHandler}>
-              {!isRegistered ? "Přihlaste se." : "Zaregistrujte se."}
+              {!isRegistrating ? "Přihlaste se." : "Zaregistrujte se."}
             </span>
           </h3>
         </div>
