@@ -1,6 +1,7 @@
 .eventItem {
-  width: 300px;
+  width: 30%;
   height: 200px;
+  margin: 3%;
   background-color: aliceblue;
   object-fit: cover;
   border-radius: 6px;

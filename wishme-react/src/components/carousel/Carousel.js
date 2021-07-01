@@ -50,10 +50,10 @@ const Carousel = (props) => {
     <FaChevronLeft className={classes.arrowLeft} onClick={prevSlideHandler} />
   );
 
-  const specialClasses = props.centerPosition && classes.center;
+  const centerMode = props.centerPosition && classes.center;
 
   return (
-    <div className={`${classes.carousel} + ${specialClasses}`}>
+    <div className={`${classes.carousel} + ${centerMode}`}>
       {arrowLeft}
       <div className={classes.slides}>{slides}</div>
       {arrowRight}

@@ -1,5 +1,6 @@
 .carousel {
-  width: 100%;
+  width: 95%;
+
   position: relative;
   display: flex;
   justify-content: space-between;
@@ -8,10 +9,13 @@
 
 .center {
   top: 20vh;
+  height: 40%;
 }
 
 .slides {
+  width: 80%;
   display: flex;
+  justify-items: space-between;
   align-items: center;
 }
 
