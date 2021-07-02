@@ -91,6 +91,30 @@ namespace WishMe.Service.Controllers
     }
 
     /// <summary>
+    /// Zamluví položku pro přihlášeného uživatele.
+    /// </summary>
+    /// <param name="id">ID položky</param>
+    /// <param name="model">model zamluvení položky</param>
+    /// <param name="cancellationToken"></param>
+    /// <returns>prázdnou odpověď, pokud byla položky zamluvena</returns>
+    [HttpPut("{id}/claimed")]
+    [Authorize(Policy = AuthorizationConstants.Policies._Participant)]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> PutClaimedAsync([FromRoute] ObjectId id, [FromBody] ItemClaimedModel model, CancellationToken cancellationToken)
+    {
+      await fMediator.Send(new PutClaimedRequest
+      {
+        Id = id,
+        Model = model
+      }, cancellationToken);
+
+      return NoContent();
+    }
+
+    /// <summary>
     /// Smaže položku.
     /// </summary>
     /// <param name="id">ID položky</param>
