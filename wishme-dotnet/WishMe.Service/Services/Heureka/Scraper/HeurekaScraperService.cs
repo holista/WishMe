@@ -30,6 +30,10 @@ namespace WishMe.Service.Services.Heureka.Scraper
         if (document is null)
           return null;
 
+        var description = (IHtmlDivElement)document.Body
+          .GetElementsByClassName(fHeurekaConfig.DescriptionClassName)
+          .First();
+
         var image = (IHtmlImageElement)document.Body
           .GetElementsByClassName(fHeurekaConfig.GalleryThumbnailImageClassName)
           .First();
@@ -42,7 +46,8 @@ namespace WishMe.Service.Services.Heureka.Scraper
         {
           Name = image.AlternativeText,
           ImageUrl = image.Source.FixUrl(),
-          Price = price.TextContent.GetPrice()
+          Price = price.TextContent.GetPrice(),
+          Description = description.TextContent.FixDescription()
         };
       }
       catch (Exception e)
