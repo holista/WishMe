@@ -1,5 +1,6 @@
-import { useHistory, useParams } from "react-router-dom";
+import { Link, useHistory, useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
+import { FaPencilAlt } from "react-icons/fa/index";
 
 import classes from "./Item.module.css";
 import Card from "../ui/Card";
@@ -39,9 +40,15 @@ const Item = (props) => {
         setUrl(responseData.url);
       }
     );
-  });
+  }, [token, sendRequest]);
 
   const editHandler = () => {};
+
+  const bookHandler = () => {};
+
+  const heurekaHandler = () => {
+    window.open(url, "_blank");
+  };
 
   return (
     <>
@@ -49,35 +56,43 @@ const Item = (props) => {
       {!isLoading && (
         <Card className={classes.item}>
           <div className={classes.edit}>
-            <button onClick={editHandler}>Upravit předmět</button>
+            <button onClick={editHandler}>
+              <FaPencilAlt />
+            </button>
           </div>
+
           <div className={classes.name}>
             <h1>{name}</h1>
           </div>
-          <section>
-            <div className={classes.control}>
-              {
-                //<span className={classes.icon}>{calendarIcon}</span>
-              }
-              <h3>{price}</h3>
-            </div>
-            <div className={classes.control}>
-              {
-                //<span className={classes.icon}>{clockIcon}</span>
-              }
-              <h3>{claimed ? "Zamluveno" : "Voln"}</h3>
-            </div>
 
-            <div>
-              <p>{description}</p>
+          <div className={classes.details}>
+            <section className={classes.section}>
+              <div className={classes.control}>
+                {
+                  //<span className={classes.icon}>{calendarIcon}</span>
+                }
+                <h3>{price}</h3>
+              </div>
+              <div className={classes.control}>
+                {
+                  //<span className={classes.icon}>{clockIcon}</span>
+                }
+                <h3>{claimed ? "Zamluveno" : "Volné"}</h3>
+              </div>
+              <div>
+                <p>{description}</p>
+              </div>
+            </section>
+
+            <div className={classes.imageWrap}>
+              <Image src={imageUrl} className={classes.image} />
             </div>
-          </section>
-          <div className={classes.imageWrap}>
-            <Image src={imageUrl} className={classes.image} />
           </div>
-          <div>
-            <button></button>
-            <button></button>
+
+          <div className={classes.btns}>
+            <button onClick={bookHandler}>Zamluvit</button>
+
+            <button onClick={heurekaHandler}>Prohlédnout si na Heuréce</button>
           </div>
         </Card>
       )}

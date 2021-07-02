@@ -1,6 +1,6 @@
 import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
-import { FaCalendarAlt, FaClock } from "react-icons/fa/index";
+import { FaCalendarAlt, FaClock, FaPencilAlt } from "react-icons/fa/index";
 import moment from "moment";
 
 import classes from "./Event.module.css";
@@ -48,7 +48,9 @@ const Event = (props) => {
       {isLoading && <Spinner />}
       <Card className={classes.event}>
         <div className={classes.edit}>
-          <button onClick={editHandler}>Upravit událost</button>
+          <button onClick={editHandler}>
+            <FaPencilAlt />
+          </button>
         </div>
         <div className={classes.title}>
           <h1>{title}</h1>
