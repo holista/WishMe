@@ -23,9 +23,10 @@ const Modal = (props) => {
             <div className={classes.close}>
               <button onClick={closeModalHandler}>x</button>
             </div>
-            <div className={classes.modalHeader}>
+            <div className={classes.header}>
               <h1>{props.header}</h1>
             </div>
+
             {props.children}
           </div>
         </div>

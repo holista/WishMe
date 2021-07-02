@@ -30,6 +30,11 @@ const MainNavigation = (props) => {
         <ul>
           {isAuthenticated && (
             <li>
+              <NavLink to="/mainpage">Moje události</NavLink>
+            </li>
+          )}
+          {isAuthenticated && (
+            <li>
               <NavLink to="/" onClick={logoutHandler}>
                 Odhlásit
               </NavLink>

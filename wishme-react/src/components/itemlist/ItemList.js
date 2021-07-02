@@ -25,7 +25,9 @@ const ItemList = (props) => {
     history.push(`/event/${eventId}/wishlist/${listId}/new-item`);
   };
 
-  const openItemHandler = () => {};
+  const openItemHandler = (itemId) => {
+    history.push(`/event/${eventId}/wishlist/${listId}/item/${itemId}`);
+  };
 
   useEffect(() => {
     sendRequest(
@@ -38,7 +40,7 @@ const ItemList = (props) => {
         return dispatch(
           eventActions.setItems(
             responseData.models.map((item) => ({
-              itemId: item.id,
+              id: item.id,
               key: item.id,
               name: item.name,
               price: item.price,

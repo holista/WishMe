@@ -22,6 +22,7 @@ const Carousel = (props) => {
       return (
         <CarouselItem
           title={data[index].name}
+          image={data[index].imageUrl}
           onClick={() => props.onData(data[index].id)}
           key={data[index].id}
         />
@@ -37,26 +38,17 @@ const Carousel = (props) => {
     }
   };
 
-  const slides = [];
-
-  slides.push(getSlide(data, curSlide - 1));
-  slides.push(getSlide(data, curSlide));
-  slides.push(getSlide(data, curSlide + 1));
-
-  const arrowRight = (
-    <FaChevronRight className={classes.arrowRight} onClick={nextSlideHandler} />
-  );
-  const arrowLeft = (
-    <FaChevronLeft className={classes.arrowLeft} onClick={prevSlideHandler} />
-  );
-
-  const specialClasses = props.centerPosition && classes.center;
+  const centerMode = props.centerPosition && classes.center;
 
   return (
-    <div className={`${classes.carousel} + ${specialClasses}`}>
-      {arrowLeft}
-      <div className={classes.slides}>{slides}</div>
-      {arrowRight}
+    <div className={`${classes.carousel} + ${centerMode}`}>
+      <FaChevronLeft className={classes.arrow} onClick={prevSlideHandler} />
+      <div className={classes.slides}>
+        {getSlide(data, curSlide - 1)}
+        {getSlide(data, curSlide)}
+        {getSlide(data, curSlide + 1)}
+      </div>
+      <FaChevronRight className={classes.arrow} onClick={nextSlideHandler} />
     </div>
   );
 };

@@ -33,15 +33,18 @@
 .edit {
   width: 100%;
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
 }
 
 .edit button {
   background-color: transparent;
   border: none;
   text-decoration: underline;
+  cursor: pointer;
+  padding: 0 0.75rem;
+  font-size: 1rem;
 }
 
 .edit button:hover {
-  cursor: pointer;
+  color: blue;
 }
