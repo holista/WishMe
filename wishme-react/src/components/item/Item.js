@@ -1,6 +1,6 @@
 import { Link, useHistory, useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { FaPencilAlt } from "react-icons/fa/index";
+import { FaPencilAlt, FaTrashAlt } from "react-icons/fa/index";
 
 import classes from "./Item.module.css";
 import Card from "../ui/Card";
@@ -12,7 +12,7 @@ import { useEffect, useState } from "react";
 const Item = (props) => {
   const history = useHistory();
   const token = useSelector((state) => state.auth.token);
-  const { id } = useParams();
+  const { evId, listId, id } = useParams();
 
   const [name, setName] = useState(null);
   const [price, setPrice] = useState(null);
@@ -42,9 +42,20 @@ const Item = (props) => {
     );
   }, [token, sendRequest]);
 
-  const editHandler = () => {};
+  const editItemHandler = () => {};
 
-  const bookHandler = () => {};
+  const removeItemHandler = () => {
+    sendRequest({
+      url: `items/${id}`,
+      method: "DELETE",
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    history.replace(`/event/:evId`);
+  };
+
+  const bookItemHandler = () => {
+    setClaimed(true);
+  };
 
   const heurekaHandler = () => {
     window.open(url, "_blank");
@@ -56,7 +67,10 @@ const Item = (props) => {
       {!isLoading && (
         <Card className={classes.item}>
           <div className={classes.edit}>
-            <button onClick={editHandler}>
+            <button onClick={removeItemHandler}>
+              <FaTrashAlt />
+            </button>
+            <button onClick={editItemHandler}>
               <FaPencilAlt />
             </button>
           </div>
@@ -90,8 +104,13 @@ const Item = (props) => {
           </div>
 
           <div className={classes.btns}>
-            <button onClick={bookHandler}>Zamluvit</button>
-
+            <button
+              onClick={bookItemHandler}
+              disabled={claimed}
+              className={claimed && classes.btnDisabled}
+            >
+              {!claimed ? "Zamluvit" : "Zamluveno"}
+            </button>
             <button onClick={heurekaHandler}>Prohlédnout si na Heuréce</button>
           </div>
         </Card>

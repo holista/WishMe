@@ -14,14 +14,6 @@
   text-align: center;
 }
 
-.details {
-  width: 80%;
-  display: flex;
-  justify-content: space-between;
-  align-self: center;
-  margin-bottom: 5%;
-}
-
 .edit {
   width: 100%;
   display: flex;
@@ -33,12 +25,25 @@
   border: none;
   text-decoration: underline;
   cursor: pointer;
+  padding: 0 0.75rem;
+  font-size: 1rem;
 }
 
 .edit button:hover {
   color: blue;
 }
 
+.details {
+  width: 80%;
+  display: flex;
+  justify-content: space-between;
+  align-self: center;
+  margin-bottom: 5%;
+}
+
+.section {
+  width: 50%;
+}
 .image {
   width: 100%;
   height: 100%;
@@ -104,4 +109,15 @@
 .btns button:hover:after {
   width: 100%;
   transition: 800ms ease all;
+}
+
+.btns button:disabled {
+  background: rgb(179, 179, 179);
+  color: #343a50;
+  cursor: unset;
+}
+
+.btns button:disabled:before,
+.btns button:disabled:after {
+  content: unset;
 }
