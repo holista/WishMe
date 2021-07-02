@@ -96,3 +96,10 @@
   width: 100%;
   transition: 800ms ease all;
 }
+
+.check {
+  padding-top: 2rem;
+  font-size: 10rem;
+  text-align: center;
+  color: #1a3cab;
+}

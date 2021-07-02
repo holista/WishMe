@@ -17,7 +17,7 @@
 .edit {
   width: 100%;
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
 }
 
 .edit button {
@@ -66,8 +66,13 @@
   justify-content: center;
 }
 
-.btns button {
+.btn {
   width: 30%;
+  margin: 0 1rem;
+}
+
+.btn button {
+  width: 100%;
   background: #1a3cab;
   border-radius: 6px;
   color: #fff;
@@ -82,13 +87,13 @@
   margin: 1rem;
 }
 
-.btns button:hover {
+.btn button:hover {
   background: transparent;
   color: #1a3cab;
 }
 
-.btns button:before,
-.btns button:after {
+.btn button:before,
+.btn button:after {
   content: "";
   position: absolute;
   top: 0;
@@ -98,26 +103,65 @@
   background: #1a3cab;
   transition: 400ms ease all;
 }
-.btns button:after {
+.btn button:after {
   right: inherit;
   top: inherit;
   left: 0;
   bottom: 0;
 }
 
-.btns button:hover:before,
-.btns button:hover:after {
+.btn button:hover:before,
+.btn button:hover:after {
   width: 100%;
   transition: 800ms ease all;
 }
 
-.btns button:disabled {
-  background: rgb(179, 179, 179);
-  color: #343a50;
-  cursor: unset;
+.booked {
+  width: 30%;
+  margin: 0 1rem;
 }
 
-.btns button:disabled:before,
-.btns button:disabled:after {
-  content: unset;
+.booked button {
+  width: 100%;
+  background: rgb(150, 150, 150);
+  border-radius: 6px;
+  color: #fff;
+  border: none;
+  position: relative;
+  height: 60px;
+  font-size: 1rem;
+  font-family: "Quicksand", sans-serif;
+  cursor: pointer;
+  transition: 800ms ease all;
+  outline: none;
+  margin: 1rem;
+}
+
+.booked button:hover {
+  background: transparent;
+  color: rgb(109, 109, 109);
+}
+
+.booked button:before,
+.booked button:after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  height: 2px;
+  width: 0;
+  background: rgb(150, 150, 150);
+  transition: 400ms ease all;
+}
+.booked button:after {
+  right: inherit;
+  top: inherit;
+  left: 0;
+  bottom: 0;
+}
+
+.booked button:hover:before,
+.booked button:hover:after {
+  width: 100%;
+  transition: 800ms ease all;
 }

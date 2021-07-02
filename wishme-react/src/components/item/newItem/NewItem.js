@@ -1,5 +1,6 @@
 import { useRef, useState } from "react";
 import { useSelector } from "react-redux";
+import { FaCheckCircle } from "react-icons/fa/index";
 
 import classes from "./NewItem.module.css";
 import Modal from "../../ui/Modal";
@@ -139,7 +140,13 @@ const NewItem = (props) => {
           </section>
         </Modal>
       )}
-      {itemIsSent && <Modal header="Předmět byl úspěšně přidán"></Modal>}
+      {itemIsSent && (
+        <Modal header="Předmět byl přidán">
+          <div className={classes.check}>
+            <FaCheckCircle />
+          </div>
+        </Modal>
+      )}
     </>
   );
 };

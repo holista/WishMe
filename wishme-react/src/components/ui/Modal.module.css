@@ -8,7 +8,7 @@
   top: 10vh;
 
   z-index: 500;
-  padding: 3rem;
+  padding: 1rem 3rem 3rem 3rem;
   box-sizing: border-box;
   background-color: white;
   border: 1px solid #ccc;
@@ -32,23 +32,20 @@
 
 .close {
   width: 100%;
+  margin-left: 2rem;
   display: flex;
+  align-items: flex-start;
   justify-content: flex-end;
 }
 
 .close button {
   background-color: transparent;
   border: none;
-  padding: 0.5rem;
   font-size: 1.5rem;
   cursor: pointer;
 }
 
-.modalHeader {
+.header {
   width: 100%;
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-
-  margin-top: 1rem;
+  padding: 0 1rem;
 }

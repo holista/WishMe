@@ -1,6 +1,6 @@
 import { Link, useHistory, useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { FaPencilAlt, FaTrashAlt } from "react-icons/fa/index";
+import { FaPencilAlt, FaTrashAlt, FaArrowLeft } from "react-icons/fa/index";
 
 import classes from "./Item.module.css";
 import Card from "../ui/Card";
@@ -50,11 +50,27 @@ const Item = (props) => {
       method: "DELETE",
       headers: { Authorization: `Bearer ${token}` },
     });
-    history.replace(`/event/:evId`);
+    history.replace(`/event/${evId}`);
   };
 
   const bookItemHandler = () => {
     setClaimed(true);
+    sendRequest({
+      url: `items/${id}/claimed`,
+      method: "PUT",
+      body: JSON.stringify({ claimed: true }),
+      headers: { Authorization: `Bearer ${token}` },
+    });
+  };
+
+  const unbookItemHandler = () => {
+    setClaimed(false);
+    sendRequest({
+      url: `items/${id}/claimed`,
+      method: "PUT",
+      body: JSON.stringify({ claimed: false }),
+      headers: { Authorization: `Bearer ${token}` },
+    });
   };
 
   const heurekaHandler = () => {
@@ -67,12 +83,19 @@ const Item = (props) => {
       {!isLoading && (
         <Card className={classes.item}>
           <div className={classes.edit}>
-            <button onClick={removeItemHandler}>
-              <FaTrashAlt />
-            </button>
-            <button onClick={editItemHandler}>
-              <FaPencilAlt />
-            </button>
+            <div>
+              <button onClick={() => history.goBack()}>
+                <FaArrowLeft />
+              </button>
+            </div>
+            <div>
+              <button onClick={removeItemHandler}>
+                <FaTrashAlt />
+              </button>
+              <button onClick={editItemHandler}>
+                <FaPencilAlt />
+              </button>
+            </div>
           </div>
 
           <div className={classes.name}>
@@ -104,14 +127,16 @@ const Item = (props) => {
           </div>
 
           <div className={classes.btns}>
-            <button
-              onClick={bookItemHandler}
-              disabled={claimed}
-              className={claimed && classes.btnDisabled}
-            >
-              {!claimed ? "Zamluvit" : "Zamluveno"}
-            </button>
-            <button onClick={heurekaHandler}>Prohlédnout si na Heuréce</button>
+            <div className={!claimed ? classes.btn : classes.booked}>
+              <button onClick={!claimed ? bookItemHandler : unbookItemHandler}>
+                {!claimed ? "Zamluvit" : "Odzamluvit"}
+              </button>
+            </div>
+            <div className={classes.btn}>
+              <button onClick={heurekaHandler}>
+                Prohlédnout si na Heuréce
+              </button>
+            </div>
           </div>
         </Card>
       )}
