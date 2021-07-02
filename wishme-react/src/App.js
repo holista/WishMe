@@ -5,6 +5,7 @@ import Layout from "./components/layout/Layout";
 import WelcomePage from "./pages/WelcomePage";
 import MainPage from "./pages/MainPage";
 import EventPage from "./pages/EventPage";
+import ItemPage from "./pages/ItemPage";
 
 function App() {
   //const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
@@ -15,6 +16,7 @@ function App() {
         <Route path="/" exact>
           <Redirect to="/welcome" />
         </Route>
+
         <Route path="/welcome">
           <WelcomePage />
         </Route>
@@ -23,7 +25,11 @@ function App() {
           <MainPage />
         </Route>
 
-        <Route path="/event/:id">
+        <Route path="/event/:evId/wishlist/:listId/item/:id">
+          <ItemPage />
+        </Route>
+
+        <Route path="/event/:evId">
           <EventPage />
         </Route>
       </Switch>
