@@ -22,5 +22,19 @@ namespace WishMe.Service.Services.Heureka
         ? heurekaUrl.Replace(urlStart, "http://")
         : heurekaUrl;
     }
+
+    public static string FixDescription(this string heurekaDescription)
+    {
+      heurekaDescription = heurekaDescription.Trim();
+
+      const string newline = "\n";
+
+      if (!heurekaDescription.Contains(newline))
+        return heurekaDescription;
+
+      int index = heurekaDescription.IndexOf(newline);
+
+      return heurekaDescription.Substring(0, index);
+    }
   }
 }
