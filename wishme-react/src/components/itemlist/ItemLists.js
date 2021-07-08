@@ -32,10 +32,11 @@ const ItemLists = (props) => {
             }))
           )
         );
+
         console.log("ItemLists: seting all lists");
       }
     );
-  }, [token, sendRequest, eventId, dispatch]);
+  }, []);
 
   return (
     <>

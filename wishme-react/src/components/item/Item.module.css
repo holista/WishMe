@@ -14,25 +14,6 @@
   text-align: center;
 }
 
-.edit {
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-}
-
-.edit button {
-  background-color: transparent;
-  border: none;
-  text-decoration: underline;
-  cursor: pointer;
-  padding: 0 0.75rem;
-  font-size: 1rem;
-}
-
-.edit button:hover {
-  color: blue;
-}
-
 .details {
   width: 80%;
   display: flex;
@@ -71,97 +52,8 @@
   margin: 0 1rem;
 }
 
-.btn button {
+.btnModal {
+  display: flex;
+  justify-content: center;
   width: 100%;
-  background: #1a3cab;
-  border-radius: 6px;
-  color: #fff;
-  border: none;
-  position: relative;
-  height: 60px;
-  font-size: 1rem;
-  font-family: "Quicksand", sans-serif;
-  cursor: pointer;
-  transition: 800ms ease all;
-  outline: none;
-  margin: 1rem;
-}
-
-.btn button:hover {
-  background: transparent;
-  color: #1a3cab;
-}
-
-.btn button:before,
-.btn button:after {
-  content: "";
-  position: absolute;
-  top: 0;
-  right: 0;
-  height: 2px;
-  width: 0;
-  background: #1a3cab;
-  transition: 400ms ease all;
-}
-.btn button:after {
-  right: inherit;
-  top: inherit;
-  left: 0;
-  bottom: 0;
-}
-
-.btn button:hover:before,
-.btn button:hover:after {
-  width: 100%;
-  transition: 800ms ease all;
-}
-
-.booked {
-  width: 30%;
-  margin: 0 1rem;
-}
-
-.booked button {
-  width: 100%;
-  background: rgb(150, 150, 150);
-  border-radius: 6px;
-  color: #fff;
-  border: none;
-  position: relative;
-  height: 60px;
-  font-size: 1rem;
-  font-family: "Quicksand", sans-serif;
-  cursor: pointer;
-  transition: 800ms ease all;
-  outline: none;
-  margin: 1rem;
-}
-
-.booked button:hover {
-  background: transparent;
-  color: rgb(109, 109, 109);
-}
-
-.booked button:before,
-.booked button:after {
-  content: "";
-  position: absolute;
-  top: 0;
-  right: 0;
-  height: 2px;
-  width: 0;
-  background: rgb(150, 150, 150);
-  transition: 400ms ease all;
-}
-.booked button:after {
-  right: inherit;
-  top: inherit;
-  left: 0;
-  bottom: 0;
-}
-
-.booked button:hover:before,
-.booked button:hover:after {
-  width: 100%;
-  transition: 800ms ease all;
 }

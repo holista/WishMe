@@ -1,17 +1,17 @@
 import { useRef, useState } from "react";
+import { useHistory } from "react-router";
 import { useSelector } from "react-redux";
 import { FaCheckCircle } from "react-icons/fa/index";
 
 import classes from "./NewItem.module.css";
-import Modal from "../../ui/Modal";
 import Image from "../../ui/Image";
 import useApi from "../../../hooks/use-api";
 import Spinner from "../../ui/Spinner";
-import { useHistory } from "react-router";
+import BlueBtn from "../../ui/buttons/BlueBtn";
 
 const NewItem = (props) => {
-  const urlInputRef = useRef();
   const history = useHistory();
+  const urlInputRef = useRef();
 
   const token = useSelector((state) => state.auth.token);
 
@@ -27,9 +27,6 @@ const NewItem = (props) => {
   const curUrl = history.location.pathname;
   const listUrl = curUrl.substring(0, curUrl.lastIndexOf("/"));
   const listId = listUrl.substring(listUrl.lastIndexOf("/") + 1);
-  /*const id = history.location.pathname.substring(
-    history.location.pathname.lastIndexOf("/") + 1
-  );*/
 
   const getItem = (url) => {
     sendRequest(
@@ -71,81 +68,79 @@ const NewItem = (props) => {
         }),
         headers: { Authorization: `Bearer ${token}` },
       },
-      setItemIsSent(true)
+      () => {
+        setItemIsSent(true);
+        props.itemAdded();
+      }
     );
   };
 
   return (
     <>
       {!itemIsSent && (
-        <Modal header="Přidejte nový předmět">
-          <section className={classes.section}>
-            <div>
-              <h2>Zadejte informace o novém předmětu.</h2>
+        <div className={classes.section}>
+          <div>
+            <h2>Zadejte informace o novém předmětu.</h2>
+          </div>
+          <form className={classes.form} onSubmit={submitHandler}>
+            <div className={classes.control}>
+              <label htmlFor="searching">Začněte vyhledávat</label>
+              <input type="text" id="searching" />
             </div>
-            <form className={classes.form} onSubmit={submitHandler}>
-              <div className={classes.control}>
-                <label htmlFor="searching">Začněte vyhledávat</label>
-                <input type="text" id="searching" />
-              </div>
 
+            <div className={classes.control}>
+              <label htmlFor="url">Zadejte url předmětu</label>
+              <input
+                type="url"
+                id="url"
+                ref={urlInputRef}
+                onChange={changeUrlHandler}
+              />
+            </div>
+
+            <div>{isLoading && <Spinner />}</div>
+
+            {dataIsVisible && (
               <div className={classes.control}>
-                <label htmlFor="url">Zadejte url předmětu</label>
-                <input
-                  type="url"
-                  id="url"
-                  ref={urlInputRef}
-                  onChange={changeUrlHandler}
+                <label htmlFor="title">Název</label>
+                <input type="text" id="title" defaultValue={name} />
+              </div>
+            )}
+
+            {dataIsVisible && (
+              <div className={classes.control}>
+                <label htmlFor="price">Cena</label>
+                <input type="text" id="price" defaultValue={price} />
+              </div>
+            )}
+
+            {dataIsVisible && (
+              <div className={classes.control}>
+                <label htmlFor="description">Popis</label>
+                <textarea
+                  type="text"
+                  id="description"
+                  rows="5"
+                  defaultValue={description}
                 />
               </div>
+            )}
 
-              <div>{isLoading && <Spinner />}</div>
-
-              {dataIsVisible && (
-                <div className={classes.control}>
-                  <label htmlFor="title">Název</label>
-                  <input type="text" id="title" defaultValue={name} />
-                </div>
-              )}
-
-              {dataIsVisible && (
-                <div className={classes.control}>
-                  <label htmlFor="price">Cena</label>
-                  <input type="text" id="price" defaultValue={price} />
-                </div>
-              )}
-
-              {dataIsVisible && (
-                <div className={classes.control}>
-                  <label htmlFor="description">Popis</label>
-                  <textarea
-                    type="text"
-                    id="description"
-                    rows="5"
-                    defaultValue={description}
-                  />
-                </div>
-              )}
-
-              {dataIsVisible && (
-                <div className={classes.imageWrap}>
-                  <Image src={imageUrl} alt={name} className={classes.image} />
-                </div>
-              )}
-
-              <div className={classes.btn}>
-                <button>Přidat předmět</button>
+            {dataIsVisible && (
+              <div className={classes.imageWrap}>
+                <Image src={imageUrl} alt={name} className={classes.image} />
               </div>
-            </form>
-          </section>
-        </Modal>
+            )}
+            <div className={classes.btn}>
+              <BlueBtn width="25%">Přidat předmět</BlueBtn>
+            </div>
+          </form>
+        </div>
       )}
       {itemIsSent && (
-        <Modal header="Předmět byl přidán">
-          <div className={classes.check}>
-            <FaCheckCircle />
-          </div>
-        </Modal>
+        <div className={classes.check}>
+          <FaCheckCircle />
+        </div>
       )}
     </>
   );

@@ -1,13 +1,16 @@
-import { Link, useHistory, useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useHistory, useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { FaPencilAlt, FaTrashAlt, FaArrowLeft } from "react-icons/fa/index";
 
 import classes from "./Item.module.css";
 import Card from "../ui/Card";
 import Spinner from "../ui/Spinner";
 import Image from "../ui/Image";
 import useApi from "../../hooks/use-api";
-import { useEffect, useState } from "react";
+import EditBar from "../ui/editBar/EditBar";
+import Modal from "../ui/Modal";
+import GreyBtn from "../ui/buttons/GreyBtn";
+import BlueBtn from "../ui/buttons/BlueBtn";
 
 const Item = (props) => {
   const history = useHistory();
@@ -21,6 +24,8 @@ const Item = (props) => {
   const [updatedUtc, setUpdatedUtc] = useState(null);
   const [description, setDescription] = useState(null);
   const [url, setUrl] = useState(null);
+  const [isRemoving, setIsRemoving] = useState(false);
+  const [isUnbooking, setIsUnbooking] = useState(false);
 
   const { isLoading, error, sendRequest } = useApi();
 
@@ -82,21 +87,12 @@ const Item = (props) => {
       {isLoading && <Spinner />}
       {!isLoading && (
         <Card className={classes.item}>
-          <div className={classes.edit}>
-            <div>
-              <button onClick={() => history.goBack()}>
-                <FaArrowLeft />
-              </button>
-            </div>
-            <div>
-              <button onClick={removeItemHandler}>
-                <FaTrashAlt />
-              </button>
-              <button onClick={editItemHandler}>
-                <FaPencilAlt />
-              </button>
-            </div>
-          </div>
+          <EditBar
+            arrowBack
+            goTo={() => history.goBack()}
+            onRemove={() => setIsRemoving(true)}
+            onEdit={editItemHandler}
+          />
 
           <div className={classes.name}>
             <h1>{name}</h1>
@@ -127,19 +123,49 @@ const Item = (props) => {
           </div>
 
           <div className={classes.btns}>
-            <div className={!claimed ? classes.btn : classes.booked}>
-              <button onClick={!claimed ? bookItemHandler : unbookItemHandler}>
-                {!claimed ? "Zamluvit" : "Odzamluvit"}
-              </button>
+            <div className={classes.btn}>
+              {!claimed ? (
+                <BlueBtn onClick={bookItemHandler}>Zamluvit</BlueBtn>
+              ) : (
+                <GreyBtn onClick={() => setIsUnbooking(true)}>
+                  Odzamluvit
+                </GreyBtn>
+              )}
             </div>
             <div className={classes.btn}>
-              <button onClick={heurekaHandler}>
+              <BlueBtn onClick={heurekaHandler}>
                 Prohlédnout si na Heuréce
-              </button>
+              </BlueBtn>
             </div>
           </div>
         </Card>
       )}
+      <Modal
+        modalIsOpen={isRemoving}
+        onClose={() => setIsRemoving(false)}
+        header="Opravdu chcete předmět smazat?"
+      >
+        <div className={classes.btnModal}>
+          <GreyBtn onClick={removeItemHandler} width="50%">
+            Smazat
+          </GreyBtn>
+        </div>
+      </Modal>
+      <Modal
+        modalIsOpen={isUnbooking}
+        onClose={() => setIsUnbooking(false)}
+        header="Opravdu chcete předmět odbookovat?"
+      >
+        <p>
+          Pokud jste předmět nezamluvili vy, smažete tak rezervaci jinému
+          uživateli.
+        </p>
+        <div className={classes.btnModal}>
+          <GreyBtn onClick={unbookItemHandler} width="50%">
+            Odbookovat
+          </GreyBtn>
+        </div>
+      </Modal>
     </>
   );
 };

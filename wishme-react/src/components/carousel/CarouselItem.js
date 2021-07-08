@@ -13,9 +13,9 @@ const CarouselItem = (props) => {
   }
 
   return (
-    <Card className={classes.item} onClick={props.onClick}>
+    <div className={classes.item} onClick={props.onClick}>
       {content}
-    </Card>
+    </div>
   );
 };
 

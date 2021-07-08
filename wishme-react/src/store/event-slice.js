@@ -4,14 +4,14 @@ const eventSlice = createSlice({
   name: "event",
   initialState: {
     lists: [],
-    items: [],
+    items: {},
   },
   reducers: {
     setLists(state, actions) {
       state.lists = actions.payload;
     },
     setItems(state, action) {
-      state.items = action.payload;
+      state.items[action.payload.id] = action.payload.items;
     },
   },
 });

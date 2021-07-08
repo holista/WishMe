@@ -20,7 +20,6 @@
 }
 
 .control {
-  font-weight: 300;
   display: flex;
   align-items: center;
 }
@@ -28,23 +27,4 @@
 .icon {
   padding: 1rem;
   font-size: 1.25rem;
-}
-
-.edit {
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-}
-
-.edit button {
-  background-color: transparent;
-  border: none;
-  text-decoration: underline;
-  cursor: pointer;
-  padding: 0 0.75rem;
-  font-size: 1rem;
-}
-
-.edit button:hover {
-  color: blue;
 }
