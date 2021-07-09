@@ -1,16 +1,19 @@
 import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { useHistory } from "react-router";
 
 import Carousel from "../components/carousel/Carousel";
+import Modal from "../components/ui/Modal";
 import NewEvent from "../components/event/newEvent/NewEvent";
 import Spinner from "../components/ui/Spinner";
 import useApi from "../hooks/use-api";
-import { uiActions } from "../store/ui-slice";
 
 const MainPage = (props) => {
+  const history = useHistory();
+
   const { token, organizerId } = useSelector((state) => state.auth);
   const [events, setEvents] = useState([]);
+  const [newEventModalIsOpen, setNewEventModalIsOpen] = useState(false);
 
   const { isLoading, error, sendRequest } = useApi();
 
@@ -29,17 +32,14 @@ const MainPage = (props) => {
     );
   }, [organizerId, token, sendRequest]);
 
-  const modalIsOpen = useSelector((state) => state.ui.modalIsOpen);
-  const dispatch = useDispatch();
-  const history = useHistory();
-
-  if (!modalIsOpen) {
-    history.push("/mainpage");
-  }
-
   const openNewEventHandler = () => {
-    dispatch(uiActions.openModal());
+    setNewEventModalIsOpen(true);
     history.push("/mainpage/new-event");
+  };
+
+  const closeNewEventHandler = () => {
+    setNewEventModalIsOpen(false);
+    history.push("/mainpage");
   };
 
   const openEventHandler = (id) => {
@@ -58,7 +58,14 @@ const MainPage = (props) => {
           centerPosition={true}
         />
       )}
-      {modalIsOpen && <NewEvent />}
+
+      <Modal
+        modalIsOpen={newEventModalIsOpen}
+        onClose={closeNewEventHandler}
+        header="Vytvořte novou událost"
+      >
+        <NewEvent />
+      </Modal>
     </>
   );
 };

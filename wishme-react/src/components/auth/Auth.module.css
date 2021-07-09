@@ -3,7 +3,7 @@
   margin: 5% 10% 20% 55%;
   width: 30%;
   border-radius: 10px;
-  background-color: aliceblue;
+  background-color: #fff;
   box-shadow: 0 3px 20px 0 rgb(0 0 0 / 10%);
   box-sizing: border-box;
 
@@ -27,8 +27,8 @@
 
 .control input {
   border-radius: 4px;
-  background-color: #fff;
-  border: 1px solid #c1d1d1;
+  background-color: #f5f5f5;
+  border: 1px solid #1b63f19a;
   font-size: 1rem;
   padding: 2%;
   text-align: center;
@@ -37,7 +37,7 @@
 
 .control input:focus,
 .control textarea:focus {
-  background-color: rgb(247, 247, 247);
+  background-color: #1b62f13f;
   outline: transparent;
 }
 
@@ -61,7 +61,7 @@
 }
 
 .switching span {
-  color: #1a3cab;
+  color: #1b62f1;
 }
 
 .switching span:hover {
@@ -72,49 +72,4 @@
 .btn {
   display: flex;
   justify-content: center;
-}
-
-.form button {
-  width: 60%;
-  background: #1a3cab;
-  border-radius: 6px;
-  color: #fff;
-  border: none;
-  position: relative;
-  height: 60px;
-  font-size: 1rem;
-  font-family: "Quicksand", sans-serif;
-  cursor: pointer;
-  transition: 800ms ease all;
-  outline: none;
-  margin: 1rem 0;
-}
-
-.form button:hover {
-  background: transparent;
-  color: #1a3cab;
-}
-
-.form button:before,
-.form button:after {
-  content: "";
-  position: absolute;
-  top: 0;
-  right: 0;
-  height: 2px;
-  width: 0;
-  background: #1a3cab;
-  transition: 400ms ease all;
-}
-.form button:after {
-  right: inherit;
-  top: inherit;
-  left: 0;
-  bottom: 0;
-}
-
-.form button:hover:before,
-.form button:hover:after {
-  width: 100%;
-  transition: 800ms ease all;
 }

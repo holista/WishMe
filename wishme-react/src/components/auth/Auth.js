@@ -7,6 +7,7 @@ import { authActions } from "../../store/auth-slice";
 import classes from "./Auth.module.css";
 import useApi from "../../hooks/use-api";
 import Spinner from "../ui/Spinner";
+import BlueBtn from "../ui/buttons/BlueBtn";
 
 const Auth = (props) => {
   const history = useHistory();
@@ -128,7 +129,9 @@ const Auth = (props) => {
           <div className={classes.btn}>
             {isLoading && <Spinner />}
             {!isLoading && (
-              <button>{isRegistrating ? "Přihlásit" : "Registrovat"}</button>
+              <BlueBtn width="62%">
+                {isRegistrating ? "Přihlásit" : "Registrovat"}
+              </BlueBtn>
             )}
           </div>
         </form>

@@ -1,32 +1,20 @@
-import { useDispatch, useSelector } from "react-redux";
-import { useHistory } from "react-router";
-import { uiActions } from "../../store/ui-slice";
-
 import classes from "./Modal.module.css";
 
 const Modal = (props) => {
-  const modalIsOpen = useSelector((state) => state.ui.modalIsOpen);
-  const dispatch = useDispatch();
-  const history = useHistory();
-
-  const closeModalHandler = () => {
-    dispatch(uiActions.closeModal());
-    history.goBack();
-  };
-
   return (
     <>
-      {modalIsOpen && (
+      {props.modalIsOpen && (
         <div className={classes.overlay}>
-          <div className={classes.backdrop} onClick={closeModalHandler}></div>
+          <div className={classes.backdrop} onClick={props.onClose}></div>
           <div className={classes.modal}>
             <div className={classes.close}>
-              <button onClick={closeModalHandler}>x</button>
+              <button onClick={props.onClose}>x</button>
             </div>
-            <div className={classes.header}>
-              <h1>{props.header}</h1>
-            </div>
-
+            {props.header && (
+              <div className={classes.header}>
+                <h1>{props.header}</h1>
+              </div>
+            )}
             {props.children}
           </div>
         </div>

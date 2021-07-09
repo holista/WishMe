@@ -3,6 +3,8 @@ import { useState, useRef } from "react";
 
 import classes from "./NewItemList.module.css";
 import useApi from "../../../hooks/use-api";
+import Card from "../../ui/Card";
+import BlueBtn from "../../ui/buttons/BlueBtn";
 
 const NewItemList = (props) => {
   const [listIsCreated, setListIsCreated] = useState(false);
@@ -33,29 +35,32 @@ const NewItemList = (props) => {
   };
 
   return (
-    <div className={classes.list}>
-      <section className={classes.listName}>
-        <div className={classes.control}>
-          <input
-            type="text"
-            placeholder="Zadejte jméno seznamu"
-            ref={nameInputRef}
-            required
-          />
-        </div>
-        <div className={classes.control}>
-          <input
-            type="text"
-            rows="2"
-            placeholder="Popište nový seznam"
-            ref={descriptionInputRef}
-          />
-        </div>
-        <div className={classes.control}>
-          <button onClick={addListHandler}>Přidat seznam přání</button>
-        </div>
-      </section>
-    </div>
+    <Card>
+      <form className={classes.form}>
+        <section className={classes.listName}>
+          <div className={classes.control}>
+            <input
+              type="text"
+              placeholder="Zadejte jméno seznamu"
+              ref={nameInputRef}
+              required
+            />
+          </div>
+          <div className={classes.control}>
+            <input
+              type="text"
+              rows="2"
+              placeholder="Popište nový seznam"
+              ref={descriptionInputRef}
+            />
+          </div>
+        </section>
+
+        <BlueBtn onClick={addListHandler} width="25%">
+          Přidat seznam přání
+        </BlueBtn>
+      </form>
+    </Card>
   );
 };
 

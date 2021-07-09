@@ -1,68 +1,25 @@
-.list {
+.form {
   display: flex;
-  flex-direction: column;
-  width: 85%;
-  background-color: rgba(255, 255, 255, 0.596);
-  border-radius: 6px;
-  box-sizing: border-box;
-  padding: 2rem;
-  margin: 2rem 0;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .listName {
   display: flex;
-  padding-left: 8%;
+  width: 70%;
 }
 
 .control {
   margin: 1rem;
-  width: 30%;
+  width: 50%;
 }
 
 .control input {
-  padding: 0.25rem;
+  padding: 0.5rem;
   width: 100%;
 }
 
 .control button {
-  width: 60%;
-  background: #1a3cab;
-  border-radius: 6px;
-  color: #fff;
-  border: none;
-  position: relative;
-  padding: 0.25rem;
-  font-size: 1rem;
-  cursor: pointer;
-  transition: 800ms ease all;
-  outline: none;
-}
-
-.control button:hover {
-  background: transparent;
-  color: #1a3cab;
-}
-
-.control button:before,
-.control button:after {
-  content: "";
-  position: absolute;
-  top: 0;
-  right: 0;
-  height: 2px;
-  width: 0;
-  background: #1a3cab;
-  transition: 400ms ease all;
-}
-.control button:after {
-  right: inherit;
-  top: inherit;
-  left: 0;
-  bottom: 0;
-}
-
-.control button:hover:before,
-.control button:hover:after {
+  margin-left: 1rem;
   width: 100%;
-  transition: 800ms ease all;
 }

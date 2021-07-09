@@ -1,13 +1,17 @@
+import { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
 import classes from "./ItemList.module.css";
-import { uiActions } from "../../store/ui-slice";
 import Carousel from "../carousel/Carousel";
 import useApi from "../../hooks/use-api";
 import Spinner from "../ui/Spinner";
-import { useEffect } from "react";
 import { eventActions } from "../../store/event-slice";
+import Card from "../ui/Card";
+import Modal from "../ui/Modal";
+import EditBar from "../ui/editBar/EditBar";
+import NewItem from "../item/newItem/NewItem";
+import GreyBtn from "../ui/buttons/GreyBtn";
 
 const ItemList = (props) => {
   const dispatch = useDispatch();
@@ -16,17 +20,33 @@ const ItemList = (props) => {
   const token = useSelector((state) => state.auth.token);
   const eventId = props.eventId;
   const listId = props.wishlistId;
-  const items = useSelector((state) => state.event.items);
+
+  const items = useSelector((state) => state.event.items[listId]) ?? [];
 
   const { isLoading, error, sendRequest } = useApi();
 
+  const [isRemoving, setIsRemoving] = useState(false);
+  const [isAddingItem, setIsAddingItem] = useState(false);
+  const [itemWasAdded, setItemWasAdded] = useState(false);
+  const [editModeIsActive, setEditModeIsActive] = useState(false);
+
   const openNewItemHandler = () => {
-    dispatch(uiActions.openModal());
+    setIsAddingItem(true);
     history.push(`/event/${eventId}/wishlist/${listId}/new-item`);
+  };
+
+  const closeNewItemHandler = () => {
+    setIsAddingItem(false);
+    setItemWasAdded(false);
+    history.goBack();
   };
 
   const openItemHandler = (itemId) => {
     history.push(`/event/${eventId}/wishlist/${listId}/item/${itemId}`);
+  };
+
+  const itemWasAddedHandler = () => {
+    setItemWasAdded(true);
   };
 
   useEffect(() => {
@@ -37,34 +57,64 @@ const ItemList = (props) => {
       },
       (responseData) => {
         console.log("Itemlist: seting items of the list");
-        return dispatch(
-          eventActions.setItems(
-            responseData.models.map((item) => ({
-              id: item.id,
-              key: item.id,
-              name: item.name,
-              price: item.price,
-              description: item.description,
-              imageUrl: item.imageUrl,
-              claimed: item.claimed,
-            }))
-          )
+        dispatch(
+          eventActions.setItems({
+            id: listId,
+            items: responseData.models.map((item) => {
+              return {
+                id: item.id,
+                key: item.id,
+                name: item.name,
+                price: item.price,
+                description: item.description,
+                imageUrl: item.imageUrl,
+                claimed: item.claimed,
+              };
+            }),
+          })
         );
       }
     );
-  }, [listId, token, sendRequest, dispatch]);
+  }, []);
+
+  const removeListHandler = () => {
+    sendRequest({
+      url: `wishlists/${listId}`,
+      method: "DELETE",
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    setIsRemoving(false);
+  };
+
+  const saveListHandler = () => {
+    sendRequest(
+      {
+        url: `wishlists/${listId}`,
+        method: "PUT",
+        body: JSON.stringify(),
+        headers: { Authorization: `Bearer ${token}` },
+      },
+      setEditModeIsActive(false)
+    );
+  };
 
   return (
-    <div className={classes.list}>
+    <>
       {isLoading && <Spinner />}
       {!isLoading && (
-        <>
+        <Card>
+          <EditBar
+            onRemove={() => setIsRemoving(true)}
+            editing={!editModeIsActive}
+            onEdit={() => setEditModeIsActive(true)}
+            onSave={saveListHandler}
+          />
           <section className={classes.listName}>
             <div className={classes.control}>
-              <h3>{props.name}</h3>
+              <h1>{props.name}</h1>
             </div>
             <div className={classes.control}>
-              <h3>{props.description}</h3>
+              <p>{props.description}</p>
             </div>
           </section>
           <Carousel
@@ -73,9 +123,25 @@ const ItemList = (props) => {
             onNewData={openNewItemHandler}
             onData={openItemHandler}
           />
-        </>
+        </Card>
       )}
-    </div>
+
+      <Modal
+        modalIsOpen={isAddingItem}
+        onClose={closeNewItemHandler}
+        header={!itemWasAdded ? "Přidejte nový předmět" : "Předmět byl přidán"}
+      >
+        <NewItem eventId={eventId} itemAdded={itemWasAddedHandler} />
+      </Modal>
+
+      <Modal
+        modalIsOpen={isRemoving}
+        onClose={() => setIsRemoving(false)}
+        header="Vážně chcete seznam smazat?"
+      >
+        <GreyBtn onClick={removeListHandler}>Smazat</GreyBtn>
+      </Modal>
+    </>
   );
 };
 

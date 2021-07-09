@@ -1,0 +1,48 @@
+.btn {
+  display: flex;
+  justify-content: center;
+}
+
+.btn button {
+  width: 100%;
+  background: #1a3cab;
+  border-radius: 6px;
+  color: #fff;
+  border: none;
+  position: relative;
+  height: 60px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: 800ms ease all;
+  outline: none;
+  margin: 1rem 0;
+}
+
+.btn button:hover {
+  background: transparent;
+  color: #1a3cab;
+}
+
+.btn button:before,
+.btn button:after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  height: 2px;
+  width: 0;
+  background: #1a3cab;
+  transition: 400ms ease all;
+}
+.btn button:after {
+  right: inherit;
+  top: inherit;
+  left: 0;
+  bottom: 0;
+}
+
+.btn button:hover:before,
+.btn button:hover:after {
+  width: 100%;
+  transition: 800ms ease all;
+}
