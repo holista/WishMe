@@ -17,6 +17,10 @@
   text-align: center;
 }
 
+.bigger {
+  height: 45vh;
+}
+
 .item:hover {
   cursor: pointer;
 }

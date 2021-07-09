@@ -3,6 +3,8 @@ import { NavLink, useHistory } from "react-router-dom";
 import { authActions } from "../../store/auth-slice";
 
 import classes from "./MainNavigation.module.css";
+import Image from "../ui/Image";
+import logo from "../../assets/logo.png";
 
 const MainNavigation = (props) => {
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
@@ -23,8 +25,8 @@ const MainNavigation = (props) => {
 
   return (
     <header className={classes.header}>
-      <div className={classes.logo} onClick={logoHandler}>
-        WishMe
+      <div className={classes.logoWrap} onClick={logoHandler}>
+        <Image src={logo} className={classes.logo} />
       </div>
       <nav className={classes.nav}>
         <ul>

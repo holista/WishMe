@@ -56,6 +56,7 @@ const MainPage = (props) => {
           data={events}
           defaultTitle="Vytvořte novou událost"
           centerPosition={true}
+          bigger
         />
       )}
 

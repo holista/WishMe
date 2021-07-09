@@ -8,6 +8,8 @@ import classes from "./Auth.module.css";
 import useApi from "../../hooks/use-api";
 import Spinner from "../ui/Spinner";
 import BlueBtn from "../ui/buttons/BlueBtn";
+import Image from "../ui/Image";
+import logo from "../../assets/logo.png";
 
 const Auth = (props) => {
   const history = useHistory();
@@ -88,8 +90,8 @@ const Auth = (props) => {
   return (
     <>
       <div className={classes.formWrap}>
-        <div className={classes.header}>
-          <h1>WishMe</h1>
+        <div className={classes.logoWrap}>
+          <Image src={logo} className={classes.logo} />
         </div>
         <form
           onSubmit={!isRegistrating ? registerHandler : loginHandler}

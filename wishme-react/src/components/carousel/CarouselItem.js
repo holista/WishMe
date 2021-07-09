@@ -4,6 +4,8 @@ import Image from "../ui/Image";
 const CarouselItem = (props) => {
   let content = <h1>{props.title}</h1>;
 
+  const bigger = props.bigger && classes.bigger;
+
   if (props.image) {
     content = (
       <div className={classes.imageWrap}>
@@ -13,7 +15,7 @@ const CarouselItem = (props) => {
   }
 
   return (
-    <div className={classes.item} onClick={props.onClick}>
+    <div className={`${classes.item} + ${bigger}`} onClick={props.onClick}>
       {content}
     </div>
   );
