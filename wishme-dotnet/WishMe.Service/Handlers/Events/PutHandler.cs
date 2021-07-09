@@ -28,10 +28,12 @@ namespace WishMe.Service.Handlers.Events
     protected override async Task<Event> DoCreateUpdatedEntityAsync(ObjectId id, EventProfileModel model, CancellationToken cancellationToken)
     {
       var @event = await fGenericRepository.GetAsync<Event>(id, cancellationToken);
+      if (@event is null)
+        throw new NotFoundException($"Entity of type '{typeof(Event)}' with ID '{id}' was not found.");
 
       var updated = model.Adapt<Event>();
 
-      updated.OrganizerId = @event!.OrganizerId;
+      updated.OrganizerId = @event.OrganizerId;
 
       return @event;
     }
