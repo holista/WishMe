@@ -1,4 +1,8 @@
 ﻿using System;
+using System.Threading;
+using System.Threading.Tasks;
+using Mapster;
+using MongoDB.Bson;
 using WishMe.Service.Entities;
 using WishMe.Service.Exceptions;
 using WishMe.Service.Models.Events;
@@ -19,6 +23,17 @@ namespace WishMe.Service.Handlers.Events
 
       if (model.DateTimeUtc <= DateTime.UtcNow)
         throw new BadRequestException($"Time of the event '{model.DateTimeUtc}' is in the past.");
+    }
+
+    protected override async Task<Event> DoCreateUpdatedEntityAsync(ObjectId id, EventProfileModel model, CancellationToken cancellationToken)
+    {
+      var @event = await fGenericRepository.GetAsync<Event>(id, cancellationToken);
+
+      var updated = model.Adapt<Event>();
+
+      updated.OrganizerId = @event!.OrganizerId;
+
+      return @event;
     }
   }
 }
