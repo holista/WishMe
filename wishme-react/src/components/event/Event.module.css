@@ -13,18 +13,77 @@
   text-align: center;
 }
 
+.details {
+  width: 95%;
+  display: flex;
+  justify-content: space-between;
+  align-self: center;
+  margin-top: 3%;
+}
+
+.section {
+  width: 50%;
+  padding-right: 5%;
+  box-sizing: border-box;
+}
+
 .dateTime {
   display: flex;
   justify-content: space-between;
-  width: 30%;
 }
 
 .control {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
+  width: 50%;
+}
+
+.controlImg {
+  width: 50%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .icon {
-  padding: 1rem;
+  padding: 0 1rem 1rem 0;
   font-size: 1.25rem;
+}
+
+.imageWrap img {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  display: flex;
+  justify-content: center;
+}
+
+.imageWrap {
+  height: auto;
+  width: 50%;
+  overflow: hidden;
+  border-radius: 6px;
+}
+
+.description textarea {
+  width: 100%;
+}
+
+.control input {
+  width: 50%;
+}
+
+.thumbWrap img {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  display: flex;
+  justify-self: center;
+}
+
+.thumbWrap {
+  height: auto;
+  width: 50%;
+  overflow: hidden;
+  border-radius: 6px;
 }

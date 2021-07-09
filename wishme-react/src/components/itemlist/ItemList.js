@@ -28,6 +28,7 @@ const ItemList = (props) => {
   const [isRemoving, setIsRemoving] = useState(false);
   const [isAddingItem, setIsAddingItem] = useState(false);
   const [itemWasAdded, setItemWasAdded] = useState(false);
+  const [editModeIsActive, setEditModeIsActive] = useState(false);
 
   const openNewItemHandler = () => {
     setIsAddingItem(true);
@@ -85,7 +86,17 @@ const ItemList = (props) => {
     setIsRemoving(false);
   };
 
-  const editListHandler = () => {};
+  const saveListHandler = () => {
+    sendRequest(
+      {
+        url: `wishlists/${listId}`,
+        method: "PUT",
+        body: JSON.stringify(),
+        headers: { Authorization: `Bearer ${token}` },
+      },
+      setEditModeIsActive(false)
+    );
+  };
 
   return (
     <>
@@ -94,7 +105,9 @@ const ItemList = (props) => {
         <Card>
           <EditBar
             onRemove={() => setIsRemoving(true)}
-            onEdit={editListHandler}
+            editing={!editModeIsActive}
+            onEdit={() => setEditModeIsActive(true)}
+            onSave={saveListHandler}
           />
           <section className={classes.listName}>
             <div className={classes.control}>

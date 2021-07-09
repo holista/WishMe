@@ -45,7 +45,7 @@ const Item = (props) => {
         setUrl(responseData.url);
       }
     );
-  }, [token, sendRequest]);
+  }, [token, id, sendRequest]);
 
   const editItemHandler = () => {};
 

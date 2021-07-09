@@ -1,9 +1,9 @@
 import classes from "./CarouselItem.module.css";
-import Card from "../ui/Card";
 import Image from "../ui/Image";
 
 const CarouselItem = (props) => {
   let content = <h1>{props.title}</h1>;
+
   if (props.image) {
     content = (
       <div className={classes.imageWrap}>

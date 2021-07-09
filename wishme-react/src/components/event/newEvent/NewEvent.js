@@ -7,6 +7,7 @@ import classes from "./NewEvent.module.css";
 import Spinner from "../../ui/Spinner";
 import useApi from "../../../hooks/use-api";
 import BlueBtn from "../../ui/buttons/BlueBtn";
+import useImage from "../../../hooks/use-img";
 
 const NewEvent = (props) => {
   const history = useHistory();
@@ -19,25 +20,7 @@ const NewEvent = (props) => {
   const imageInputRef = useRef();
 
   const { isLoading, error, sendRequest } = useApi();
-
-  const toBase64 = async (file) => {
-    try {
-      const imageStr = await toBase64Convertor(file);
-      const index = imageStr.indexOf("base64,");
-      return imageStr.substring(index + 7);
-    } catch (e) {
-      return "";
-    }
-  };
-
-  const toBase64Convertor = (file) => {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onload = () => resolve(reader.result.toString());
-      reader.onerror = (error) => reject(error);
-    });
-  };
+  const { toBase64 } = useImage();
 
   const addEventHandler = async (event) => {
     event.preventDefault();
