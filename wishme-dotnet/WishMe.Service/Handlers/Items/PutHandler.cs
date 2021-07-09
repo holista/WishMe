@@ -26,7 +26,7 @@ namespace WishMe.Service.Handlers.Items
       updated.EventId = item.EventId;
       updated.WishlistId = item.WishlistId;
 
-      return item;
+      return updated;
     }
   }
 }
