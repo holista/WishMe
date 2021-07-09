@@ -1,7 +1,7 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
-using Mapster;
 using MediatR;
+using MongoDB.Bson;
 using WishMe.Service.Entities;
 using WishMe.Service.Exceptions;
 using WishMe.Service.Repositories;
@@ -13,7 +13,7 @@ namespace WishMe.Service.Handlers
     where TRequest : PutRequestBase<TModel>
     where TEntity : DbDocBase
   {
-    private readonly IGenericRepository fGenericRepository;
+    protected readonly IGenericRepository fGenericRepository;
 
     protected PutHandlerBase(IGenericRepository genericRepository)
     {
@@ -24,12 +24,19 @@ namespace WishMe.Service.Handlers
     {
       DoCheckModel(request.Model);
 
-      if (!await fGenericRepository.UpdateAsync<TEntity>(request.Id, request.Model!.Adapt<TEntity>(), cancellationToken))
+      var updated = await DoCreateUpdatedEntityAsync(request.Id, request.Model!, cancellationToken);
+
+      if (!await fGenericRepository.UpdateAsync(request.Id, updated, cancellationToken))
         throw new NotFoundException($"Entity of type '{typeof(TEntity)}' with ID '{request.Id}' was not found.");
 
       return Unit.Value;
     }
 
-    protected abstract void DoCheckModel(TModel model);
+    protected virtual void DoCheckModel(TModel model)
+    {
+
+    }
+
+    protected abstract Task<TEntity> DoCreateUpdatedEntityAsync(ObjectId id, TModel model, CancellationToken cancellationToken);
   }
 }
