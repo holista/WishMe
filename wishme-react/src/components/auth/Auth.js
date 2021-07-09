@@ -74,7 +74,7 @@ const Auth = (props) => {
             token: responseData.token,
           })
         );
-        history.push("/mainpage");
+        history.push("/moje-udalosti");
       }
     );
   };

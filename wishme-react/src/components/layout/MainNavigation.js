@@ -15,7 +15,7 @@ const MainNavigation = (props) => {
 
   const logoHandler = () => {
     if (isAuthenticated) {
-      history.push("/mainpage");
+      history.push("/moje-udalosti");
     } else {
       history.push("/welcome");
     }
@@ -28,9 +28,12 @@ const MainNavigation = (props) => {
       </div>
       <nav className={classes.nav}>
         <ul>
+          <li>
+            <NavLink to="/jak-to-funguje">Jak to funguje</NavLink>
+          </li>
           {isAuthenticated && (
             <li>
-              <NavLink to="/mainpage">Moje události</NavLink>
+              <NavLink to="/moje-udalosti">Moje události</NavLink>
             </li>
           )}
           {isAuthenticated && (

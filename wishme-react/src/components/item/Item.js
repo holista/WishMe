@@ -55,7 +55,7 @@ const Item = (props) => {
       method: "DELETE",
       headers: { Authorization: `Bearer ${token}` },
     });
-    history.replace(`/event/${evId}`);
+    history.replace(`/udalost/${evId}`);
   };
 
   const bookItemHandler = () => {
@@ -70,12 +70,15 @@ const Item = (props) => {
 
   const unbookItemHandler = () => {
     setClaimed(false);
-    sendRequest({
-      url: `items/${id}/claimed`,
-      method: "PUT",
-      body: JSON.stringify({ claimed: false }),
-      headers: { Authorization: `Bearer ${token}` },
-    });
+    sendRequest(
+      {
+        url: `items/${id}/claimed`,
+        method: "PUT",
+        body: JSON.stringify({ claimed: false }),
+        headers: { Authorization: `Bearer ${token}` },
+      },
+      setIsUnbooking(false)
+    );
   };
 
   const heurekaHandler = () => {

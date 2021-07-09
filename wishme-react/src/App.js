@@ -6,6 +6,7 @@ import WelcomePage from "./pages/WelcomePage";
 import MainPage from "./pages/MainPage";
 import EventPage from "./pages/EventPage";
 import ItemPage from "./pages/ItemPage";
+import IntroductionPage from "./pages/IntroductionPage";
 
 function App() {
   //const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
@@ -21,15 +22,19 @@ function App() {
           <WelcomePage />
         </Route>
 
-        <Route path="/mainpage">
+        <Route path="/jak-to-funguje">
+          <IntroductionPage />
+        </Route>
+
+        <Route path="/moje-udalosti">
           <MainPage />
         </Route>
 
-        <Route path="/event/:evId/wishlist/:listId/item/:id">
+        <Route path="/udalost/:evId/seznam/:listId/polozka/:id">
           <ItemPage />
         </Route>
 
-        <Route path="/event/:evId">
+        <Route path="/udalost/:evId">
           <EventPage />
         </Route>
       </Switch>

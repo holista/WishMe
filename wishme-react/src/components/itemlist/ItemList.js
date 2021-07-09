@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useHistory } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -30,9 +30,12 @@ const ItemList = (props) => {
   const [itemWasAdded, setItemWasAdded] = useState(false);
   const [editModeIsActive, setEditModeIsActive] = useState(false);
 
+  const nameInputRef = useRef();
+  const descriptionInputRef = useRef();
+
   const openNewItemHandler = () => {
     setIsAddingItem(true);
-    history.push(`/event/${eventId}/wishlist/${listId}/new-item`);
+    history.push(`/udalost/${eventId}/seznam/${listId}/nova-polozka`);
   };
 
   const closeNewItemHandler = () => {
@@ -42,7 +45,7 @@ const ItemList = (props) => {
   };
 
   const openItemHandler = (itemId) => {
-    history.push(`/event/${eventId}/wishlist/${listId}/item/${itemId}`);
+    history.push(`/udalost/${eventId}/seznam/${listId}/polozka/${itemId}`);
   };
 
   const itemWasAddedHandler = () => {
@@ -111,10 +114,29 @@ const ItemList = (props) => {
           />
           <section className={classes.listName}>
             <div className={classes.control}>
-              <h1>{props.name}</h1>
+              {!editModeIsActive ? (
+                <h1>{props.name}</h1>
+              ) : (
+                <input
+                  type="text"
+                  id="title"
+                  defaultValue={props.name}
+                  ref={nameInputRef}
+                />
+              )}
             </div>
             <div className={classes.control}>
-              <p>{props.description}</p>
+              {!editModeIsActive ? (
+                <p>{props.description}</p>
+              ) : (
+                <textarea
+                  type="text"
+                  id="description"
+                  rows="3"
+                  defaultValue={props.description}
+                  ref={descriptionInputRef}
+                />
+              )}
             </div>
           </section>
           <Carousel

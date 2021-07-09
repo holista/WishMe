@@ -66,7 +66,7 @@ const Event = (props) => {
         method: "DELETE",
         headers: { Authorization: `Bearer ${token}` },
       },
-      history.replace("/mainpage")
+      history.replace("/moje-udalosti")
     );
   };
 
@@ -111,7 +111,7 @@ const Event = (props) => {
         <Card>
           <EditBar
             arrowBack
-            goTo={() => history.replace("/mainpage")}
+            goTo={() => history.replace("/moje-udalosti")}
             onRemove={() => setIsRemoving(true)}
             editing={!editModeIsActive}
             onEdit={editEventHandler}
@@ -135,26 +135,30 @@ const Event = (props) => {
             <section className={classes.section}>
               <div className={classes.dateTime}>
                 <div className={classes.control}>
-                  <span className={classes.icon}>
-                    <FaCalendarAlt />
-                  </span>
                   {!editModeIsActive ? (
-                    <h3>{date}</h3>
+                    <>
+                      <span className={classes.icon}>
+                        <FaCalendarAlt />
+                      </span>
+                      <h3>{date}</h3>
+                    </>
                   ) : (
                     <input
                       type="date"
                       id="date"
-                      defaultValue={dateTime}
+                      defaultValue={dateTime.toISOString().substring(0, 10)}
                       ref={dateInputRef}
                     />
                   )}
                 </div>
                 <div className={classes.control}>
-                  <span className={classes.icon}>
-                    <FaClock />
-                  </span>
                   {!editModeIsActive ? (
-                    <h3>{time}</h3>
+                    <>
+                      <span className={classes.icon}>
+                        <FaClock />
+                      </span>
+                      <h3>{time}</h3>
+                    </>
                   ) : (
                     <input
                       type="time"
