@@ -35,7 +35,7 @@ namespace WishMe.Service.Handlers.Events
 
       updated.OrganizerId = @event.OrganizerId;
 
-      return @event;
+      return updated;
     }
   }
 }
