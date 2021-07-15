@@ -3,8 +3,8 @@ import { useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
 import { FaEyeSlash, FaEye } from "react-icons/fa/index";
 
-import { authActions } from "../../store/auth-slice";
 import classes from "./Auth.module.css";
+import { authActions } from "../../store/auth-slice";
 import useApi from "../../hooks/use-api";
 import Spinner from "../ui/Spinner";
 import BlueBtn from "../ui/buttons/BlueBtn";
@@ -17,6 +17,7 @@ const Auth = (props) => {
 
   const [isRegistrating, setIsRegistrating] = useState(true);
   const [passwordIsVisible, setPasswordIsVisible] = useState(false);
+  const [inputError, setInputError] = useState(null);
 
   const usernameInputRef = useRef();
   const passwordInputRef = useRef();
@@ -34,9 +35,30 @@ const Auth = (props) => {
 
   const registerHandler = (event) => {
     event.preventDefault();
+
+    const username = usernameInputRef.current.value;
+    const password = passwordInputRef.current.value;
+    const passwordRepeat = passwordRepeatInputRef.current.value;
+
+    if (password.length || passwordRepeat.length || username.length === 0) {
+      setInputError("Vyplňte prosím prázdná pole!");
+      return;
+    } else if (password !== passwordRepeat) {
+      setInputError("Zadaná hesla se neshodují!");
+      return;
+    } else if (username.length < 4) {
+      setInputError("Uživatelské jméno musí obsahovat nejméně 4 znaky!");
+      return;
+    } else if (password.length < 5) {
+      setInputError("Heslo musí obsahovat nejméně 5 znaků!");
+      return;
+    }
+
+    setInputError(null);
+
     const dataReg = {
-      username: usernameInputRef.current.value,
-      password: passwordInputRef.current.value,
+      username,
+      password,
     };
 
     sendRequest(
@@ -52,6 +74,7 @@ const Auth = (props) => {
             token: responseData.token,
           })
         );
+        setInputError(null);
       }
     );
   };
@@ -77,6 +100,11 @@ const Auth = (props) => {
           })
         );
         history.push("/moje-udalosti");
+      },
+      (responseData) => {
+        if (responseData.status === 401) {
+          setInputError("Špatné uživatelské jméno a heslo!");
+        }
       }
     );
   };
@@ -102,7 +130,6 @@ const Auth = (props) => {
               placeholder="Uživatelské jméno"
               type="text"
               ref={usernameInputRef}
-              required
             />
           </div>
 
@@ -111,7 +138,6 @@ const Auth = (props) => {
               placeholder="Heslo"
               type={passwordIsVisible ? "text" : "password"}
               ref={passwordInputRef}
-              required
             />
             <span>{eye}</span>
           </div>
@@ -122,11 +148,12 @@ const Auth = (props) => {
                 placeholder="Potvrdit heslo"
                 type={passwordIsVisible ? "text" : "password"}
                 ref={passwordRepeatInputRef}
-                required
               />
               <span>{eye}</span>
             </div>
           )}
+
+          {inputError && <div className={classes.error}>{inputError}</div>}
 
           <div className={classes.btn}>
             {isLoading && <Spinner />}

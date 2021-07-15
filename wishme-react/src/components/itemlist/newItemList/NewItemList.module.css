@@ -23,3 +23,11 @@
   margin-left: 1rem;
   width: 100%;
 }
+
+.error {
+  text-align: center;
+  width: 100%;
+  font-size: 0.8rem;
+  font-weight: 900;
+  color: rgb(212, 48, 48);
+}

@@ -7,7 +7,8 @@
   background-color: #fff;
   object-fit: cover;
   border-radius: 6px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  box-shadow: 0px 6px 9px rgba(0, 0, 0, 0.25);
+
   display: flex;
   flex-grow: 0;
   flex-shrink: 0;
@@ -15,6 +16,7 @@
   justify-content: center;
   align-items: center;
   text-align: center;
+  transition: all 0.5s;
 }
 
 .bigger {
@@ -23,6 +25,9 @@
 
 .item:hover {
   cursor: pointer;
+  color: #02a2f1;
+  box-shadow: 0px 6px 9px rgba(0, 0, 0, 0.4);
+  transform: scale(1.03);
 }
 
 .image {

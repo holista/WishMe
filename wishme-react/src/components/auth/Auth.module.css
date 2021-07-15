@@ -1,6 +1,7 @@
 .formWrap {
   position: absolute;
-  margin: 10% 10% 20% 60%;
+  margin-top: 7%;
+  margin-left: 45%;
   width: 30%;
   border-radius: 10px;
   box-shadow: 0 3px 20px 0 rgb(0 0 0 / 10%);
@@ -74,15 +75,25 @@
 }
 
 .switching span {
-  color: #1b62f1;
+  color: #004aad;
 }
 
 .switching span:hover {
   text-decoration: underline;
   cursor: pointer;
+  color: #02a2f1;
 }
 
 .btn {
   display: flex;
   justify-content: center;
+}
+
+.error {
+  text-align: center;
+  width: 100%;
+  padding-top: 2%;
+  font-size: 0.75rem;
+  font-weight: 900;
+  color: rgb(212, 48, 48);
 }

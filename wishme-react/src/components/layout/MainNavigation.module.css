@@ -9,6 +9,7 @@
   justify-content: space-between;
   background: linear-gradient(#fff, rgba(255, 255, 255, 0.363));
   position: absolute;
+  box-shadow: 0 0 20px 0 rgb(0 0 0 / 10%);
 }
 
 .logo img {
@@ -19,19 +20,16 @@
 }
 
 .logo {
-  height: 90%;
+  height: 100%;
   width: auto;
   overflow: hidden;
   border-top-right-radius: 6px;
   border-top-left-radius: 6px;
-  margin: 5% 0;
 }
 
 .logoWrap {
   height: 100%;
-
   width: auto;
-
   overflow: hidden;
   border-top-right-radius: 6px;
   border-top-left-radius: 6px;
@@ -46,14 +44,16 @@
 .nav li {
   margin-left: 1.5rem;
   font-size: 1.25rem;
-  text-decoration: none;
 }
 
 .nav li :hover {
   cursor: pointer;
+  color: blue;
 }
 
 .nav a {
   text-decoration: none;
-  color: #421daa;
+  font-family: "Lato", sans-serif;
+  font-weight: 400;
+  color: #004aad;
 }

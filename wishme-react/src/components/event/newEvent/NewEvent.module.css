@@ -76,3 +76,11 @@
   overflow: hidden;
   border-radius: 6px;
 }
+
+.error {
+  text-align: center;
+  width: 100%;
+  font-size: 0.75rem;
+  font-weight: 900;
+  color: rgb(212, 48, 48);
+}

@@ -29,6 +29,7 @@ const ItemList = (props) => {
   const [isAddingItem, setIsAddingItem] = useState(false);
   const [itemWasAdded, setItemWasAdded] = useState(false);
   const [editModeIsActive, setEditModeIsActive] = useState(false);
+  const [inputError, setInputError] = useState(null);
 
   const nameInputRef = useRef();
   const descriptionInputRef = useRef();
@@ -95,9 +96,18 @@ const ItemList = (props) => {
   };
 
   const saveListHandler = () => {
+    const name = nameInputRef.current.value;
+    const description = descriptionInputRef.current.value;
+
+    if (name.length === 0) {
+      setInputError("Vyplňte prosím název seznamu!");
+      return;
+    }
+    setInputError(null);
+
     const dataList = {
-      name: nameInputRef.current.value,
-      description: descriptionInputRef.current.value,
+      name,
+      description,
     };
 
     sendRequest({
@@ -148,6 +158,7 @@ const ItemList = (props) => {
               )}
             </div>
           </section>
+          {inputError && <div className={classes.error}>{inputError}</div>}
           <Carousel
             defaultTitle="Přidejte nový předmět"
             data={items}
