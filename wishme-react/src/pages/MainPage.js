@@ -34,16 +34,16 @@ const MainPage = (props) => {
 
   const openNewEventHandler = () => {
     setNewEventModalIsOpen(true);
-    history.push("/mainpage/new-event");
+    history.push("/moje-udalosti/nova-udalost");
   };
 
   const closeNewEventHandler = () => {
     setNewEventModalIsOpen(false);
-    history.push("/mainpage");
+    history.push("/moje-udalosti");
   };
 
   const openEventHandler = (id) => {
-    history.push(`/event/${id}`);
+    history.push(`/udalost/${id}`);
   };
 
   return (
@@ -56,6 +56,7 @@ const MainPage = (props) => {
           data={events}
           defaultTitle="Vytvořte novou událost"
           centerPosition={true}
+          bigger
         />
       )}
 

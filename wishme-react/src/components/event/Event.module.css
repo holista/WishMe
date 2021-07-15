@@ -1,14 +1,3 @@
-.event {
-  display: flex;
-  flex-direction: column;
-  margin-top: 3%;
-  width: 85%;
-  background-color: rgba(255, 255, 255, 0.596);
-  border-radius: 6px;
-  box-sizing: border-box;
-  padding: 2rem;
-}
-
 .title {
   text-align: center;
 }
@@ -30,12 +19,13 @@
 .dateTime {
   display: flex;
   justify-content: space-between;
+  width: 100%;
 }
 
 .control {
   display: flex;
-  align-items: flex-start;
-  width: 50%;
+  width: 48%;
+  padding: 1%;
 }
 
 .controlImg {
@@ -65,12 +55,26 @@
   border-radius: 6px;
 }
 
-.description textarea {
-  width: 100%;
+.title input {
+  width: 40%;
+  padding: 1%;
+  text-align: center;
 }
 
 .control input {
-  width: 50%;
+  width: 100%;
+  text-align: center;
+}
+
+.controlImg input {
+  background-color: transparent;
+  border: none;
+  outline: transparent;
+  width: fit-content;
+}
+
+.description textarea {
+  width: 100%;
 }
 
 .thumbWrap img {

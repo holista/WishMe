@@ -10,8 +10,10 @@ const ItemLists = (props) => {
   const dispatch = useDispatch();
 
   const token = useSelector((state) => state.auth.token);
-  const eventId = props.eventId;
   const lists = useSelector((state) => state.event.lists);
+  const eventId = props.eventId;
+  const loaded = props.isLoaded;
+
   const { isLoading, error, sendRequest } = useApi();
 
   useEffect(() => {
@@ -32,16 +34,15 @@ const ItemLists = (props) => {
             }))
           )
         );
-
+        loaded();
         console.log("ItemLists: seting all lists");
       }
     );
-  }, []);
+  }, [loaded]);
 
   return (
     <>
-      {isLoading && <Spinner />}
-      {!isLoading &&
+      {props.visible &&
         lists.map((list) => (
           <ItemList
             key={list.wishlistId}

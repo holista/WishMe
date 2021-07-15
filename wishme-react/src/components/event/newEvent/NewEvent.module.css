@@ -37,6 +37,20 @@
   outline-color: #2e52ca;
 }
 
+.controlImg {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1rem;
+  padding: 0 1rem;
+}
+
+.controlImg input {
+  background-color: transparent;
+  border: none;
+  outline: transparent;
+  width: fit-content;
+}
+
 .time {
   display: flex;
 }
@@ -45,4 +59,20 @@
   display: flex;
   justify-content: center;
   width: 100%;
+}
+
+.thumbWrap img {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  display: flex;
+  justify-self: center;
+}
+
+.thumbWrap {
+  height: auto;
+  width: 20vw;
+  padding: 2% 0;
+  overflow: hidden;
+  border-radius: 6px;
 }

@@ -1,0 +1,9 @@
+.control input {
+  width: 30vw;
+  margin: 0.5% 0;
+}
+
+.control textarea {
+  width: 73vw;
+  margin: 0.5% 0;
+}

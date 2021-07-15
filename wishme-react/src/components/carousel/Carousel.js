@@ -25,6 +25,7 @@ const Carousel = (props) => {
           image={data[index].imageUrl}
           onClick={() => props.onData(data[index].id)}
           key={data[index].id}
+          bigger={props.bigger}
         />
       );
     } else {
@@ -33,6 +34,7 @@ const Carousel = (props) => {
           title={props.defaultTitle}
           onClick={props.onNewData}
           key={index}
+          bigger={props.bigger}
         />
       );
     }

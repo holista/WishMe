@@ -1,13 +1,13 @@
 .main {
-  min-height: calc(100vh - 3rem);
-  background-image: linear-gradient(
-      rgba(255, 255, 255, 0.9),
-      rgba(0, 0, 255, 0.6)
-    ),
-    url("../../assets/background.jpg");
+  min-height: 100vh;
+  background-image: url("../../assets/clouds.jpg");
   background-size: cover;
   display: flex;
   flex-direction: column;
   align-items: center;
   overflow-y: clip;
+}
+
+.space {
+  margin: 2%;
 }

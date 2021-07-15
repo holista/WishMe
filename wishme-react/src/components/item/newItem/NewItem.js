@@ -1,7 +1,9 @@
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { useHistory } from "react-router";
 import { useSelector } from "react-redux";
 import { FaCheckCircle } from "react-icons/fa/index";
+import Autocomplete from "@material-ui/lab/Autocomplete";
+import TextField from "@material-ui/core/TextField";
 
 import classes from "./NewItem.module.css";
 import Image from "../../ui/Image";
@@ -11,16 +13,14 @@ import BlueBtn from "../../ui/buttons/BlueBtn";
 
 const NewItem = (props) => {
   const history = useHistory();
-  const urlInputRef = useRef();
-
   const token = useSelector((state) => state.auth.token);
 
+  const [item, setItem] = useState(null);
+  const [options, setOptions] = useState();
+
   const [itemIsSent, setItemIsSent] = useState(false);
-  const [name, setName] = useState("");
-  const [price, setPrice] = useState(null);
-  const [description, setDescription] = useState("");
-  const [imageUrl, setImageUrl] = useState("");
-  const [dataIsVisible, setDataIsVisible] = useState(false);
+  const [dataIsLoading, setDataIsLoading] = useState(false);
+  const [comboboxOptions, setComboboxOptions] = useState([]);
 
   const { isLoading, error, sendRequest } = useApi();
 
@@ -28,27 +28,49 @@ const NewItem = (props) => {
   const listUrl = curUrl.substring(0, curUrl.lastIndexOf("/"));
   const listId = listUrl.substring(listUrl.lastIndexOf("/") + 1);
 
-  const getItem = (url) => {
+  const searchHandler = (term) => {
+    if (!term || term.length < 3) return;
+
     sendRequest(
       {
-        url: `items/suggestions/heureka/detail?url=${url}`,
+        url: `items/suggestions/heureka/previews?term=${term}`,
         headers: { Authorization: `Bearer ${token}` },
       },
       (responseData) => {
-        setName(responseData.name);
-        setPrice(responseData.price);
-        setDescription(responseData.description);
-        setImageUrl(responseData.imageUrl);
-        setDataIsVisible(true);
+        setComboboxOptions(responseData.map((i) => i.name));
+        setOptions(responseData);
       }
     );
   };
 
-  const changeUrlHandler = (event) => {
-    event.preventDefault();
-    const url = urlInputRef.current.value;
+  const getItemHandler = (event, newValue) => {
+    if (!newValue) setItem(null);
+    if (!newValue) return;
+
+    const item = options.find((v) => v.name === newValue);
+    urlHandler(item.url);
+  };
+
+  const urlHandler = (url) => {
     const parsedUrl = encodeURIComponent(url);
-    getItem(parsedUrl);
+    setDataIsLoading(true);
+
+    sendRequest(
+      {
+        url: `items/suggestions/heureka/detail?url=${parsedUrl}`,
+        headers: { Authorization: `Bearer ${token}` },
+      },
+      (responseData) => {
+        setItem({
+          name: responseData.name,
+          description: responseData.description,
+          price: responseData.price,
+          imageUrl: responseData.imageUrl,
+          url: url,
+        });
+        setDataIsLoading(false);
+      }
+    );
   };
 
   const submitHandler = (event) => {
@@ -60,11 +82,11 @@ const NewItem = (props) => {
         url: `wishlists/${listId}/items`,
         method: "POST",
         body: JSON.stringify({
-          name,
-          description,
-          price,
-          imageUrl,
-          url: urlInputRef.current.value,
+          name: item.name,
+          description: item.description,
+          price: item.price,
+          imageUrl: item.imageUrl,
+          url: item.url,
         }),
         headers: { Authorization: `Bearer ${token}` },
       },
@@ -85,51 +107,89 @@ const NewItem = (props) => {
           <form className={classes.form} onSubmit={submitHandler}>
             <div className={classes.control}>
               <label htmlFor="searching">Začněte vyhledávat</label>
-              <input type="text" id="searching" />
+
+              <Autocomplete
+                onInputChange={(event, newInputValue) => {
+                  searchHandler(newInputValue);
+                }}
+                onChange={(event, newValue) => getItemHandler(event, newValue)}
+                style={{
+                  fontFamily: "Quicksand, sans-serif",
+                  backgroundColor: "#f5f5f5",
+                  borderRadius: "4px",
+                  border: "1px solid #1b63f19a",
+                  fontSize: "1rem",
+                  width: "100.6%",
+                  textDecoration: "none",
+                }}
+                clearOnEscape
+                options={comboboxOptions}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    InputProps={{
+                      ...params.InputProps,
+                      endAdornment: (
+                        <>
+                          {isLoading && !dataIsLoading ? (
+                            <Spinner width="1rem" heigh="1rem" />
+                          ) : null}
+                          {params.InputProps.endAdornment}
+                        </>
+                      ),
+                    }}
+                  />
+                )}
+              />
             </div>
+
+            <p>NEBO</p>
 
             <div className={classes.control}>
               <label htmlFor="url">Zadejte url předmětu</label>
               <input
                 type="url"
                 id="url"
-                ref={urlInputRef}
-                onChange={changeUrlHandler}
+                onChange={(e) => urlHandler(e.target.value)}
               />
             </div>
 
-            <div>{isLoading && <Spinner />}</div>
-
-            {dataIsVisible && (
-              <div className={classes.control}>
-                <label htmlFor="title">Název</label>
-                <input type="text" id="title" defaultValue={name} />
+            {(isLoading || dataIsLoading) && (
+              <div className={classes.loading}>
+                <Spinner />
               </div>
             )}
 
-            {dataIsVisible && (
-              <div className={classes.control}>
-                <label htmlFor="price">Cena</label>
-                <input type="text" id="price" defaultValue={price} />
-              </div>
-            )}
+            {!isLoading && !dataIsLoading && item && (
+              <>
+                <div className={classes.control}>
+                  <label htmlFor="title">Název</label>
+                  <input type="text" id="title" defaultValue={item.name} />
+                </div>
 
-            {dataIsVisible && (
-              <div className={classes.control}>
-                <label htmlFor="description">Popis</label>
-                <textarea
-                  type="text"
-                  id="description"
-                  rows="5"
-                  defaultValue={description}
-                />
-              </div>
-            )}
+                <div className={classes.control}>
+                  <label htmlFor="price">Cena</label>
+                  <input type="text" id="price" defaultValue={item.price} />
+                </div>
 
-            {dataIsVisible && (
-              <div className={classes.imageWrap}>
-                <Image src={imageUrl} alt={name} className={classes.image} />
-              </div>
+                <div className={classes.control}>
+                  <label htmlFor="description">Popis</label>
+                  <textarea
+                    type="text"
+                    id="description"
+                    rows="5"
+                    defaultValue={item.description}
+                  />
+                </div>
+
+                <div className={classes.imageWrap}>
+                  <Image
+                    src={item.imageUrl}
+                    alt={item.name}
+                    className={classes.image}
+                  />
+                </div>
+              </>
             )}
             <div className={classes.btn}>
               <BlueBtn width="25%">Přidat předmět</BlueBtn>

@@ -3,6 +3,8 @@ import { NavLink, useHistory } from "react-router-dom";
 import { authActions } from "../../store/auth-slice";
 
 import classes from "./MainNavigation.module.css";
+import Image from "../ui/Image";
+import logo from "../../assets/logo.png";
 
 const MainNavigation = (props) => {
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
@@ -11,26 +13,30 @@ const MainNavigation = (props) => {
 
   const logoutHandler = () => {
     dispatch(authActions.logout());
+    history.push("/vitejte");
   };
 
   const logoHandler = () => {
     if (isAuthenticated) {
-      history.push("/mainpage");
+      history.push("/moje-udalosti");
     } else {
-      history.push("/welcome");
+      history.push("/vitejte");
     }
   };
 
   return (
     <header className={classes.header}>
-      <div className={classes.logo} onClick={logoHandler}>
-        WishMe
+      <div className={classes.logoWrap} onClick={logoHandler}>
+        <Image src={logo} className={classes.logo} />
       </div>
       <nav className={classes.nav}>
         <ul>
+          <li>
+            <NavLink to="/jak-to-funguje">Jak to funguje</NavLink>
+          </li>
           {isAuthenticated && (
             <li>
-              <NavLink to="/mainpage">Moje události</NavLink>
+              <NavLink to="/moje-udalosti">Moje události</NavLink>
             </li>
           )}
           {isAuthenticated && (

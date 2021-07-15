@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useHistory } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -17,10 +17,10 @@ const ItemList = (props) => {
   const dispatch = useDispatch();
   const history = useHistory();
 
-  const token = useSelector((state) => state.auth.token);
   const eventId = props.eventId;
   const listId = props.wishlistId;
 
+  const token = useSelector((state) => state.auth.token);
   const items = useSelector((state) => state.event.items[listId]) ?? [];
 
   const { isLoading, error, sendRequest } = useApi();
@@ -30,9 +30,12 @@ const ItemList = (props) => {
   const [itemWasAdded, setItemWasAdded] = useState(false);
   const [editModeIsActive, setEditModeIsActive] = useState(false);
 
+  const nameInputRef = useRef();
+  const descriptionInputRef = useRef();
+
   const openNewItemHandler = () => {
     setIsAddingItem(true);
-    history.push(`/event/${eventId}/wishlist/${listId}/new-item`);
+    history.push(`/udalost/${eventId}/seznam/${listId}/nova-polozka`);
   };
 
   const closeNewItemHandler = () => {
@@ -42,60 +45,69 @@ const ItemList = (props) => {
   };
 
   const openItemHandler = (itemId) => {
-    history.push(`/event/${eventId}/wishlist/${listId}/item/${itemId}`);
-  };
-
-  const itemWasAddedHandler = () => {
-    setItemWasAdded(true);
+    history.push(`/udalost/${eventId}/seznam/${listId}/polozka/${itemId}`);
   };
 
   useEffect(() => {
-    sendRequest(
-      {
-        url: `items?offset=0&limit=100&wishlistId=${listId}`,
-        headers: { Authorization: `Bearer ${token}` },
-      },
-      (responseData) => {
-        console.log("Itemlist: seting items of the list");
-        dispatch(
-          eventActions.setItems({
-            id: listId,
-            items: responseData.models.map((item) => {
-              return {
-                id: item.id,
-                key: item.id,
-                name: item.name,
-                price: item.price,
-                description: item.description,
-                imageUrl: item.imageUrl,
-                claimed: item.claimed,
-              };
-            }),
-          })
-        );
-      }
-    );
-  }, []);
+    if (!editModeIsActive || history.location === `udalost/${eventId}`) {
+      sendRequest(
+        {
+          url: `items?offset=0&limit=100&wishlistId=${listId}`,
+          headers: { Authorization: `Bearer ${token}` },
+        },
+        (responseData) => {
+          console.log("Itemlist: seting items of the list");
+          dispatch(
+            eventActions.setItems({
+              id: listId,
+              items: responseData.models.map((item) => {
+                return {
+                  id: item.id,
+                  key: item.id,
+                  name: item.name,
+                  price: item.price,
+                  description: item.description,
+                  imageUrl: item.imageUrl,
+                  claimed: item.claimed,
+                };
+              }),
+            })
+          );
+        }
+      );
+    }
+  }, [sendRequest, token, listId, editModeIsActive, history.location]);
 
   const removeListHandler = () => {
+    history.push(`/udalost/${eventId}/smazat`);
     sendRequest({
       url: `wishlists/${listId}`,
       method: "DELETE",
       headers: { Authorization: `Bearer ${token}` },
     });
     setIsRemoving(false);
+    history.push(`/udalost/${eventId}`);
+  };
+
+  const editListHandler = () => {
+    setEditModeIsActive(true);
+    history.push(`/udalost/${eventId}/upravit`);
   };
 
   const saveListHandler = () => {
-    sendRequest(
-      {
-        url: `wishlists/${listId}`,
-        method: "PUT",
-        body: JSON.stringify(),
-        headers: { Authorization: `Bearer ${token}` },
-      },
-      setEditModeIsActive(false)
-    );
+    const dataList = {
+      name: nameInputRef.current.value,
+      description: descriptionInputRef.current.value,
+    };
+
+    sendRequest({
+      url: `wishlists/${listId}`,
+      method: "PUT",
+      body: JSON.stringify(dataList),
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    setEditModeIsActive(false);
+    history.push(`/udalost/${eventId}`);
   };
 
   return (
@@ -106,15 +118,34 @@ const ItemList = (props) => {
           <EditBar
             onRemove={() => setIsRemoving(true)}
             editing={!editModeIsActive}
-            onEdit={() => setEditModeIsActive(true)}
+            onEdit={editListHandler}
             onSave={saveListHandler}
           />
           <section className={classes.listName}>
             <div className={classes.control}>
-              <h1>{props.name}</h1>
+              {!editModeIsActive ? (
+                <h1>{props.name}</h1>
+              ) : (
+                <input
+                  type="text"
+                  id="title"
+                  defaultValue={props.name}
+                  ref={nameInputRef}
+                />
+              )}
             </div>
             <div className={classes.control}>
-              <p>{props.description}</p>
+              {!editModeIsActive ? (
+                <p>{props.description}</p>
+              ) : (
+                <textarea
+                  type="text"
+                  id="description"
+                  rows="3"
+                  defaultValue={props.description}
+                  ref={descriptionInputRef}
+                />
+              )}
             </div>
           </section>
           <Carousel
@@ -131,7 +162,7 @@ const ItemList = (props) => {
         onClose={closeNewItemHandler}
         header={!itemWasAdded ? "Přidejte nový předmět" : "Předmět byl přidán"}
       >
-        <NewItem eventId={eventId} itemAdded={itemWasAddedHandler} />
+        <NewItem eventId={eventId} itemAdded={() => setItemWasAdded(true)} />
       </Modal>
 
       <Modal

@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { useHistory } from "react-router";
 import moment from "moment";
@@ -6,12 +6,15 @@ import moment from "moment";
 import classes from "./NewEvent.module.css";
 import Spinner from "../../ui/Spinner";
 import useApi from "../../../hooks/use-api";
+import Image from "../../ui/Image";
 import BlueBtn from "../../ui/buttons/BlueBtn";
 import useImage from "../../../hooks/use-img";
 
 const NewEvent = (props) => {
   const history = useHistory();
   const token = useSelector((state) => state.auth.token);
+
+  const [thumb, setThumb] = useState();
 
   const titleInputRef = useRef();
   const dateInputRef = useRef();
@@ -45,9 +48,15 @@ const NewEvent = (props) => {
         headers: { Authorization: `Bearer ${token}` },
       },
       (responseData) => {
-        history.replace(`/event/${responseData.id}`);
+        history.replace(`/udalost/${responseData.id}`);
       }
     );
+  };
+
+  const changeImageHandler = async (e) => {
+    e.preventDefault();
+    const thumbnail = await toBase64(e.target.files[0]);
+    setThumb(thumbnail);
   };
 
   return (
@@ -81,13 +90,19 @@ const NewEvent = (props) => {
           />
         </div>
 
-        <div className={classes.control}>
+        <div className={classes.controlImg}>
           <label htmlFor="image">Obrázek</label>
+          {thumb && (
+            <div className={classes.thumbWrap}>
+              <Image src={`data:image/jpeg;base64,${thumb}`} />
+            </div>
+          )}
           <input
             type="file"
             accept="image/*"
             multiple={false}
             id="image"
+            onChange={changeImageHandler}
             ref={imageInputRef}
           />
         </div>
