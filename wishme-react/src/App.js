@@ -15,10 +15,10 @@ function App() {
     <Layout>
       <Switch>
         <Route path="/" exact>
-          <Redirect to="/welcome" />
+          <Redirect to="/vitejte" />
         </Route>
 
-        <Route path="/welcome">
+        <Route path="/vitejte">
           <WelcomePage />
         </Route>
 

@@ -1,3 +1,5 @@
+import { FaTimes } from "react-icons/fa/index";
+
 import classes from "./Modal.module.css";
 
 const Modal = (props) => {
@@ -8,7 +10,9 @@ const Modal = (props) => {
           <div className={classes.backdrop} onClick={props.onClose}></div>
           <div className={classes.modal}>
             <div className={classes.close}>
-              <button onClick={props.onClose}>x</button>
+              <button onClick={props.onClose}>
+                <FaTimes />
+              </button>
             </div>
             {props.header && (
               <div className={classes.header}>

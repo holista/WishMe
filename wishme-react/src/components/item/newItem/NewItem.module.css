@@ -48,6 +48,12 @@
   justify-content: center;
 }
 
+.loading {
+  display: flex;
+  justify-content: center;
+  margin-top: 5%;
+}
+
 .btn {
   display: flex;
   justify-content: center;

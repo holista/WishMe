@@ -13,13 +13,14 @@ const MainNavigation = (props) => {
 
   const logoutHandler = () => {
     dispatch(authActions.logout());
+    history.push("/vitejte");
   };
 
   const logoHandler = () => {
     if (isAuthenticated) {
       history.push("/moje-udalosti");
     } else {
-      history.push("/welcome");
+      history.push("/vitejte");
     }
   };
 

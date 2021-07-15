@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useHistory, useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 
@@ -17,37 +17,40 @@ const Item = (props) => {
   const token = useSelector((state) => state.auth.token);
   const { evId, listId, id } = useParams();
 
-  const [name, setName] = useState(null);
-  const [price, setPrice] = useState(null);
-  const [imageUrl, setImageUrl] = useState(null);
-  const [claimed, setClaimed] = useState(false);
-  const [updatedUtc, setUpdatedUtc] = useState(null);
-  const [description, setDescription] = useState(null);
-  const [url, setUrl] = useState(null);
+  const [item, setItem] = useState(null);
+
+  const [editModeIsActive, setEditModeIsActive] = useState(false);
   const [isRemoving, setIsRemoving] = useState(false);
   const [isUnbooking, setIsUnbooking] = useState(false);
+
+  const nameInputRef = useRef();
+  const priceInputRef = useRef();
+  const imageUrlInputRef = useRef();
+  const descriptionInputRef = useRef();
 
   const { isLoading, error, sendRequest } = useApi();
 
   useEffect(() => {
-    sendRequest(
-      {
-        url: `items/${id}`,
-        headers: { Authorization: `Bearer ${token}` },
-      },
-      (responseData) => {
-        setName(responseData.name);
-        setPrice(responseData.price);
-        setImageUrl(responseData.imageUrl);
-        setClaimed(responseData.claimed);
-        setUpdatedUtc(responseData.updatedUtc);
-        setDescription(responseData.description);
-        setUrl(responseData.url);
-      }
-    );
-  }, [token, id, sendRequest]);
-
-  const editItemHandler = () => {};
+    if (!editModeIsActive) {
+      sendRequest(
+        {
+          url: `items/${id}`,
+          headers: { Authorization: `Bearer ${token}` },
+        },
+        (responseData) => {
+          setItem({
+            name: responseData.name,
+            price: responseData.price,
+            imageUrl: responseData.imageUrl,
+            claimed: responseData.claimed,
+            updatedUtc: responseData.updatedUtc,
+            description: responseData.description,
+            url: responseData.url,
+          });
+        }
+      );
+    }
+  }, [token, id, sendRequest, editModeIsActive]);
 
   const removeItemHandler = () => {
     sendRequest({
@@ -58,8 +61,27 @@ const Item = (props) => {
     history.replace(`/udalost/${evId}`);
   };
 
+  const saveItemHandler = () => {
+    const itemData = {
+      name: nameInputRef.current.value,
+      price: priceInputRef.current.value,
+      description: descriptionInputRef.current.value,
+      imageUrl: imageUrlInputRef.current.value,
+    };
+
+    sendRequest({
+      url: `items/${id}`,
+      method: "PUT",
+      body: JSON.stringify(itemData),
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    setEditModeIsActive(false);
+  };
+
   const bookItemHandler = () => {
-    setClaimed(true);
+    setItem((prevState) => {
+      return { ...prevState, claimed: true };
+    });
     sendRequest({
       url: `items/${id}/claimed`,
       method: "PUT",
@@ -69,7 +91,9 @@ const Item = (props) => {
   };
 
   const unbookItemHandler = () => {
-    setClaimed(false);
+    setItem((prevState) => {
+      return { ...prevState, claimed: false };
+    });
     sendRequest(
       {
         url: `items/${id}/claimed`,
@@ -82,65 +106,116 @@ const Item = (props) => {
   };
 
   const heurekaHandler = () => {
-    window.open(url, "_blank");
+    window.open(item.url, "_blank");
+  };
+
+  const changeImageHandler = async (e) => {
+    e.preventDefault();
+    const thumbnail = imageUrlInputRef.current.value;
+    setItem((prevState) => {
+      return { ...prevState, thumb: thumbnail };
+    });
   };
 
   return (
     <>
       {isLoading && <Spinner />}
-      {!isLoading && (
-        <Card className={classes.item}>
+      {!isLoading && item && (
+        <Card>
           <EditBar
             arrowBack
             goTo={() => history.goBack()}
             onRemove={() => setIsRemoving(true)}
-            onEdit={editItemHandler}
+            editing={!editModeIsActive}
+            onEdit={() => setEditModeIsActive(true)}
+            onSave={saveItemHandler}
           />
 
           <div className={classes.name}>
-            <h1>{name}</h1>
+            {!editModeIsActive ? (
+              <h1>{item.name}</h1>
+            ) : (
+              <input
+                type="text"
+                id="name"
+                defaultValue={item.name}
+                ref={nameInputRef}
+              />
+            )}
           </div>
 
           <div className={classes.details}>
             <section className={classes.section}>
               <div className={classes.control}>
-                {
-                  //<span className={classes.icon}>{calendarIcon}</span>
-                }
-                <h3>{price}</h3>
+                {!editModeIsActive ? (
+                  <h3>{`${item.price} Kč`}</h3>
+                ) : (
+                  <input
+                    type="text"
+                    id="price"
+                    defaultValue={item.price}
+                    ref={priceInputRef}
+                  />
+                )}
               </div>
+
               <div className={classes.control}>
-                {
-                  //<span className={classes.icon}>{clockIcon}</span>
-                }
-                <h3>{claimed ? "Zamluveno" : "Volné"}</h3>
+                <h3>{item.claimed ? "Zamluveno" : "Volné"}</h3>
               </div>
-              <div>
-                <p>{description}</p>
+
+              <div className={classes.description}>
+                {!editModeIsActive ? (
+                  <p>{item.description}</p>
+                ) : (
+                  <textarea
+                    type="text"
+                    id="description"
+                    rows="5"
+                    defaultValue={item.description}
+                    ref={descriptionInputRef}
+                  />
+                )}
               </div>
             </section>
 
-            <div className={classes.imageWrap}>
-              <Image src={imageUrl} className={classes.image} />
-            </div>
+            {!editModeIsActive ? (
+              <div className={classes.imageWrap}>
+                <Image src={item.imageUrl} className={classes.image} />
+              </div>
+            ) : (
+              <div className={classes.controlImg}>
+                <div className={classes.thumbWrap}>
+                  <Image src={item.thumb || item.imageUrl} />
+                </div>
+                <input
+                  type="url"
+                  defaultValue={item.imageUrl}
+                  ref={imageUrlInputRef}
+                  onChange={changeImageHandler}
+                  onClick={(e) => e.target.select()}
+                />
+              </div>
+            )}
           </div>
 
-          <div className={classes.btns}>
-            <div className={classes.btn}>
-              {!claimed ? (
-                <BlueBtn onClick={bookItemHandler}>Zamluvit</BlueBtn>
-              ) : (
-                <GreyBtn onClick={() => setIsUnbooking(true)}>
-                  Odzamluvit
-                </GreyBtn>
-              )}
+          {!editModeIsActive && (
+            <div className={classes.btns}>
+              <div className={classes.btn}>
+                {!item.claimed ? (
+                  <BlueBtn onClick={bookItemHandler}>Zamluvit</BlueBtn>
+                ) : (
+                  <GreyBtn onClick={() => setIsUnbooking(true)}>
+                    Odzamluvit
+                  </GreyBtn>
+                )}
+              </div>
+              <div className={classes.btn}>
+                <BlueBtn onClick={heurekaHandler}>
+                  Prohlédnout si na Heuréce
+                </BlueBtn>
+              </div>
             </div>
-            <div className={classes.btn}>
-              <BlueBtn onClick={heurekaHandler}>
-                Prohlédnout si na Heuréce
-              </BlueBtn>
-            </div>
-          </div>
+          )}
         </Card>
       )}
       <Modal

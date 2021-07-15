@@ -18,19 +18,15 @@ const Event = (props) => {
   const history = useHistory();
   const token = useSelector((state) => state.auth.token);
   const eventId = props.eventId;
+  const loaded = props.isLoaded;
 
-  const [title, setTitle] = useState();
-  const [date, setDate] = useState();
-  const [time, setTime] = useState();
-  const [dateTime, setDateTime] = useState();
-  const [description, setDescription] = useState();
-  const [image, setImage] = useState();
-  const [thumb, setThumb] = useState();
+  const [event, setEvent] = useState(null);
+
   const [isRemoving, setIsRemoving] = useState(false);
   const [editModeIsActive, setEditModeIsActive] = useState(false);
 
   const { isLoading, error, sendRequest } = useApi();
-  const { toBase64 } = useImage();
+  const { imgIsLoading, toBase64 } = useImage();
 
   const titleInputRef = useRef();
   const dateInputRef = useRef();
@@ -39,25 +35,34 @@ const Event = (props) => {
   const imageInputRef = useRef();
 
   useEffect(() => {
-    sendRequest(
-      {
-        url: `events/${eventId}`,
-        headers: { Authorization: `Bearer ${token}` },
-      },
-      (responseData) => {
-        const dateData = moment(responseData.dateTimeUtc).toDate();
-        const dayData = `${dateData.getDay()}.${dateData.getMonth()}.${dateData.getFullYear()}`;
-        const timeData = `${dateData.getHours()}:${dateData.getMinutes()}`;
+    if (!editModeIsActive || history.location === `udalost/${eventId}`) {
+      sendRequest(
+        {
+          url: `events/${eventId}`,
+          headers: { Authorization: `Bearer ${token}` },
+        },
+        (responseData) => {
+          const dateData = moment(responseData.dateTimeUtc).toDate();
+          const dayData = `${dateData.getDate()}.${
+            dateData.getMonth() + 1
+          }.${dateData.getFullYear()}`;
+          const timeData = `${dateData.getHours()}:${dateData.getMinutes()}`;
 
-        setTitle(responseData.name);
-        setDate(dayData);
-        setTime(timeData);
-        setDateTime(dateData);
-        setDescription(responseData.description);
-        setImage(responseData.image);
-      }
-    );
-  }, [eventId, token, sendRequest]);
+          setEvent({
+            title: responseData.name,
+            date: dayData,
+            time: timeData,
+            dateTime: dateData,
+            description: responseData.description,
+            image: responseData.image,
+            thumb: responseData.image,
+          });
+
+          loaded();
+        }
+      );
+    }
+  }, [sendRequest, token, eventId, editModeIsActive, loaded, history.location]);
 
   const removeEventHandler = () => {
     sendRequest(
@@ -72,6 +77,7 @@ const Event = (props) => {
 
   const editEventHandler = () => {
     setEditModeIsActive(true);
+    history.push(`/udalost/${eventId}/upravit`);
   };
 
   const saveEventHandler = async () => {
@@ -85,29 +91,31 @@ const Event = (props) => {
       description: descriptionInputRef.current.value,
     };
 
-    eventData.image = await toBase64(imageInputRef.current.files[0]);
+    eventData.image = imageInputRef.current.files[0]
+      ? await toBase64(imageInputRef.current.files[0])
+      : event.image;
 
-    sendRequest(
-      {
-        url: `events/${eventId}`,
-        method: "PUT",
-        body: JSON.stringify(eventData),
-        headers: { Authorization: `Bearer ${token}` },
-      },
-      setEditModeIsActive(false)
-    );
+    await sendRequest({
+      url: `events/${eventId}`,
+      method: "PUT",
+      body: JSON.stringify(eventData),
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    setEditModeIsActive(false);
+    history.push(`/udalost/${eventId}`);
   };
 
   const changeImageHandler = async (e) => {
     e.preventDefault();
     const thumbnail = await toBase64(e.target.files[0]);
-    setThumb(thumbnail);
+    setEvent((prevState) => {
+      return { ...prevState, thumb: thumbnail };
+    });
   };
 
   return (
     <>
-      {isLoading && <Spinner />}
-      {!isLoading && (
+      {props.visible && (
         <Card>
           <EditBar
             arrowBack
@@ -120,12 +128,12 @@ const Event = (props) => {
 
           <div className={classes.title}>
             {!editModeIsActive ? (
-              <h1>{title}</h1>
+              <h1>{event.title}</h1>
             ) : (
               <input
                 type="text"
                 id="title"
-                defaultValue={title}
+                defaultValue={event.title}
                 ref={titleInputRef}
               />
             )}
@@ -140,13 +148,15 @@ const Event = (props) => {
                       <span className={classes.icon}>
                         <FaCalendarAlt />
                       </span>
-                      <h3>{date}</h3>
+                      <h3>{event.date}</h3>
                     </>
                   ) : (
                     <input
                       type="date"
                       id="date"
-                      defaultValue={dateTime.toISOString().substring(0, 10)}
+                      defaultValue={event.dateTime
+                        .toISOString()
+                        .substring(0, 10)}
                       ref={dateInputRef}
                     />
                   )}
@@ -157,13 +167,13 @@ const Event = (props) => {
                       <span className={classes.icon}>
                         <FaClock />
                       </span>
-                      <h3>{time}</h3>
+                      <h3>{event.time}</h3>
                     </>
                   ) : (
                     <input
                       type="time"
                       id="time"
-                      defaultValue={time}
+                      defaultValue={event.time}
                       ref={timeInputRef}
                     />
                   )}
@@ -172,13 +182,13 @@ const Event = (props) => {
 
               <div className={classes.description}>
                 {!editModeIsActive ? (
-                  <p>{description}</p>
+                  <p>{event.description}</p>
                 ) : (
                   <textarea
                     type="text"
                     id="description"
                     rows="5"
-                    defaultValue={description}
+                    defaultValue={event.description}
                     ref={descriptionInputRef}
                   />
                 )}
@@ -187,18 +197,20 @@ const Event = (props) => {
 
             {!editModeIsActive ? (
               <div className={classes.imageWrap}>
-                <Image src={`data:image/jpeg;base64,${image}`} />
+                <Image src={`data:image/jpeg;base64,${event.image}`} />
               </div>
             ) : (
               <div className={classes.controlImg}>
                 <div className={classes.thumbWrap}>
-                  <Image
-                    src={
-                      thumb
-                        ? `data:image/jpeg;base64,${thumb}`
-                        : `data:image/jpeg;base64,${image}`
-                    }
-                  />
+                  {imgIsLoading ? (
+                    <Spinner />
+                  ) : (
+                    <Image
+                      src={`data:image/jpeg;base64,${
+                        event.thumb ?? event.image
+                      }`}
+                    />
+                  )}
                 </div>
 
                 <label htmlFor="image">Obrázek události</label>

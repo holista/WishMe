@@ -1,11 +1,18 @@
+import { useState } from "react";
+
 const useImage = () => {
+  const [imgIsLoading, setImgIsLoading] = useState(false);
+
   const toBase64 = async (file) => {
+    setImgIsLoading(true);
     try {
       const imageStr = await toBase64Convertor(file);
       const index = imageStr.indexOf("base64,");
       return imageStr.substring(index + 7);
     } catch (e) {
       return "";
+    } finally {
+      setImgIsLoading(false);
     }
   };
 
@@ -18,7 +25,7 @@ const useImage = () => {
     });
   };
 
-  return { toBase64 };
+  return { imgIsLoading, toBase64 };
 };
 
 export default useImage;

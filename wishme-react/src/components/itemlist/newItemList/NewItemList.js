@@ -7,7 +7,6 @@ import Card from "../../ui/Card";
 import BlueBtn from "../../ui/buttons/BlueBtn";
 
 const NewItemList = (props) => {
-  const [listIsCreated, setListIsCreated] = useState(false);
   const token = useSelector((state) => state.auth.token);
 
   const { isLoading, error, sendRequest } = useApi();
@@ -21,46 +20,45 @@ const NewItemList = (props) => {
       description: descriptionInputRef.current.value,
     };
 
-    sendRequest(
-      {
-        url: `events/${props.eventId}/wishlists`,
-        body: JSON.stringify(dataList),
-        method: "POST",
-        headers: { Authorization: `Bearer ${token}` },
-      },
-      () => {
-        setListIsCreated(true);
-      }
-    );
+    sendRequest({
+      url: `events/${props.eventId}/wishlists`,
+      body: JSON.stringify(dataList),
+      method: "POST",
+      headers: { Authorization: `Bearer ${token}` },
+    });
   };
 
   return (
-    <Card>
-      <form className={classes.form}>
-        <section className={classes.listName}>
-          <div className={classes.control}>
-            <input
-              type="text"
-              placeholder="Zadejte jméno seznamu"
-              ref={nameInputRef}
-              required
-            />
-          </div>
-          <div className={classes.control}>
-            <input
-              type="text"
-              rows="2"
-              placeholder="Popište nový seznam"
-              ref={descriptionInputRef}
-            />
-          </div>
-        </section>
+    <>
+      {props.visible && (
+        <Card>
+          <form className={classes.form}>
+            <section className={classes.listName}>
+              <div className={classes.control}>
+                <input
+                  type="text"
+                  placeholder="Zadejte jméno seznamu"
+                  ref={nameInputRef}
+                  required
+                />
+              </div>
+              <div className={classes.control}>
+                <input
+                  type="text"
+                  rows="2"
+                  placeholder="Popište nový seznam"
+                  ref={descriptionInputRef}
+                />
+              </div>
+            </section>
 
-        <BlueBtn onClick={addListHandler} width="25%">
-          Přidat seznam přání
-        </BlueBtn>
-      </form>
-    </Card>
+            <BlueBtn onClick={addListHandler} width="25%">
+              Přidat seznam přání
+            </BlueBtn>
+          </form>
+        </Card>
+      )}
+    </>
   );
 };
 

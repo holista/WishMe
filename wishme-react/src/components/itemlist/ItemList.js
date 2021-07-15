@@ -17,10 +17,10 @@ const ItemList = (props) => {
   const dispatch = useDispatch();
   const history = useHistory();
 
-  const token = useSelector((state) => state.auth.token);
   const eventId = props.eventId;
   const listId = props.wishlistId;
 
+  const token = useSelector((state) => state.auth.token);
   const items = useSelector((state) => state.event.items[listId]) ?? [];
 
   const { isLoading, error, sendRequest } = useApi();
@@ -48,57 +48,66 @@ const ItemList = (props) => {
     history.push(`/udalost/${eventId}/seznam/${listId}/polozka/${itemId}`);
   };
 
-  const itemWasAddedHandler = () => {
-    setItemWasAdded(true);
-  };
-
   useEffect(() => {
-    sendRequest(
-      {
-        url: `items?offset=0&limit=100&wishlistId=${listId}`,
-        headers: { Authorization: `Bearer ${token}` },
-      },
-      (responseData) => {
-        console.log("Itemlist: seting items of the list");
-        dispatch(
-          eventActions.setItems({
-            id: listId,
-            items: responseData.models.map((item) => {
-              return {
-                id: item.id,
-                key: item.id,
-                name: item.name,
-                price: item.price,
-                description: item.description,
-                imageUrl: item.imageUrl,
-                claimed: item.claimed,
-              };
-            }),
-          })
-        );
-      }
-    );
-  }, []);
+    if (!editModeIsActive || history.location === `udalost/${eventId}`) {
+      sendRequest(
+        {
+          url: `items?offset=0&limit=100&wishlistId=${listId}`,
+          headers: { Authorization: `Bearer ${token}` },
+        },
+        (responseData) => {
+          console.log("Itemlist: seting items of the list");
+          dispatch(
+            eventActions.setItems({
+              id: listId,
+              items: responseData.models.map((item) => {
+                return {
+                  id: item.id,
+                  key: item.id,
+                  name: item.name,
+                  price: item.price,
+                  description: item.description,
+                  imageUrl: item.imageUrl,
+                  claimed: item.claimed,
+                };
+              }),
+            })
+          );
+        }
+      );
+    }
+  }, [sendRequest, token, listId, editModeIsActive, history.location]);
 
   const removeListHandler = () => {
+    history.push(`/udalost/${eventId}/smazat`);
     sendRequest({
       url: `wishlists/${listId}`,
       method: "DELETE",
       headers: { Authorization: `Bearer ${token}` },
     });
     setIsRemoving(false);
+    history.push(`/udalost/${eventId}`);
+  };
+
+  const editListHandler = () => {
+    setEditModeIsActive(true);
+    history.push(`/udalost/${eventId}/upravit`);
   };
 
   const saveListHandler = () => {
-    sendRequest(
-      {
-        url: `wishlists/${listId}`,
-        method: "PUT",
-        body: JSON.stringify(),
-        headers: { Authorization: `Bearer ${token}` },
-      },
-      setEditModeIsActive(false)
-    );
+    const dataList = {
+      name: nameInputRef.current.value,
+      description: descriptionInputRef.current.value,
+    };
+
+    sendRequest({
+      url: `wishlists/${listId}`,
+      method: "PUT",
+      body: JSON.stringify(dataList),
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    setEditModeIsActive(false);
+    history.push(`/udalost/${eventId}`);
   };
 
   return (
@@ -109,7 +118,7 @@ const ItemList = (props) => {
           <EditBar
             onRemove={() => setIsRemoving(true)}
             editing={!editModeIsActive}
-            onEdit={() => setEditModeIsActive(true)}
+            onEdit={editListHandler}
             onSave={saveListHandler}
           />
           <section className={classes.listName}>
@@ -153,7 +162,7 @@ const ItemList = (props) => {
         onClose={closeNewItemHandler}
         header={!itemWasAdded ? "Přidejte nový předmět" : "Předmět byl přidán"}
       >
-        <NewItem eventId={eventId} itemAdded={itemWasAddedHandler} />
+        <NewItem eventId={eventId} itemAdded={() => setItemWasAdded(true)} />
       </Modal>
 
       <Modal
