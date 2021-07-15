@@ -15,6 +15,7 @@ const NewEvent = (props) => {
   const token = useSelector((state) => state.auth.token);
 
   const [thumb, setThumb] = useState();
+  const [inputError, setInputError] = useState(null);
 
   const titleInputRef = useRef();
   const dateInputRef = useRef();
@@ -28,17 +29,29 @@ const NewEvent = (props) => {
   const addEventHandler = async (event) => {
     event.preventDefault();
 
-    const time = moment.duration(timeInputRef.current.value);
-    const date = moment(dateInputRef.current.value);
-    const dateTime = date.add(time).utc().format();
+    const name = titleInputRef.current.value;
+    const description = descriptionInputRef.current.value;
+    const time = timeInputRef.current.value;
+    const date = dateInputRef.current.value;
+    const image = imageInputRef.current.files[0];
+
+    if (name.length === 0 || description.length === 0 || !time || !date) {
+      setInputError("Vyplňte prosím prázdná pole!");
+      return;
+    } else if (!image) {
+      setInputError("Vložte prosím obrázek!");
+      return;
+    }
+    setInputError(null);
+
+    const dateTime = moment(date).add(moment.duration(time)).utc().format();
 
     const eventData = {
-      name: titleInputRef.current.value,
+      name,
       dateTimeUtc: dateTime,
-      description: descriptionInputRef.current.value,
+      description,
     };
-
-    eventData.image = await toBase64(imageInputRef.current.files[0]);
+    eventData.image = await toBase64(image);
 
     sendRequest(
       {
@@ -106,6 +119,8 @@ const NewEvent = (props) => {
             ref={imageInputRef}
           />
         </div>
+
+        {inputError && <div className={classes.error}>{inputError}</div>}
 
         <div className={classes.btn}>
           <BlueBtn width="25%">Přidat událost</BlueBtn>

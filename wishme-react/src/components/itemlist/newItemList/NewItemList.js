@@ -9,15 +9,27 @@ import BlueBtn from "../../ui/buttons/BlueBtn";
 const NewItemList = (props) => {
   const token = useSelector((state) => state.auth.token);
 
+  const [inputError, setInputError] = useState(null);
+
   const { isLoading, error, sendRequest } = useApi();
 
   const nameInputRef = useRef();
   const descriptionInputRef = useRef();
 
-  const addListHandler = () => {
+  const addListHandler = (e) => {
+    e.preventDefault();
+    const name = nameInputRef.current.value;
+    const description = descriptionInputRef.current.value;
+
+    if (name.length === 0) {
+      setInputError("Vyplňte prosím název seznamu!");
+      return;
+    }
+    setInputError(null);
+
     const dataList = {
-      name: nameInputRef.current.value,
-      description: descriptionInputRef.current.value,
+      name,
+      description,
     };
 
     sendRequest({
@@ -32,14 +44,13 @@ const NewItemList = (props) => {
     <>
       {props.visible && (
         <Card>
-          <form className={classes.form}>
+          <form className={classes.form} onSubmit={addListHandler}>
             <section className={classes.listName}>
               <div className={classes.control}>
                 <input
                   type="text"
-                  placeholder="Zadejte jméno seznamu"
+                  placeholder="Zadejte název seznamu"
                   ref={nameInputRef}
-                  required
                 />
               </div>
               <div className={classes.control}>
@@ -52,10 +63,9 @@ const NewItemList = (props) => {
               </div>
             </section>
 
-            <BlueBtn onClick={addListHandler} width="25%">
-              Přidat seznam přání
-            </BlueBtn>
+            <BlueBtn width="25%">Přidat seznam přání</BlueBtn>
           </form>
+          {inputError && <div className={classes.error}>{inputError}</div>}
         </Card>
       )}
     </>
