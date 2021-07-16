@@ -1,6 +1,6 @@
 .main {
   min-height: 100vh;
-  background-image: url("../../assets/clouds.jpg");
+
   background-size: cover;
   display: flex;
   flex-direction: column;
@@ -10,4 +10,10 @@
 
 .space {
   margin: 2%;
+}
+
+.video {
+  position: fixed;
+  z-index: -1;
+  width: 100%;
 }
